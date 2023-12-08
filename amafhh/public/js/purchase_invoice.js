@@ -653,23 +653,23 @@ frappe.ui.form.on('Purchase Invoice Item', {
 
     // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS
 	// ADDING BATCH DOCTYPE
-sr_no:function(frm,cdt,cdn){
-
-  var d = locals[cdt][cdn];
-
-  frappe.call({
-    method: 'frappe.client.insert',
-    args: {
-      doc: {
-        doctype: 'Batch',
-        item: d.item_code,
-        batch_id: d.sr_no,
-		  batch_qty:d.qty
-      }
-    }
-  });
-frappe.model.set_value(cdt, cdn,'batch_no',d.sr_no);
-},
+// sr_no:function(frm,cdt,cdn){
+//
+//   var d = locals[cdt][cdn];
+//
+//   frappe.call({
+//     method: 'frappe.client.insert',
+//     args: {
+//       doc: {
+//         doctype: 'Batch',
+//         item: d.item_code,
+//         batch_id: d.sr_no,
+// 		  batch_qty:d.qty
+//       }
+//     }
+//   });
+// frappe.model.set_value(cdt, cdn,'batch_no',d.sr_no);
+// },
 
 
 
