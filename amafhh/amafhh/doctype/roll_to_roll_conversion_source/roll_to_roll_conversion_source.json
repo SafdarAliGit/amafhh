@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2023-12-10 20:28:15.955024",
+ "creation": "2023-12-12 16:07:04.904286",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -77,7 +77,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-10 20:57:22.150997",
+ "modified": "2023-12-12 16:09:04.432231",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion Source",

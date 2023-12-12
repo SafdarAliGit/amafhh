@@ -8,32 +8,27 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "conversion_type",
   "posting_date",
+  "column_break_ahnmg",
   "warehouse",
+  "section_break_iyspz",
   "roll_to_roll_conversion_source",
   "source_weight",
+  "section_break_htdgb",
   "roll_to_roll_conversion_target",
   "target_weight",
   "amended_from"
  ],
  "fields": [
   {
-   "default": "Roll To Roll",
-   "fieldname": "conversion_type",
-   "fieldtype": "Select",
-   "label": "Conversion Type",
-   "options": "Roll To Roll"
-  },
-  {
    "fieldname": "posting_date",
-   "fieldtype": "Data",
+   "fieldtype": "Date",
    "label": "Posting Date"
   },
   {
    "fieldname": "warehouse",
-   "fieldtype": "Data",
-   "label": "Warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
    "options": "Warehouse"
   },
   {
@@ -43,9 +38,11 @@
    "options": "Roll To Roll Conversion Source"
   },
   {
+   "default": "None",
    "fieldname": "source_weight",
    "fieldtype": "Data",
-   "label": "Source Weight"
+   "label": "Source Weight",
+   "read_only": 1
   },
   {
    "fieldname": "roll_to_roll_conversion_target",
@@ -54,9 +51,11 @@
    "options": "Roll To Roll Conversion Target"
   },
   {
+   "default": "None",
    "fieldname": "target_weight",
    "fieldtype": "Data",
-   "label": "Target Weight"
+   "label": "Target Weight",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -66,12 +65,24 @@
    "options": "Roll To Roll Conversion",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_iyspz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ahnmg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_htdgb",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-10 20:57:51.565995",
+ "modified": "2023-12-11 22:32:50.639525",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion",
