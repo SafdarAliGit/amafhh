@@ -7,7 +7,7 @@ from erpnext.accounts.doctype.purchase_invoice.purchase_invoice import PurchaseI
 
 class PurchaseInvoiceOverrides(PurchaseInvoice):
 
-    def save(self):
+    def on_submit(self):
         super(PurchaseInvoiceOverrides, self).save()
         for item in self.items:
             sr_no_doc = frappe.new_doc("SR NO")
