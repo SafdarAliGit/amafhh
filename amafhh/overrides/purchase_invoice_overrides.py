@@ -2,9 +2,6 @@ import frappe
 from erpnext.accounts.doctype.purchase_invoice.purchase_invoice import PurchaseInvoice
 
 
-# form_grid_templates = {"items": "templates/form_grid/item_grid.html"}
-
-
 class PurchaseInvoiceOverrides(PurchaseInvoice):
 
     def on_submit(self):
