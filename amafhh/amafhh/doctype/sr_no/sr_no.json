@@ -26,7 +26,6 @@
   "purchase_document_no",
   "purchase_date",
   "purchase_time",
-  "purchase_rate",
   "column_break3",
   "supplier",
   "supplier_name",
@@ -38,7 +37,12 @@
   "invoice_details",
   "sales_invoice",
   "company",
-  "status"
+  "status",
+  "weight_total",
+  "purchase_rate",
+  "purchase_amount",
+  "weight_converted",
+  "weight_balance"
  ],
  "fields": [
   {
@@ -173,12 +177,7 @@
   {
    "fieldname": "purchase_rate",
    "fieldtype": "Currency",
-   "label": "Incoming Rate",
-   "no_copy": 1,
-   "oldfieldname": "purchase_rate",
-   "oldfieldtype": "Currency",
-   "options": "Company:company:default_currency",
-   "read_only": 1
+   "label": "Purchase Rate"
   },
   {
    "fieldname": "column_break3",
@@ -271,11 +270,31 @@
    "label": "Status",
    "options": "\nActive\nInactive\nDelivered\nExpired",
    "read_only": 1
+  },
+  {
+   "fieldname": "weight_converted",
+   "fieldtype": "Data",
+   "label": "Weight Converted"
+  },
+  {
+   "fieldname": "weight_balance",
+   "fieldtype": "Data",
+   "label": "Weight Balance"
+  },
+  {
+   "fieldname": "weight_total",
+   "fieldtype": "Data",
+   "label": "Weight Total"
+  },
+  {
+   "fieldname": "purchase_amount",
+   "fieldtype": "Currency",
+   "label": "Purchase Amount"
   }
  ],
  "icon": "fa fa-barcode",
  "links": [],
- "modified": "2023-12-12 22:02:01.159037",
+ "modified": "2023-12-13 18:07:44.415758",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "SR NO",

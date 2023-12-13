@@ -113,7 +113,9 @@ doctype_js = {"Purchase Invoice": "public/js/purchase_invoice.js",}
 # override_doctype_class = {
 #	"ToDo": "custom_app.overrides.CustomToDo"
 # }
-
+override_doctype_class = {
+    "Purchase Invoice": "amafhh.overrides.purchase_invoice_overrides.PurchaseInvoiceOverrides",
+}
 # Document Events
 # ---------------
 # Hook on document methods and events
