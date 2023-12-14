@@ -9,8 +9,8 @@ def get_sr_no(sr_no):
         data.update(
             {
                 "item_code": sr_no_doc.item_code,
-                "purchase_rate": sr_no_doc.purchase_rate,
-                "purchase_amount": sr_no_doc.purchase_amount,
+                "rate": sr_no_doc.rate,
+                "amount": sr_no_doc.amount,
                 "weight_balance": sr_no_doc.weight_balance,
             }
         )
