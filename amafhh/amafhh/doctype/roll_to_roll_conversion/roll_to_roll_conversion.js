@@ -31,8 +31,8 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
                 callback: function (response) {
                     if (response.message) {
                         frappe.model.set_value(cdt, cdn, 'item_code', response.message.item_code);
-                        frappe.model.set_value(cdt, cdn, 'rate', response.message.purchase_rate);
-                        frappe.model.set_value(cdt, cdn, 'amount', response.message.purchase_amount);
+                        frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
+                        frappe.model.set_value(cdt, cdn, 'amount', response.message.amount);
                         frappe.model.set_value(cdt, cdn, 'weightkg', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
