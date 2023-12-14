@@ -39,10 +39,12 @@
   "company",
   "status",
   "weight_total",
-  "purchase_rate",
-  "purchase_amount",
-  "weight_converted",
-  "weight_balance"
+  "rate",
+  "amount",
+  "converted",
+  "weight_balance",
+  "ref_type",
+  "ref_no"
  ],
  "fields": [
   {
@@ -175,11 +177,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "purchase_rate",
-   "fieldtype": "Currency",
-   "label": "Purchase Rate"
-  },
-  {
    "fieldname": "column_break3",
    "fieldtype": "Column Break",
    "width": "50%"
@@ -272,11 +269,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "weight_converted",
-   "fieldtype": "Data",
-   "label": "Weight Converted"
-  },
-  {
    "fieldname": "weight_balance",
    "fieldtype": "Data",
    "label": "Weight Balance"
@@ -287,14 +279,34 @@
    "label": "Weight Total"
   },
   {
-   "fieldname": "purchase_amount",
+   "fieldname": "rate",
    "fieldtype": "Currency",
-   "label": "Purchase Amount"
+   "label": "Rate"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "converted",
+   "fieldtype": "Data",
+   "label": "Converted"
+  },
+  {
+   "fieldname": "ref_type",
+   "fieldtype": "Data",
+   "label": "Ref Type"
+  },
+  {
+   "fieldname": "ref_no",
+   "fieldtype": "Data",
+   "label": "Ref No"
   }
  ],
  "icon": "fa fa-barcode",
  "links": [],
- "modified": "2023-12-13 18:07:44.415758",
+ "modified": "2023-12-14 18:20:29.780076",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "SR NO",

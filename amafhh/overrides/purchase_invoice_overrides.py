@@ -12,8 +12,10 @@ class PurchaseInvoiceOverrides(PurchaseInvoice):
             sr_no_doc.item_code = item.item_code
             sr_no_doc.weight_total = item.qty
             sr_no_doc.weight_balance = item.qty
-            sr_no_doc.purchase_rate = item.rate
-            sr_no_doc.purchase_amount= item.amount
+            sr_no_doc.rate = item.rate
+            sr_no_doc.amount= item.amount
+            sr_no_doc.ref_type= 'Purchase Invoice'
+            sr_no_doc.ref_no = self.name
             sr_no_doc.save()
             frappe.db.commit()
 
