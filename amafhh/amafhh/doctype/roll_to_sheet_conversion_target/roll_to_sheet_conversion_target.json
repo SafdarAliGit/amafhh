@@ -13,7 +13,7 @@
   "gsm",
   "weightkg",
   "sheets",
-  "packets",
+  "ream_packets",
   "rate",
   "amount"
  ],
@@ -62,12 +62,6 @@
    "label": "Sheets"
   },
   {
-   "fieldname": "packets",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Packets"
-  },
-  {
    "fieldname": "rate",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -78,12 +72,18 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Amount"
+  },
+  {
+   "fieldname": "ream_packets",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Ream/Packets"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-14 16:38:49.808931",
+ "modified": "2023-12-15 20:31:26.603322",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion Target",

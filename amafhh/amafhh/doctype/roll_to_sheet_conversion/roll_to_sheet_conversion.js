@@ -39,6 +39,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Source', {
     weightkg: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
+
         function calculate_net_total(frm) {
             var source_weight = 0;
             $.each(frm.doc.roll_to_sheet_conversion_source || [], function (i, d) {
@@ -49,12 +50,42 @@ frappe.ui.form.on('Roll To Sheet Conversion Source', {
 
         calculate_net_total(frm);
     },
-       rate: function (frm, cdt, cdn) {
-         var row = locals[cdt][cdn];
+    rate: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
     }
 
 });
+
+function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
+    var weightFactor, singleUnitWeight, totalUnitWeight;
+
+    if (conversionType == 'REAM') {
+        weightFactor = 3100;
+    } else if (conversionType == 'PKT') {
+        weightFactor = 15500;
+    } else {
+        // Adjust this part based on your requirements
+        frappe.model.set_value(cdt, cdn, 'sheets', 0); // Set to a default value or handle differently
+        frappe.msgprint("Please select Conversion Type");
+        return;
+    }
+
+    var weightkg = (row.width * row.gsm * row.length) / weightFactor;
+
+    if (conversionType == 'REAM') {
+        weightkg *= row.ream_packets;
+        singleUnitWeight = weightkg / 500 || 0;
+        totalUnitWeight = singleUnitWeight * row.sheets || 0;
+    } else if (conversionType == 'PKT') {
+        weightkg *= row.ream_packets;
+        singleUnitWeight = weightkg / 100 || 0;
+        totalUnitWeight = singleUnitWeight * row.sheets || 0;
+    }
+
+    frappe.model.set_value(cdt, cdn, 'weightkg', weightkg + totalUnitWeight);
+}
+
 frappe.ui.form.on('Roll To Sheet Conversion Target', {
 
     // sr_no: function (frm, cdt, cdn) {
@@ -84,6 +115,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Target', {
     weightkg: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
+
         function calculate_net_total(frm) {
             var target_weight = 0;
             $.each(frm.doc.roll_to_sheet_conversion_target || [], function (i, d) {
@@ -101,8 +133,30 @@ frappe.ui.form.on('Roll To Sheet Conversion Target', {
         }
     },
     rate: function (frm, cdt, cdn) {
-         var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
+    },
+
+    sheets: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        var conversionType = frm.doc.conversion_type;
+        calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+    },
+    ream_packets: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        var conversionType = frm.doc.conversion_type;
+        calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+    },
+    width: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        var conversionType = frm.doc.conversion_type;
+        calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+    },
+
+    length: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        var conversionType = frm.doc.conversion_type;
+        calculateWeightAndSetValues(row, conversionType, cdt, cdn);
     }
 
 });
