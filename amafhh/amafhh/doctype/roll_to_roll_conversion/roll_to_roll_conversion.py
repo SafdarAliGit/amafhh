@@ -20,11 +20,11 @@ class RollToRollConversion(Document):
 			sr_no_doc.amount = item.amount
 			sr_no_doc.ref_type = 'Roll To Roll Conversion'
 			sr_no_doc.ref_no = self.name
-		try:
-			sr_no_doc.save()
-			frappe.db.commit()
-		except Exception as e:
-			frappe.throw(_("Error saving SR NO: {0}".format(str(e))))
+			try:
+				sr_no_doc.save()
+				frappe.db.commit()
+			except Exception as e:
+				frappe.throw(_("Error saving SR NO: {0}".format(str(e))))
 		# STOCK ENTRY SAVING
 
 		doc = frappe.new_doc("Stock Entry")
