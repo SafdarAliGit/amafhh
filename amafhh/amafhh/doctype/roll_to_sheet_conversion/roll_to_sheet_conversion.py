@@ -10,6 +10,19 @@ from frappe import _, throw
 class RollToSheetConversion(Document):
     def on_submit(self):
         super(RollToSheetConversion, self).save()
+        # CREATING BATCH NO
+        for item in self.roll_to_sheet_conversion_target:
+            batch = frappe.new_doc("Batch")
+            batch.item = item.item_code
+            batch.batch_id = item.batch_no
+            batch.batch_qty = 10
+            try:
+                batch.save()
+                frappe.db.commit()
+            except Exception as e:
+                    frappe.throw(_("Error saving BATCH NO: {0}".format(str(e))))
+
+        # STOCK ENTRY SAVING
         doc = frappe.new_doc("Stock Entry")
         doc.stock_entry_type = "Repack"
         doc.purpose = "Repack"
@@ -23,7 +36,7 @@ class RollToSheetConversion(Document):
             "qty": self.roll_to_sheet_conversion_source[0].weightkg,
             "set_basic_rate_manually": 1,
             "basic_rate": self.roll_to_sheet_conversion_source[0].rate,
-            "amount": self.roll_to_sheet_conversion_source[0].amount
+            "amount": self.roll_to_sheet_conversion_source[0].amount,
         })
 
         # Append target items using a loop
@@ -34,7 +47,8 @@ class RollToSheetConversion(Document):
                 "qty": item.weightkg,
                 "set_basic_rate_manually": 1,
                 "basic_rate": item.rate,
-                "amount": item.amount
+                "amount": item.amount,
+                "batch_no": item.batch_no
             })
         try:
             doc.submit()
