@@ -30,6 +30,7 @@ class RollToSheetConversion(Document):
             doc = frappe.new_doc("Stock Entry")
             doc.stock_entry_type = "Repack"
             doc.purpose = "Repack"
+            doc.sr_no = item.sr_no
             doc.posting_date = nowdate()
             source_warehouse = self.warehouse
             target_warehouse = None
