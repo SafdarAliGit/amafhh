@@ -46,7 +46,8 @@ class RollToSheetConversion(Document):
                 "item_code": item.item_code_source,
                 "qty": item.weight_target,
                 "basic_rate": item.rate,
-                "amount": item.amount
+                "amount": item.amount,
+                "sr_no": item.sr_no
             })
             doc.append("items", {
                 "s_warehouse": "",
@@ -54,7 +55,8 @@ class RollToSheetConversion(Document):
                 "item_code": item.item_code_target,
                 "qty": item.weight_target,
                 "basic_rate": item.rate,
-                "amount": item.amount
+                "amount": item.amount,
+                "sr_no": item.sr_no
             })
             try:
                 # doc.ignore_validate = True
