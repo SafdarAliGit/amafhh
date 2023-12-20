@@ -7,55 +7,7 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
     // }
 });
 
-frappe.ui.form.on('Roll To Sheet Conversion Source', {
 
-    sr_no: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        if (row.sr_no) {
-            frappe.call({
-                method: 'amafhh.amafhh.doctype.utils.get_sr_no.get_sr_no',
-
-                args: {
-                    sr_no: row.sr_no
-                },
-                callback: function (response) {
-                    if (response.message) {
-                        frappe.model.set_value(cdt, cdn, 'item_code', response.message.item_code);
-                        frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
-                        frappe.model.set_value(cdt, cdn, 'amount', response.message.amount);
-                        frappe.model.set_value(cdt, cdn, 'weightkg', response.message.weight_balance);
-                        frappe.model.set_value(cdt, cdn, 'width', response.message.width);
-                        frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
-
-                        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
-                    } else {
-                        frappe.msgprint(__('Record not found for SR No: {0}', [row.sr_no]));
-                        frappe.model.set_value(cdt, cdn, 'item_code', '');
-                    }
-                }
-            });
-        }
-    },
-    weightkg: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
-
-        function calculate_net_total(frm) {
-            var source_weight = 0;
-            $.each(frm.doc.roll_to_sheet_conversion_source || [], function (i, d) {
-                source_weight += flt(d.weightkg);
-            });
-            frm.set_value("source_weight", source_weight)
-        }
-
-        calculate_net_total(frm);
-    },
-    rate: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
-    }
-
-});
 
 function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
     var single_ream_pkt_weight, total_ream_pkt_weight=0, single_sheet_weight, total_sheet_weight=0, weightFactor;
@@ -100,7 +52,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                     if (response.message) {
                         frappe.model.set_value(cdt, cdn, 'item_code_source', response.message.item_code);
                         frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
-                        frappe.model.set_value(cdt, cdn, 'amount', response.message.amount);
+                        frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
                         frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
@@ -114,7 +66,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
     },
     weight_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
+        frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
 
         // function calculate_net_total(frm) {
         //     var weight_target = 0;
@@ -134,7 +86,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
     },
     rate: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
+        frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
     },
 
     sheet_target: function (frm, cdt, cdn) {
