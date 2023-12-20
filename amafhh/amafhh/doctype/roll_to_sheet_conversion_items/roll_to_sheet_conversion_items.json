@@ -1,0 +1,126 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-19 12:12:28.551857",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sr_no",
+  "item_code_source",
+  "width_source",
+  "gsm_source",
+  "weight_source",
+  "item_code_target",
+  "width_target",
+  "length_target",
+  "ream_pkt_target",
+  "sheet_target",
+  "stock_type_source",
+  "weight_target",
+  "rate",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "sr_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SR NO"
+  },
+  {
+   "fieldname": "item_code_source",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "SRC Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "width_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SRC Width"
+  },
+  {
+   "fieldname": "gsm_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SRC GSM"
+  },
+  {
+   "fieldname": "weight_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SRC Weight"
+  },
+  {
+   "fieldname": "item_code_target",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "TRG Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "width_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TRG Width"
+  },
+  {
+   "fieldname": "length_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Length"
+  },
+  {
+   "fieldname": "ream_pkt_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "RM/PKT"
+  },
+  {
+   "fieldname": "sheet_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Sheet"
+  },
+  {
+   "default": "Finished",
+   "fieldname": "stock_type_source",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Stock",
+   "options": "Finished\nSemi-Finished\nDamaged"
+  },
+  {
+   "fieldname": "weight_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TRG Weight"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-19 13:09:50.375487",
+ "modified_by": "Administrator",
+ "module": "Amafhh",
+ "name": "Roll To Sheet Conversion Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

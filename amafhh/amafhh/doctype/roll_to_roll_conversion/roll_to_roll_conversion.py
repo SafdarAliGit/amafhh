@@ -26,7 +26,6 @@ class RollToRollConversion(Document):
 			except Exception as e:
 				frappe.throw(_("Error saving SR NO: {0}".format(str(e))))
 		# STOCK ENTRY SAVING
-
 		doc = frappe.new_doc("Stock Entry")
 		doc.stock_entry_type = "Repack"
 		doc.purpose = "Repack"

@@ -14,11 +14,10 @@
   "column_break_gfau7",
   "warehouse",
   "section_break_zuehv",
-  "roll_to_sheet_conversion_source",
   "source_weight",
   "section_break_j29ig",
-  "roll_to_sheet_conversion_target",
   "target_weight",
+  "roll_to_sheet_conversion_items",
   "amended_from"
  ],
  "fields": [
@@ -40,23 +39,11 @@
    "options": "Warehouse"
   },
   {
-   "fieldname": "roll_to_sheet_conversion_source",
-   "fieldtype": "Table",
-   "label": "Roll To Sheet Conversion Source",
-   "options": "Roll To Sheet Conversion Source"
-  },
-  {
    "default": "None",
    "fieldname": "source_weight",
    "fieldtype": "Data",
    "label": "Source Weight",
    "read_only": 1
-  },
-  {
-   "fieldname": "roll_to_sheet_conversion_target",
-   "fieldtype": "Table",
-   "label": "Roll To Sheet Conversion Target",
-   "options": "Roll To Sheet Conversion Target"
   },
   {
    "default": "None",
@@ -89,12 +76,18 @@
   {
    "fieldname": "section_break_j29ig",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "roll_to_sheet_conversion_items",
+   "fieldtype": "Table",
+   "label": "Roll To Sheet Conversion Items",
+   "options": "Roll To Sheet Conversion Items"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-11 22:34:35.211038",
+ "modified": "2023-12-19 19:51:07.626560",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion",

@@ -11,47 +11,53 @@ class RollToSheetConversion(Document):
     def on_submit(self):
         super(RollToSheetConversion, self).save()
         # CREATING BATCH NO
-        for item in self.roll_to_sheet_conversion_target:
-            batch = frappe.new_doc("Batch")
-            batch.item = item.item_code
-            batch.batch_id = item.batch_no
-            batch.batch_qty = 10
-            try:
-                batch.save()
-                frappe.db.commit()
-            except Exception as e:
-                    frappe.throw(_("Error saving BATCH NO: {0}".format(str(e))))
+        # for item in self.roll_to_sheet_conversion_target:
+        #     batch = frappe.new_doc("Batch")
+        #     batch.item = item.item_code
+        #     batch.batch_id = item.batch_no
+        #     batch.batch_qty = 10
+        #     try:
+        #         batch.save()
+        #         frappe.db.commit()
+        #     except Exception as e:
+        #             frappe.throw(_("Error saving BATCH NO: {0}".format(str(e))))
 
         # STOCK ENTRY SAVING
-        doc = frappe.new_doc("Stock Entry")
-        doc.stock_entry_type = "Repack"
-        doc.purpose = "Repack"
-        doc.posting_date = nowdate()
-        source_warehouse = self.warehouse
 
-        # Append source item
-        doc.append("items", {
-            "s_warehouse": source_warehouse,
-            "item_code": self.roll_to_sheet_conversion_source[0].item_code,
-            "qty": self.roll_to_sheet_conversion_source[0].weightkg,
-            "set_basic_rate_manually": 1,
-            "basic_rate": self.roll_to_sheet_conversion_source[0].rate,
-            "amount": self.roll_to_sheet_conversion_source[0].amount,
-        })
 
         # Append target items using a loop
-        for item in self.roll_to_sheet_conversion_target:
+        for item in self.roll_to_sheet_conversion_items:
+            doc = frappe.new_doc("Stock Entry")
+            doc.stock_entry_type = "Repack"
+            doc.purpose = "Repack"
+            doc.posting_date = nowdate()
+            source_warehouse = self.warehouse
+            target_warehouse = None
+            if item.stock_type_source == "Finished":
+                target_warehouse = 'Finished Goods - A'
+            elif item.stock_type_source == "Semi-Finished":
+                target_warehouse = 'Goods In Transit - A'
+            elif item.stock_type_source == "Damaged":
+                target_warehouse = 'Damaged - A'
+
             doc.append("items", {
-                "t_warehouse": source_warehouse,
-                "item_code": item.item_code,
-                "qty": item.weightkg,
-                "set_basic_rate_manually": 1,
+                "s_warehouse": source_warehouse,
+                "t_warehouse": "",
+                "item_code": item.item_code_source,
+                "qty": item.weight_target,
                 "basic_rate": item.rate,
-                "amount": item.amount,
-                "batch_no": item.batch_no
+                "amount": round(float(item.amount),2)
             })
-        try:
-            doc.submit()
-            frappe.db.commit()
-        except Exception as e:
-            throw(_("Error submitting Stock Entry: {0}".format(str(e))))
+            doc.append("items", {
+                "s_warehouse": "",
+                "t_warehouse": target_warehouse,
+                "item_code": item.item_code_target,
+                "qty": item.weight_target,
+                "basic_rate": item.rate,
+                "amount": round(float(item.amount),2)
+            })
+            try:
+                doc.submit()
+                frappe.db.commit()
+            except Exception as e:
+                throw(_("Error submitting Stock Entry: {0}".format(str(e))))

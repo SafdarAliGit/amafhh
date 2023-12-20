@@ -58,102 +58,102 @@ frappe.ui.form.on('Roll To Sheet Conversion Source', {
 });
 
 function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
-    var weightFactor, singleUnitWeight, totalUnitWeight;
+    var single_ream_pkt_weight, total_ream_pkt_weight=0, single_sheet_weight, total_sheet_weight=0, weightFactor;
 
     if (conversionType == 'REAM') {
         weightFactor = 3100;
+        var single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
+        var single_sheet_weight = single_ream_pkt_weight / 500;
     } else if (conversionType == 'PKT') {
         weightFactor = 15500;
+        var single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
+        var single_sheet_weight = single_ream_pkt_weight / 100;
     } else {
         // Adjust this part based on your requirements
-        frappe.model.set_value(cdt, cdn, 'sheets', 0); // Set to a default value or handle differently
+        frappe.model.set_value(cdt, cdn, 'sheet_target', 0); // Set to a default value or handle differently
         frappe.msgprint("Please select Conversion Type");
         return;
     }
 
-    var weightkg = (row.width * row.gsm * row.length) / weightFactor;
-
-    if (conversionType == 'REAM') {
-        weightkg *= row.ream_packets;
-        singleUnitWeight = weightkg / 500 || 0;
-        totalUnitWeight = singleUnitWeight * row.sheets || 0;
-    } else if (conversionType == 'PKT') {
-        weightkg *= row.ream_packets;
-        singleUnitWeight = weightkg / 100 || 0;
-        totalUnitWeight = singleUnitWeight * row.sheets || 0;
+    if (row.ream_pkt_target !== null && row.ream_pkt_target !== undefined && row.ream_pkt_target !== "") {
+        total_ream_pkt_weight = single_ream_pkt_weight * row.ream_pkt_target;
     }
-
-    frappe.model.set_value(cdt, cdn, 'weightkg', weightkg + totalUnitWeight);
+    if (row.sheet_target !== null && row.sheet_target !== undefined && row.sheet_target !== "") {
+        total_sheet_weight = single_sheet_weight * row.sheet_target;
+    }
+    frappe.model.set_value(cdt, cdn, 'weight_target', total_ream_pkt_weight + total_sheet_weight );
 }
 
-frappe.ui.form.on('Roll To Sheet Conversion Target', {
 
-    // sr_no: function (frm, cdt, cdn) {
-    //     var row = locals[cdt][cdn];
-    //     if (row.sr_no) {
-    //         frappe.call({
-    //             method: 'amafhh.amafhh.doctype.utils.get_sr_no.get_sr_no',
-    //
-    //             args: {
-    //                 sr_no: row.sr_no
-    //             },
-    //             callback: function (response) {
-    //                 if (response.message) {
-    //                     frappe.model.set_value(cdt, cdn, 'item_code', response.message.item_code);
-    //                 } else {
-    //                     frappe.msgprint(__('Record not found for SR No: {0}', [row.sr_no]));
-    //                     frappe.model.set_value(cdt, cdn, 'item_code', '');
-    //                 }
-    //             }
-    //         });
-    //     }
-    // },
-    roll_to_sheet_conversion_target_add: function (frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, 'gsm', frm.fields_dict['roll_to_sheet_conversion_source'].grid.data[0].gsm);
-        frappe.model.set_value(cdt, cdn, 'rate', frm.fields_dict['roll_to_sheet_conversion_source'].grid.data[0].rate);
-    },
-    weightkg: function (frm, cdt, cdn) {
+frappe.ui.form.on('Roll To Sheet Conversion Items', {
+
+    sr_no: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
+        if (row.sr_no) {
+            frappe.call({
+                method: 'amafhh.amafhh.doctype.utils.get_sr_no.get_sr_no',
 
-        function calculate_net_total(frm) {
-            var target_weight = 0;
-            $.each(frm.doc.roll_to_sheet_conversion_target || [], function (i, d) {
-                target_weight += flt(d.weightkg);
+                args: {
+                    sr_no: row.sr_no
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        frappe.model.set_value(cdt, cdn, 'item_code_source', response.message.item_code);
+                        frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
+                        frappe.model.set_value(cdt, cdn, 'amount', response.message.amount);
+                        frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
+                        frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
+                        frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
+                    } else {
+                        frappe.msgprint(__('Record not found for SR No: {0}', [row.sr_no]));
+                        frappe.model.set_value(cdt, cdn, 'item_code', '');
+                    }
+                }
             });
-            frm.set_value("target_weight", target_weight)
         }
+    },
+    weight_target: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
 
-        calculate_net_total(frm);
-        var source_weight = frm.doc.source_weight || 0;
-        var target_weight = frm.doc.target_weight || 0;
-        if (target_weight > source_weight) {
-            frappe.model.set_value(cdt, cdn, 'weightkg', null);
-            frappe.throw(__("Target Weight cannot be greater than Source Weight"));
-        }
+        // function calculate_net_total(frm) {
+        //     var weight_target = 0;
+        //     $.each(frm.doc.roll_to_sheet_conversion_items || [], function (i, d) {
+        //         weight_target += flt(d.weight_target);
+        //     });
+        //     frm.set_value("weight_target", weight_target)
+        // }
+        //
+        // calculate_net_total(frm);
+        // var source_weight = frm.doc.source_weight || 0;
+        // var target_weight = frm.doc.target_weight || 0;
+        // if (target_weight > source_weight) {
+        //     frappe.model.set_value(cdt, cdn, 'weightkg', null);
+        //     frappe.throw(__("Target Weight cannot be greater than Source Weight"));
+        // }
     },
     rate: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
+        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
     },
 
-    sheets: function (frm, cdt, cdn) {
+    sheet_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
     },
-    ream_packets: function (frm, cdt, cdn) {
+    ream_pkt_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
     },
-    width: function (frm, cdt, cdn) {
+    width_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
     },
 
-    length: function (frm, cdt, cdn) {
+    length_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
