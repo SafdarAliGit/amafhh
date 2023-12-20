@@ -57,6 +57,7 @@ class RollToSheetConversion(Document):
                 "amount": round(float(item.amount),2)
             })
             try:
+                doc.ignore_validate = True
                 doc.submit()
                 frappe.db.commit()
             except Exception as e:
