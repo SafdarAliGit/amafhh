@@ -39,7 +39,7 @@ class RollToRollConversion(Document):
 			"s_warehouse": source_warehouse,
 			"t_warehouse":"",
 			"item_code": self.roll_to_roll_conversion_source[0].item_code,
-			"qty": self.roll_to_roll_conversion_source[0].weightkg,
+			"qty": self.target_weight,
 			"set_basic_rate_manually": 1,
 			"basic_rate": self.roll_to_roll_conversion_source[0].rate,
 			"amount": self.roll_to_roll_conversion_source[0].amount,
