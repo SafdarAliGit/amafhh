@@ -86,8 +86,13 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2023-12-19 19:51:07.626560",
+ "links": [
+  {
+   "link_doctype": "Stock Entry",
+   "link_fieldname": "roll_to_sheet_conversion"
+  }
+ ],
+ "modified": "2023-12-21 10:25:22.224379",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion",

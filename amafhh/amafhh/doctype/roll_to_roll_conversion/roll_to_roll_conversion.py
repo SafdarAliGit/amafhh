@@ -30,6 +30,7 @@ class RollToRollConversion(Document):
 		doc.stock_entry_type = "Repack"
 		doc.purpose = "Repack"
 		doc.posting_date = nowdate()
+		doc.roll_to_roll_conversion = self.name
 		source_warehouse = self.warehouse
 
 		# Append source item

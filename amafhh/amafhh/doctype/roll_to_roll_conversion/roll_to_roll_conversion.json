@@ -81,8 +81,17 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2023-12-11 22:32:50.639525",
+ "links": [
+  {
+   "link_doctype": "SR NO",
+   "link_fieldname": "ref_no"
+  },
+  {
+   "link_doctype": "Stock Entry",
+   "link_fieldname": "roll_to_roll_conversion"
+  }
+ ],
+ "modified": "2023-12-21 10:47:40.237438",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion",

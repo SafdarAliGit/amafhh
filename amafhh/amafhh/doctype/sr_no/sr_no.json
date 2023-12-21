@@ -222,8 +222,13 @@
   }
  ],
  "icon": "fa fa-barcode",
- "links": [],
- "modified": "2023-12-17 13:45:23.055878",
+ "links": [
+  {
+   "link_doctype": "Stock Entry",
+   "link_fieldname": "sr_no"
+  }
+ ],
+ "modified": "2023-12-21 10:49:21.604576",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "SR NO",

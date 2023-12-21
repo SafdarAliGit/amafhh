@@ -32,6 +32,7 @@ class RollToSheetConversion(Document):
             doc.purpose = "Repack"
             doc.sr_no = item.sr_no
             doc.posting_date = nowdate()
+            doc.roll_to_sheet_conversion = self.name
             source_warehouse = self.warehouse
             target_warehouse = None
             if item.stock_type_source == "Finished":
@@ -62,6 +63,8 @@ class RollToSheetConversion(Document):
             try:
                 # doc.ignore_validate = True
                 doc.submit()
+                self.stock_entry = doc.name
+                self.save()
                 frappe.db.commit()
             except Exception as e:
                 throw(_("Error submitting Stock Entry: {0}".format(str(e))))
