@@ -8,9 +8,8 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
 });
 
 
-
 function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
-    var single_ream_pkt_weight, total_ream_pkt_weight=0, single_sheet_weight, total_sheet_weight=0, weightFactor;
+    var single_ream_pkt_weight, total_ream_pkt_weight = 0, single_sheet_weight, total_sheet_weight = 0, weightFactor;
 
     if (conversionType == 'REAM') {
         weightFactor = 3100;
@@ -33,7 +32,7 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
     if (row.sheet_target !== null && row.sheet_target !== undefined && row.sheet_target !== "") {
         total_sheet_weight = single_sheet_weight * row.sheet_target;
     }
-    frappe.model.set_value(cdt, cdn, 'weight_target', total_ream_pkt_weight + total_sheet_weight );
+    frappe.model.set_value(cdt, cdn, 'weight_target', total_ream_pkt_weight + total_sheet_weight);
 }
 
 
@@ -109,6 +108,17 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+    },
+    width_target: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if (parseInt(row.width_target)> parseInt(row.width_source)) {
+            frappe.model.set_value(cdt, cdn, 'width_target', null);
+            frappe.throw(__("Target Width cannot be greater than Source Width"));
+        }
+        if (parseInt(row.width_target) < 1) {
+            frappe.model.set_value(cdt, cdn, 'width_target', null);
+            frappe.throw(__("Target Width cannot be less than 1"));
+        }
     }
 
 });

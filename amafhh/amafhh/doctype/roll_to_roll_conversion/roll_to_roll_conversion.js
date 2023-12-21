@@ -53,6 +53,7 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
     weightkg: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
+
         function calculate_net_total(frm) {
             var source_weight = 0;
             $.each(frm.doc.roll_to_roll_conversion_source || [], function (i, d) {
@@ -63,8 +64,8 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
 
         calculate_net_total(frm);
     },
-       rate: function (frm, cdt, cdn) {
-         var row = locals[cdt][cdn];
+    rate: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
     }
 
@@ -99,6 +100,7 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
     weightkg: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
+
         function calculate_net_total(frm) {
             var target_weight = 0;
             $.each(frm.doc.roll_to_roll_conversion_target || [], function (i, d) {
@@ -115,9 +117,20 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
             frappe.throw(__("Target Weight cannot be greater than Source Weight"));
         }
     },
-       rate: function (frm, cdt, cdn) {
-         var row = locals[cdt][cdn];
+    rate: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weightkg);
+    },
+    width: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if (parseInt(row.width) > frm.doc.roll_to_roll_conversion_source[0].width) {
+            frappe.model.set_value(cdt, cdn, 'width', null);
+            frappe.throw(__("Target Width cannot be greater than Source Width"));
+        }
+        if(parseInt(row.width) < 1) {
+            frappe.model.set_value(cdt, cdn, 'width', null);
+            frappe.throw(__("Target Width cannot be less than 1"));
+        }
     }
 
 });
