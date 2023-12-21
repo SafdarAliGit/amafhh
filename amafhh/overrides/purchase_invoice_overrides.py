@@ -2,6 +2,7 @@ import frappe
 from erpnext.accounts.doctype.purchase_invoice.purchase_invoice import PurchaseInvoice
 
 
+
 class PurchaseInvoiceOverrides(PurchaseInvoice):
 
     def on_submit(self):
