@@ -19,5 +19,6 @@ class PurchaseInvoiceOverrides(PurchaseInvoice):
             sr_no_doc.amount = item.amount
             sr_no_doc.ref_type = 'Purchase Invoice'
             sr_no_doc.ref_no = self.name
+            sr_no_doc.supplier = self.supplier
             sr_no_doc.save()
             frappe.db.commit()
