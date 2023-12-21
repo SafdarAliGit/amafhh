@@ -29,6 +29,7 @@ class RollToRollConversion(Document):
 		doc = frappe.new_doc("Stock Entry")
 		doc.stock_entry_type = "Repack"
 		doc.purpose = "Repack"
+		doc.sr_no = self.roll_to_roll_conversion_source[0].sr_no
 		doc.posting_date = nowdate()
 		doc.roll_to_roll_conversion = self.name
 		source_warehouse = self.warehouse
@@ -41,7 +42,8 @@ class RollToRollConversion(Document):
 			"qty": self.roll_to_roll_conversion_source[0].weightkg,
 			"set_basic_rate_manually": 1,
 			"basic_rate": self.roll_to_roll_conversion_source[0].rate,
-			"amount": self.roll_to_roll_conversion_source[0].amount
+			"amount": self.roll_to_roll_conversion_source[0].amount,
+			"sr_no": self.roll_to_roll_conversion_source[0].sr_no
 		})
 
 		# Append target items using a loop
@@ -53,7 +55,8 @@ class RollToRollConversion(Document):
 				"qty": item.weightkg,
 				"set_basic_rate_manually": 1,
 				"basic_rate": item.rate,
-				"amount": item.amount
+				"amount": item.amount,
+				"sr_no": item.sr_no
 			})
 		try:
 			doc.submit()
