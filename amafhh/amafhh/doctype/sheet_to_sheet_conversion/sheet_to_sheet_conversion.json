@@ -1,0 +1,118 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "STSC-.#####",
+ "creation": "2023-12-21 22:51:05.914722",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "conversion_type",
+  "column_break_kupli",
+  "posting_date",
+  "column_break_i2ide",
+  "source_warehouse",
+  "section_break_oplev",
+  "amended_from",
+  "sheet_to_sheet_conversion_items",
+  "section_break_urbfc",
+  "source_weight",
+  "column_break_bceuo",
+  "target_weight"
+ ],
+ "fields": [
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "column_break_i2ide",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse ",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "section_break_oplev",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Sheet To Sheet Conversion",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "sheet_to_sheet_conversion_items",
+   "fieldtype": "Table",
+   "label": "Sheet To Sheet Conversion Items",
+   "options": "Sheet To Sheet Conversion Items"
+  },
+  {
+   "fieldname": "conversion_type",
+   "fieldtype": "Select",
+   "label": "Conversion Type",
+   "options": "\nREAM\nPKT"
+  },
+  {
+   "fieldname": "column_break_kupli",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_urbfc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "source_weight",
+   "fieldtype": "Data",
+   "label": "Source Weight",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_bceuo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "target_weight",
+   "fieldtype": "Data",
+   "label": "Target Weight",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-12-22 17:35:16.581754",
+ "modified_by": "Administrator",
+ "module": "Amafhh",
+ "name": "Sheet To Sheet Conversion",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,134 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-21 22:58:56.240188",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code_source",
+  "width_source",
+  "length_source",
+  "gsm_source",
+  "ream_pkt_source",
+  "sheet_source",
+  "weight_source",
+  "column_break_pyaqn",
+  "item_code_target",
+  "width_target",
+  "length_target",
+  "ream_pkt_target",
+  "sheet_target",
+  "weight_target",
+  "rate",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code_source",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "SRC Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "width_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SRC Width"
+  },
+  {
+   "fieldname": "length_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SRC Len"
+  },
+  {
+   "fieldname": "gsm_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SRC GSM"
+  },
+  {
+   "fieldname": "weight_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SRC Wt"
+  },
+  {
+   "fieldname": "item_code_target",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "TRG Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "width_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TRG Width"
+  },
+  {
+   "fieldname": "length_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TRG Len"
+  },
+  {
+   "fieldname": "ream_pkt_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TRG/RP"
+  },
+  {
+   "fieldname": "sheet_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TRG Sheet"
+  },
+  {
+   "fieldname": "weight_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TRG Wt"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount"
+  },
+  {
+   "fieldname": "ream_pkt_source",
+   "fieldtype": "Data",
+   "label": "SRC/RP"
+  },
+  {
+   "fieldname": "sheet_source",
+   "fieldtype": "Data",
+   "label": "SRC Sheet"
+  },
+  {
+   "fieldname": "column_break_pyaqn",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-22 17:33:26.104876",
+ "modified_by": "Administrator",
+ "module": "Amafhh",
+ "name": "Sheet To Sheet Conversion Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -98,11 +98,6 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
     },
-    width_target: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        var conversionType = frm.doc.conversion_type;
-        calculateWeightAndSetValues(row, conversionType, cdt, cdn);
-    },
 
     length_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
@@ -111,13 +106,19 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
     },
     width_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (parseInt(row.width_target)> parseInt(row.width_source)) {
+        if (parseInt(row.width_target) > parseInt(row.width_source)) {
             frappe.model.set_value(cdt, cdn, 'width_target', null);
             frappe.throw(__("Target Width cannot be greater than Source Width"));
+        } else {
+            var conversionType = frm.doc.conversion_type;
+            calculateWeightAndSetValues(row, conversionType, cdt, cdn);
         }
         if (parseInt(row.width_target) < 1) {
             frappe.model.set_value(cdt, cdn, 'width_target', null);
             frappe.throw(__("Target Width cannot be less than 1"));
+        } else {
+            var conversionType = frm.doc.conversion_type;
+            calculateWeightAndSetValues(row, conversionType, cdt, cdn);
         }
     }
 
