@@ -35,11 +35,11 @@ class RollToSheetConversion(Document):
             doc.roll_to_sheet_conversion = self.name
             source_warehouse = self.warehouse
             target_warehouse = None
-            if item.stock_type_source == "Finished":
+            if item.stock_type_target == "Finished":
                 target_warehouse = 'Finished Goods - A'
-            elif item.stock_type_source == "Semi-Finished":
+            elif item.stock_type_target == "Semi-Finished":
                 target_warehouse = 'Goods In Transit - A'
-            elif item.stock_type_source == "Damaged":
+            elif item.stock_type_target == "Damaged":
                 target_warehouse = 'Damaged - A'
 
             doc.append("items", {

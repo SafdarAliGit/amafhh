@@ -2,7 +2,6 @@ import frappe
 from erpnext.accounts.doctype.purchase_invoice.purchase_invoice import PurchaseInvoice
 
 
-
 class PurchaseInvoiceOverrides(PurchaseInvoice):
 
     def on_submit(self):
@@ -20,5 +19,22 @@ class PurchaseInvoiceOverrides(PurchaseInvoice):
             sr_no_doc.ref_type = 'Purchase Invoice'
             sr_no_doc.ref_no = self.name
             sr_no_doc.supplier = self.supplier
-            sr_no_doc.save()
-            frappe.db.commit()
+            try:
+                if item.sr_no:
+                    sr_no_doc.save()
+                    frappe.db.commit()
+            except Exception as e:
+                frappe.throw(frappe._("Error saving SR NO: {0}".format(str(e))))
+
+    def before_submit(self):
+        for item in self.items:
+            batch = frappe.get_doc('Batch', item.batch_no)
+            batch.rate = item.rate
+            batch.amount = item.amount
+            batch.ref_no = self.name
+            batch.ref_type = "Purchase Invoice"
+            try:
+                batch.save()
+                frappe.db.commit()
+            except Exception as e:
+                frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))

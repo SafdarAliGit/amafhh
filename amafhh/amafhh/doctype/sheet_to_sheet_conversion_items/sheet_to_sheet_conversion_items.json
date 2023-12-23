@@ -6,14 +6,18 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "batch_no_source",
   "item_code_source",
   "width_source",
   "length_source",
   "gsm_source",
   "ream_pkt_source",
   "sheet_source",
+  "stock_weight_source",
   "weight_source",
   "column_break_pyaqn",
+  "batch_no_target",
+  "stock_type_target",
   "item_code_target",
   "width_target",
   "length_target",
@@ -25,17 +29,21 @@
  ],
  "fields": [
   {
+   "default": "None",
    "fieldname": "item_code_source",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "SRC Item",
-   "options": "Item"
+   "options": "Item",
+   "read_only": 1
   },
   {
+   "default": "0",
    "fieldname": "width_source",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "SRC Width"
+   "label": "SRC Width",
+   "read_only": 1
   },
   {
    "fieldname": "length_source",
@@ -44,16 +52,20 @@
    "label": "SRC Len"
   },
   {
+   "default": "0",
    "fieldname": "gsm_source",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "SRC GSM"
+   "label": "SRC GSM",
+   "read_only": 1
   },
   {
+   "default": "0",
    "fieldname": "weight_source",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "SRC Wt"
+   "label": "SRC Wt",
+   "read_only": 1
   },
   {
    "fieldname": "item_code_target",
@@ -93,36 +105,69 @@
    "label": "TRG Wt"
   },
   {
+   "default": "0",
    "fieldname": "rate",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Rate"
+   "label": "Rate",
+   "read_only": 1
   },
   {
+   "default": "0",
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Amount"
+   "label": "Amount",
+   "read_only": 1
   },
   {
    "fieldname": "ream_pkt_source",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "SRC/RP"
   },
   {
    "fieldname": "sheet_source",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "SRC Sheet"
   },
   {
    "fieldname": "column_break_pyaqn",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "batch_no_source",
+   "fieldtype": "Link",
+   "label": "SRC BN",
+   "options": "Batch"
+  },
+  {
+   "fieldname": "batch_no_target",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TRG BN"
+  },
+  {
+   "default": "0",
+   "fieldname": "stock_weight_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SRC Stock",
+   "read_only": 1
+  },
+  {
+   "default": "Finished",
+   "fieldname": "stock_type_target",
+   "fieldtype": "Select",
+   "label": "Stock",
+   "options": "Finished\nSemi-Finished\nDamaged"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-22 17:33:26.104876",
+ "modified": "2023-12-23 17:55:06.679487",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion Items",

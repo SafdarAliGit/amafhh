@@ -16,7 +16,7 @@
   "length_target",
   "ream_pkt_target",
   "sheet_target",
-  "stock_type_source",
+  "stock_type_target",
   "weight_target",
   "rate",
   "amount"
@@ -85,14 +85,6 @@
    "label": "Sheet"
   },
   {
-   "default": "Finished",
-   "fieldname": "stock_type_source",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Stock",
-   "options": "Finished\nSemi-Finished\nDamaged"
-  },
-  {
    "fieldname": "weight_target",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -109,12 +101,20 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Amount"
+  },
+  {
+   "default": "Finished",
+   "fieldname": "stock_type_target",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Stock",
+   "options": "Finished\nSemi-Finished\nDamaged"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-19 13:09:50.375487",
+ "modified": "2023-12-23 17:52:48.240984",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion Items",
