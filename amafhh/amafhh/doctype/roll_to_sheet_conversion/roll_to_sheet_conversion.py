@@ -11,19 +11,20 @@ class RollToSheetConversion(Document):
     def on_submit(self):
         super(RollToSheetConversion, self).save()
         # CREATING BATCH NO
-        # for item in self.roll_to_sheet_conversion_target:
-        #     batch = frappe.new_doc("Batch")
-        #     batch.item = item.item_code
-        #     batch.batch_id = item.batch_no
-        #     batch.batch_qty = 10
-        #     try:
-        #         batch.save()
-        #         frappe.db.commit()
-        #     except Exception as e:
-        #             frappe.throw(_("Error saving BATCH NO: {0}".format(str(e))))
-
-        # STOCK ENTRY SAVING
-
+        for item in self.roll_to_sheet_conversion_items:
+            batch = frappe.new_doc("Batch")
+            batch.item = item.item_code_target
+            batch.batch_id = item.batch_no_target
+            batch.batch_qty = item.weight_target
+            batch.rate = item.rate
+            batch.amount = item.amount
+            batch.ref_no = self.name
+            batch.ref_type = "Roll To Sheet Conversion"
+            try:
+                batch.save()
+                frappe.db.commit()
+            except Exception as e:
+                frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))
 
         # Append target items using a loop
         for item in self.roll_to_sheet_conversion_items:

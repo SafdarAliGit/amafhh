@@ -21,7 +21,12 @@ frappe.ui.form.on('Sheet To Sheet Conversion', {
         });
     }
 });
+// CUSTOM ID
+var maxSubBatchManager = {
+    batch: {},
+};
 
+// CUSTOM OBJECT END
 
 function calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn) {
     var single_ream_pkt_weight, total_ream_pkt_weight = 0, single_sheet_weight, total_sheet_weight = 0, weightFactor;
@@ -103,12 +108,23 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                 },
                 callback: function (response) {
                     if (response.message) {
+
                         frappe.model.set_value(cdt, cdn, 'item_code_source', response.message.item_code);
                         frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
                         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
                         frappe.model.set_value(cdt, cdn, 'stock_weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
+
+
+                        if (response.message.batch_id in maxSubBatchManager.batch) {
+                            maxSubBatchManager.batch[response.message.batch_id] += 1;
+                        } else {
+                            maxSubBatchManager.batch[response.message.batch_id] = 1;
+                        }
+
+                        frappe.model.set_value(cdt, cdn, 'batch_no_target', response.message.batch_id + ' - ' + maxSubBatchManager.batch[response.message.batch_id]);
+
                     } else {
                         frappe.msgprint(__('Record not found for Batch No: {0}', [row.batch_no_source]));
                         frappe.model.set_value(cdt, cdn, 'item_code', '');
@@ -126,7 +142,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn);
-        calculate_source_target_weight_total( frm);
+        calculate_source_target_weight_total(frm);
     },
     ream_pkt_source: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
