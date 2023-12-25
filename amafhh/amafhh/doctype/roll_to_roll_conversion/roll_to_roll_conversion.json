@@ -8,6 +8,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "cut_option",
+  "column_break_y0xdh",
   "posting_date",
   "column_break_ahnmg",
   "warehouse",
@@ -21,6 +23,7 @@
  ],
  "fields": [
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date"
@@ -77,6 +80,17 @@
   {
    "fieldname": "section_break_htdgb",
    "fieldtype": "Section Break"
+  },
+  {
+   "default": "Full Width",
+   "fieldname": "cut_option",
+   "fieldtype": "Select",
+   "label": "Cut Opt",
+   "options": "Full Width\nManual"
+  },
+  {
+   "fieldname": "column_break_y0xdh",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -91,7 +105,7 @@
    "link_fieldname": "roll_to_roll_conversion"
   }
  ],
- "modified": "2023-12-21 10:47:40.237438",
+ "modified": "2023-12-25 11:36:31.175717",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion",

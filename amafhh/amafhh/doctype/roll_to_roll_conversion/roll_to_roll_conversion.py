@@ -14,8 +14,8 @@ class RollToRollConversion(Document):
 			sr_no_doc = frappe.new_doc("SR NO")
 			sr_no_doc.sr_no = item.sr_no
 			sr_no_doc.item_code = item.item_code
-			sr_no_doc.weight_total = item.weightkg
-			sr_no_doc.weight_balance = item.weightkg
+			sr_no_doc.weight_total = item.weight_target
+			sr_no_doc.weight_balance = item.weight_target
 			sr_no_doc.rate = item.rate
 			sr_no_doc.amount = item.amount
 			sr_no_doc.ref_type = 'Roll To Roll Conversion'
@@ -40,7 +40,6 @@ class RollToRollConversion(Document):
 			"t_warehouse":"",
 			"item_code": self.roll_to_roll_conversion_source[0].item_code,
 			"qty": self.target_weight,
-			"set_basic_rate_manually": 1,
 			"basic_rate": self.roll_to_roll_conversion_source[0].rate,
 			"amount": self.roll_to_roll_conversion_source[0].amount,
 			"sr_no": self.roll_to_roll_conversion_source[0].sr_no
@@ -52,8 +51,7 @@ class RollToRollConversion(Document):
 				"s_warehouse":"",
 				"t_warehouse": source_warehouse,
 				"item_code": item.item_code,
-				"qty": item.weightkg,
-				"set_basic_rate_manually": 1,
+				"qty": item.weight_target,
 				"basic_rate": item.rate,
 				"amount": item.amount,
 				"sr_no": item.sr_no
