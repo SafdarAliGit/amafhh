@@ -25,8 +25,7 @@ def get_batch_no(batch_no):
                 "rate": batch_doc.rate,
                 "amount": batch_doc.amount,
                 "weight_balance": float(batch_doc.batch_qty) + balance,
-                "batch_id": batch_doc.batch_id,
-                "max_sub_batch": batch_doc.max_sub_batch
+                "batch_id": batch_doc.batch_id
             }
         )
         item = frappe.get_doc("Item", batch_doc.item)
