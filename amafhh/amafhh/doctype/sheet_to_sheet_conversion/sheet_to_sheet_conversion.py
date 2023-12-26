@@ -42,7 +42,7 @@ class SheetToSheetConversion(Document):
         frappe.db.commit()
 
     def on_submit(self):
-        super(SheetToSheetConversion, self).save()
+        # super(SheetToSheetConversion, self).save()
         # CREATING BATCH NO
         for item in self.sheet_to_sheet_conversion_items:
             batch = frappe.new_doc("Batch")
