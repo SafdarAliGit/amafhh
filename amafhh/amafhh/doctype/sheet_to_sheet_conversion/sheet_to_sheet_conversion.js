@@ -117,13 +117,13 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
 
 
-                        if (response.message.batch_id in maxSubBatchManager.batch) {
-                            maxSubBatchManager.batch[response.message.batch_id] += 1;
-                        } else {
-                            maxSubBatchManager.batch[response.message.batch_id] = 1;
-                        }
-
-                        frappe.model.set_value(cdt, cdn, 'batch_no_target', response.message.batch_id + ' - ' + maxSubBatchManager.batch[response.message.batch_id]);
+                        // if (response.message.batch_id in maxSubBatchManager.batch) {
+                        //     maxSubBatchManager.batch[response.message.batch_id] += 1;
+                        // } else {
+                        //     maxSubBatchManager.batch[response.message.batch_id] = 1;
+                        // }
+                        //
+                        // frappe.model.set_value(cdt, cdn, 'batch_no_target', response.message.batch_id + ' - ' + maxSubBatchManager.batch[response.message.batch_id]);
 
                     } else {
                         frappe.msgprint(__('Record not found for Batch No: {0}', [row.batch_no_source]));

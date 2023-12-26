@@ -7,9 +7,39 @@ from frappe.utils import nowdate
 
 
 class SheetToSheetConversion(Document):
-    def validate(self):
-        if self.source_weight != self.target_weight:
-            frappe.throw("Total Source And Target Weight Should Be Same")
+    # def validate(self):
+    #     if self.source_weight != self.target_weight:
+    #         frappe.throw("Total Source And Target Weight Should Be Same")
+
+    def save(self):
+        super(SheetToSheetConversion, self).save()
+        batches = {}
+
+        for i in self.sheet_to_sheet_conversion_items:
+            last_record = frappe.get_all(
+                'Sheet To Sheet Conversion Items',
+                filters={'batch_no_target': ('like', f'{i.batch_no_source}-%')},
+                fields=['batch_no_target'],
+                order_by='CAST(REPLACE(batch_no_target, "-", "") AS SIGNED) DESC',
+                limit=1
+            )
+            if last_record:
+                last_batch_number = int(last_record[0]['batch_no_target'].split('-')[-1])
+                if i.batch_no_source in batches:
+                    i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + batches[i.batch_no_source]}"
+                else:
+                    batches[i.batch_no_source] = 1
+                    i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + 1}"
+            else:
+                if i.batch_no_source in batches:
+                    i.batch_no_target = f"{i.batch_no_source}-{batches[i.batch_no_source]}"
+                else:
+                    batches[i.batch_no_source] = 1
+                    i.batch_no_target = f"{i.batch_no_source}-{1}"
+
+            i.save()
+
+        frappe.db.commit()
 
     def on_submit(self):
         super(SheetToSheetConversion, self).save()
@@ -27,7 +57,7 @@ class SheetToSheetConversion(Document):
                 batch.save()
                 frappe.db.commit()
             except Exception as e:
-                    frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))
+                frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))
 
         # STOCK ENTRY SAVING
 
