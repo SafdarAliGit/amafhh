@@ -13,12 +13,12 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
 
     if (conversionType == 'REAM') {
         weightFactor = 3100;
-        var single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
-        var single_sheet_weight = single_ream_pkt_weight / 500;
+         single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
+         single_sheet_weight = single_ream_pkt_weight / 500;
     } else if (conversionType == 'PKT') {
         weightFactor = 15500;
-        var single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
-        var single_sheet_weight = single_ream_pkt_weight / 100;
+         single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
+         single_sheet_weight = single_ream_pkt_weight / 100;
     } else {
         // Adjust this part based on your requirements
         frappe.model.set_value(cdt, cdn, 'sheet_target', 0); // Set to a default value or handle differently
