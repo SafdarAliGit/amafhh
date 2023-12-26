@@ -55,6 +55,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
                     } else {
                         frappe.msgprint(__('Record not found for SR No: {0}', [row.sr_no]));
                         frappe.model.set_value(cdt, cdn, 'item_code', '');

@@ -115,6 +115,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'stock_weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
 
 
                         // if (response.message.batch_id in maxSubBatchManager.batch) {

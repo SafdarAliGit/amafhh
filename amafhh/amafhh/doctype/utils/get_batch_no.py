@@ -34,6 +34,7 @@ def get_batch_no(batch_no):
                 {
                     "width": item.width,
                     "gsm": item.gsm,
+                    "length_source": item.length,
                 }
             )
         return data

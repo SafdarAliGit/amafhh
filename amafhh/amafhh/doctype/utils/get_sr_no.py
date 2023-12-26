@@ -33,6 +33,7 @@ def get_sr_no(sr_no):
                 {
                     "width": item.width,
                     "gsm": item.gsm,
+                    "length_source": item.length,
                 }
             )
         return data

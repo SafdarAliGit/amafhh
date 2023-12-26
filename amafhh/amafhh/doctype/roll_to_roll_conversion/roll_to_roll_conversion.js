@@ -44,6 +44,7 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
                         frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
 
                         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
                     } else {

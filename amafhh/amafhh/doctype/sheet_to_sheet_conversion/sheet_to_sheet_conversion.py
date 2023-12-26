@@ -11,8 +11,8 @@ class SheetToSheetConversion(Document):
     #     if self.source_weight != self.target_weight:
     #         frappe.throw("Total Source And Target Weight Should Be Same")
 
-    def save(self):
-        super(SheetToSheetConversion, self).save()
+    def before_insert(self):
+        # super(SheetToSheetConversion, self).save()
         batches = {}
 
         for i in self.sheet_to_sheet_conversion_items:
