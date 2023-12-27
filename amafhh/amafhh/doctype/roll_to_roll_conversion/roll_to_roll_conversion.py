@@ -8,56 +8,61 @@ from frappe import _, throw
 
 
 class RollToRollConversion(Document):
-	def on_submit(self):
-		super(RollToRollConversion, self).save()
-		for item in self.roll_to_roll_conversion_target:
-			sr_no_doc = frappe.new_doc("SR NO")
-			sr_no_doc.sr_no = item.sr_no
-			sr_no_doc.item_code = item.item_code
-			sr_no_doc.weight_total = item.weight_target
-			sr_no_doc.weight_balance = item.weight_target
-			sr_no_doc.rate = item.rate
-			sr_no_doc.amount = item.amount
-			sr_no_doc.ref_type = 'Roll To Roll Conversion'
-			sr_no_doc.ref_no = self.name
-			try:
-				sr_no_doc.save()
-				frappe.db.commit()
-			except Exception as e:
-				frappe.throw(_("Error saving SR NO: {0}".format(str(e))))
-		# STOCK ENTRY SAVING
-		doc = frappe.new_doc("Stock Entry")
-		doc.stock_entry_type = "Repack"
-		doc.purpose = "Repack"
-		doc.sr_no = self.roll_to_roll_conversion_source[0].sr_no
-		doc.posting_date = nowdate()
-		doc.roll_to_roll_conversion = self.name
-		source_warehouse = self.warehouse
+    def on_submit(self):
+        # super(RollToRollConversion, self).save()
+        # CREATING BATCH NO
+        for item in self.roll_to_roll_conversion_target:
+            batch = frappe.new_doc("Batch")
+            batch.item = item.item_code
+            batch.batch_id = item.batch_no_target
+            batch.batch_qty = item.weight_target
+            batch.rate = item.rate
+            batch.amount = item.amount
+            batch.ref_no = self.name
+            batch.ref_type = "Roll To Roll Conversion"
+            try:
+                batch.save()
+                # frappe.db.commit()
+            except Exception as e:
+                frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))
 
-		# Append source item
-		doc.append("items", {
-			"s_warehouse": source_warehouse,
-			"t_warehouse":"",
-			"item_code": self.roll_to_roll_conversion_source[0].item_code,
-			"qty": self.target_weight,
-			"basic_rate": self.roll_to_roll_conversion_source[0].rate,
-			"amount": self.roll_to_roll_conversion_source[0].amount,
-			"sr_no": self.roll_to_roll_conversion_source[0].sr_no
-		})
+    # STOCK ENTRY SAVING
+        doc = frappe.new_doc("Stock Entry")
+        doc.stock_entry_type = "Repack"
+        doc.purpose = "Repack"
+        doc.batch_no = self.roll_to_roll_conversion_source[0].batch_no_source
+        doc.posting_date = nowdate()
+        doc.roll_to_roll_conversion = self.name
+        source_warehouse = self.warehouse
 
-		# Append target items using a loop
-		for item in self.roll_to_roll_conversion_target:
-			doc.append("items", {
-				"s_warehouse":"",
-				"t_warehouse": source_warehouse,
-				"item_code": item.item_code,
-				"qty": item.weight_target,
-				"basic_rate": item.rate,
-				"amount": item.amount,
-				"sr_no": item.sr_no
-			})
-		try:
-			doc.submit()
-			frappe.db.commit()
-		except Exception as e:
-			frappe.throw(_("Error submitting Stock Entry: {0}".format(str(e))))
+        # Append source item
+        it = doc.append("items", {})
+        it.s_warehouse = source_warehouse
+        it.item_code = self.roll_to_roll_conversion_source[0].item_code
+        it.qty = self.target_weight
+        it.basic_rate = self.roll_to_roll_conversion_source[0].rate
+        it.amount = self.roll_to_roll_conversion_source[0].amount
+        it.batch_no = self.roll_to_roll_conversion_source[0].batch_no_source
+
+        # Append target items using a loop
+        for item in self.roll_to_roll_conversion_target:
+            it = doc.append("items", {})
+            target_warehouse = None
+            if item.stock_type_target == "Finished":
+                target_warehouse = 'Finished Goods - A'
+            elif item.stock_type_target == "Semi-Finished":
+                target_warehouse = 'Goods In Transit - A'
+            elif item.stock_type_target == "Damaged":
+                target_warehouse = 'Damaged - A'
+            it.t_warehouse = target_warehouse
+            it.item_code = item.item_code
+            it.qty = item.weight_target
+            it.basic_rate = item.rate
+            it.amount = item.amount
+            it.batch_no = item.batch_no_target
+
+        try:
+            # doc.ignore_validation = True
+            doc.submit()
+        except Exception as e:
+            frappe.throw(_("Error submitting Stock Entry: {0}".format(str(e))))

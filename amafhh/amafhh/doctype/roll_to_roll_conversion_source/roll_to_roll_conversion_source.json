@@ -10,7 +10,7 @@
   "width",
   "length",
   "gsm",
-  "sr_no",
+  "batch_no_source",
   "weight_source",
   "rate",
   "amount"
@@ -42,12 +42,6 @@
    "label": "GSM"
   },
   {
-   "fieldname": "sr_no",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "SR NO"
-  },
-  {
    "fieldname": "rate",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -65,12 +59,19 @@
    "in_list_view": 1,
    "label": "Weight(KG)",
    "read_only": 1
+  },
+  {
+   "fieldname": "batch_no_source",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "BN",
+   "options": "Batch"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-25 12:27:58.071282",
+ "modified": "2023-12-27 15:05:52.802243",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion Source",
