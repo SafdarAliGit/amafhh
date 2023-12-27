@@ -12,7 +12,7 @@ class SheetToSheetConversion(Document):
     #         frappe.throw("Total Source And Target Weight Should Be Same")
 
     def before_insert(self):
-        # super(SheetToSheetConversion, self).save()
+        # super(SheetToSheetConversion, self).before_insert()
         batches = {}
 
         for i in self.sheet_to_sheet_conversion_items:
@@ -42,7 +42,7 @@ class SheetToSheetConversion(Document):
         frappe.db.commit()
 
     def on_submit(self):
-        # super(SheetToSheetConversion, self).save()
+        # super(SheetToSheetConversion, self).on_submit()
         # CREATING BATCH NO
         for item in self.sheet_to_sheet_conversion_items:
             batch = frappe.new_doc("Batch")
@@ -55,7 +55,6 @@ class SheetToSheetConversion(Document):
             batch.ref_type = "Sheet To Sheet Conversion"
             try:
                 batch.save()
-                frappe.db.commit()
             except Exception as e:
                 frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))
 
@@ -101,6 +100,7 @@ class SheetToSheetConversion(Document):
                 doc.submit()
                 self.stock_entry = doc.name
                 self.save()
-                frappe.db.commit()
             except Exception as e:
                 frappe.throw(frappe._("Error submitting Stock Entry: {0}".format(str(e))))
+
+
