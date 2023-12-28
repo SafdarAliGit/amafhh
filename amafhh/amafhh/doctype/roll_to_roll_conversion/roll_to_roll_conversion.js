@@ -48,7 +48,7 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
 
                         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
                     } else {
-                        frappe.msgprint(__('Record not found for SR No: {0}', [row.sr_no]));
+                        frappe.msgprint(__('Record not found for SR No: {0}', [row.batch_no_source]));
                         frappe.model.set_value(cdt, cdn, 'item_code', '');
                     }
 

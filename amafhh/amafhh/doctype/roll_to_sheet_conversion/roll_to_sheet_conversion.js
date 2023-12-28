@@ -38,14 +38,14 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
 
 frappe.ui.form.on('Roll To Sheet Conversion Items', {
 
-    sr_no: function (frm, cdt, cdn) {
+    batch_no_source: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (row.sr_no) {
+        if (row.batch_no_source) {
             frappe.call({
-                method: 'amafhh.amafhh.doctype.utils.get_sr_no.get_sr_no',
+                method: 'amafhh.amafhh.doctype.utils.get_batch_no.get_batch_no',
 
                 args: {
-                    sr_no: row.sr_no
+                    batch_no: row.batch_no_source
                 },
                 callback: function (response) {
                     if (response.message) {
@@ -55,9 +55,10 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source);
                         frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
                     } else {
-                        frappe.msgprint(__('Record not found for SR No: {0}', [row.sr_no]));
+                        frappe.msgprint(__('Record not found for SR No: {0}', [row.batch_no_source]));
                         frappe.model.set_value(cdt, cdn, 'item_code', '');
                     }
                 }

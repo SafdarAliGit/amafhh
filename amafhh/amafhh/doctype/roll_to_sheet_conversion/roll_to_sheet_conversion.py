@@ -8,8 +8,38 @@ from frappe import _, throw
 
 
 class RollToSheetConversion(Document):
+    def before_insert(self):
+        # super(SheetToSheetConversion, self).before_insert()
+        batches = {}
+
+        for i in self.roll_to_sheet_conversion_items:
+            last_record = frappe.get_all(
+                'Roll To Sheet Conversion Items',
+                filters={'batch_no_target': ('like', f'{i.batch_no_source}-%')},
+                fields=['batch_no_target'],
+                order_by='CAST(REPLACE(batch_no_target, "-", "") AS SIGNED) DESC',
+                limit=1
+            )
+            if last_record:
+                last_batch_number = int(last_record[0]['batch_no_target'].split('-')[-1])
+                if i.batch_no_source in batches:
+                    i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + batches[i.batch_no_source]}"
+                else:
+                    batches[i.batch_no_source] = 1
+                    i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + 1}"
+            else:
+                if i.batch_no_source in batches:
+                    i.batch_no_target = f"{i.batch_no_source}-{batches[i.batch_no_source]}"
+                else:
+                    batches[i.batch_no_source] = 1
+                    i.batch_no_target = f"{i.batch_no_source}-{1}"
+
+            i.save()
+
+        frappe.db.commit()
+
     def on_submit(self):
-        super(RollToSheetConversion, self).save()
+        # super(RollToSheetConversion, self).save()
         # CREATING BATCH NO
         for item in self.roll_to_sheet_conversion_items:
             batch = frappe.new_doc("Batch")
@@ -31,7 +61,7 @@ class RollToSheetConversion(Document):
             doc = frappe.new_doc("Stock Entry")
             doc.stock_entry_type = "Repack"
             doc.purpose = "Repack"
-            doc.sr_no = item.sr_no
+            doc.batch_no = item.batch_no_source
             doc.posting_date = nowdate()
             doc.roll_to_sheet_conversion = self.name
             source_warehouse = self.warehouse
@@ -50,7 +80,7 @@ class RollToSheetConversion(Document):
                 "qty": item.weight_target,
                 "basic_rate": item.rate,
                 "amount": item.amount,
-                "sr_no": item.sr_no
+                "batch_no": item.batch_no_source
             })
             doc.append("items", {
                 "s_warehouse": "",
@@ -59,13 +89,13 @@ class RollToSheetConversion(Document):
                 "qty": item.weight_target,
                 "basic_rate": item.rate,
                 "amount": item.amount,
-                "sr_no": item.sr_no
+                "batch_no": item.batch_no_target
             })
             try:
                 # doc.ignore_validate = True
                 doc.submit()
                 self.stock_entry = doc.name
                 self.save()
-                frappe.db.commit()
+                # frappe.db.commit()
             except Exception as e:
                 throw(_("Error submitting Stock Entry: {0}".format(str(e))))
