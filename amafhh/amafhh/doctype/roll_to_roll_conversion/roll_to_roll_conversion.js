@@ -14,14 +14,14 @@ frappe.ui.form.on('Roll To Roll Conversion', {
         });
 
     },
-  cut_option: function (frm, cdt, cdn) {
-    if (frm.doc.cut_option == 'Manual') {
-        $.each(frm.doc.roll_to_roll_conversion_target || [], function (i, d) {
-            frappe.model.set_value(d.doctype, d.name, 'weight_target', null);
-            frappe.model.set_value(d.doctype, d.name, 'amount', null);
-        });
+    cut_option: function (frm, cdt, cdn) {
+        if (frm.doc.cut_option == 'Manual') {
+            $.each(frm.doc.roll_to_roll_conversion_target || [], function (i, d) {
+                frappe.model.set_value(d.doctype, d.name, 'weight_target', null);
+                frappe.model.set_value(d.doctype, d.name, 'amount', null);
+            });
+        }
     }
-}
 });
 
 
@@ -120,11 +120,37 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
             frappe.model.set_value(cdt, cdn, 'width', null);
             frappe.throw(__("Target Width cannot be less than 1"));
         }
-        if (frm.doc.cut_option =='Full Width') {
+        if (frm.doc.cut_option == 'Full Width') {
             var weight_target = (parseFloat(row.width) / frm.doc.roll_to_roll_conversion_source[0].width) * frm.doc.roll_to_roll_conversion_source[0].weight_source;
             frappe.model.set_value(cdt, cdn, 'weight_target', weight_target);
         }
     },
+    item_code: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if (row.item_code) {
+            frappe.call({
+                method: 'amafhh.amafhh.doctype.utils.get_by_item_code.get_by_item_code',
 
+                args: {
+                    item_code: row.item_code
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        frappe.model.set_value(cdt, cdn, 'width', response.message.width);
+                        frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
+                        frappe.model.set_value(cdt, cdn, 'length', response.message.length || 0);
+
+                        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
+                    } else {
+                        frappe.msgprint(__('Record not found for Item: {0}', [row.item_code]));
+                    }
+
+
+                }
+            });
+        }
+
+
+    },
 
 });
