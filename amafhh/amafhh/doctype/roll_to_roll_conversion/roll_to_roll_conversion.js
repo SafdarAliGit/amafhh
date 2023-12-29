@@ -112,16 +112,16 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
     },
     width: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (parseInt(row.width) > frm.doc.roll_to_roll_conversion_source[0].width) {
+        if (parseFloat(row.width) > frm.doc.roll_to_roll_conversion_source[0].width) {
             frappe.model.set_value(cdt, cdn, 'width', null);
             frappe.throw(__("Target Width cannot be greater than Source Width"));
         }
-        if (parseInt(row.width) < 1) {
+        if (parseFloat(row.width) < 1) {
             frappe.model.set_value(cdt, cdn, 'width', null);
             frappe.throw(__("Target Width cannot be less than 1"));
         }
         if (frm.doc.cut_option =='Full Width') {
-            var weight_target = (parseInt(row.width) / frm.doc.roll_to_roll_conversion_source[0].width) * frm.doc.roll_to_roll_conversion_source[0].weight_source;
+            var weight_target = (parseFloat(row.width) / frm.doc.roll_to_roll_conversion_source[0].width) * frm.doc.roll_to_roll_conversion_source[0].weight_source;
             frappe.model.set_value(cdt, cdn, 'weight_target', weight_target);
         }
     },
