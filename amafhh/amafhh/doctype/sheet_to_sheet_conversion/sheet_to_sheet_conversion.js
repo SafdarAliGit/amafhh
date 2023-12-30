@@ -176,7 +176,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
     },
     width_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (parseInt(row.width_target) > parseInt(row.width_source)) {
+        if (parseFloat(row.width_target) > parseFloat(row.width_source)) {
             frappe.model.set_value(cdt, cdn, 'width_target', null);
             frappe.throw(__("Target Width cannot be greater than Source Width"));
         } else {
@@ -185,7 +185,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
             calculate_source_target_weight_total(frm);
             frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
         }
-        if (parseInt(row.width_target) < 1) {
+        if (parseFloat(row.width_target) < 1) {
             frappe.model.set_value(cdt, cdn, 'width_target', null);
             frappe.throw(__("Target Width cannot be less than 1"));
         } else {

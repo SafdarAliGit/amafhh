@@ -98,6 +98,7 @@ class SheetToSheetConversion(Document):
             try:
                 # doc.ignore_validate = True
                 doc.submit()
+                self.stock_entry = doc.name
                 self.save()
             except Exception as e:
                 frappe.throw(frappe._("Error submitting Stock Entry: {0}".format(str(e))))

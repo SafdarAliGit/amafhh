@@ -52,7 +52,7 @@ class RollToSheetConversion(Document):
             batch.ref_type = "Roll To Sheet Conversion"
             try:
                 batch.save()
-                frappe.db.commit()
+                # frappe.db.commit()
             except Exception as e:
                 frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))
 
