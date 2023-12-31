@@ -11,6 +11,14 @@ frappe.ui.form.on('Sheet To Sheet Conversion', {
                 ]
             };
         });
+         frm.set_query('batch_no_source', 'sheet_to_sheet_conversion_items', function (doc, cdt, cdn) {
+            var d = locals[cdt][cdn];
+            return {
+                filters: [
+                    ["Batch", "item_group", "=", 'Sheet']
+                ]
+            };
+        });
         frm.set_query('item_code_target', 'sheet_to_sheet_conversion_items', function (doc, cdt, cdn) {
             var d = locals[cdt][cdn];
             return {

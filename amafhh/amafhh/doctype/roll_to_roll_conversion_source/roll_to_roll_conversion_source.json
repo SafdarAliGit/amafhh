@@ -64,6 +64,7 @@
    "fieldname": "batch_no_source",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_preview": 1,
    "label": "BN",
    "options": "Batch"
   }
@@ -71,7 +72,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-27 15:05:52.802243",
+ "modified": "2023-12-30 21:55:47.217046",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion Source",

@@ -2,9 +2,32 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Roll To Sheet Conversion', {
-    // refresh: function(frm) {
-
-    // }
+    refresh: function(frm) {
+      frm.set_query('batch_no_source', 'roll_to_sheet_conversion_items', function (doc, cdt, cdn) {
+            var d = locals[cdt][cdn];
+            return {
+                filters: [
+                    ["Batch", "item_group", "=", "Roll"]
+                ]
+            };
+        });
+        frm.set_query('item_code_target', 'roll_to_sheet_conversion_items', function (doc, cdt, cdn) {
+            var d = locals[cdt][cdn];
+            return {
+                filters: [
+                    ["Item", "item_group", "=", "Sheet"]
+                ]
+            };
+        });
+         frm.set_query('item_code_source', 'roll_to_sheet_conversion_items', function (doc, cdt, cdn) {
+            var d = locals[cdt][cdn];
+            return {
+                filters: [
+                    ["Item", "item_group", "=", "Roll"]
+                ]
+            };
+        });
+    }
 });
 
 
