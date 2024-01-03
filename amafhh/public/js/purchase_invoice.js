@@ -660,11 +660,11 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
 
     if (conversionType == 'REAM') {
         weightFactor = 3100;
-        single_ream_pkt_weight = (parseInt(row.width) * parseInt(row.gsm) * parseInt(row.length)) / weightFactor;
+        single_ream_pkt_weight = (parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor;
 
     } else if (conversionType == 'PKT') {
         weightFactor = 15500;
-        single_ream_pkt_weight = (parseInt(row.width) * parseInt(row.gsm) * parseInt(row.length)) / weightFactor;
+        single_ream_pkt_weight = (parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor;
     } else {
         // Adjust this part based on your requirements
         frappe.model.set_value(cdt, cdn, 'qty', 0); // Set to a default value or handle differently
