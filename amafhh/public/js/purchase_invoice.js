@@ -657,18 +657,27 @@ frappe.ui.form.on("Purchase Invoice", {
 
 function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
     var single_ream_pkt_weight, total_ream_pkt_weight = 0, weightFactor;
-
     if (conversionType == 'REAM') {
         weightFactor = 3100;
         single_ream_pkt_weight = (parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor;
+        // for rate calculation
+         var rm_price =parseFloat(row.pkt_price) * (parseFloat(row.qty)/parseFloat(row.ream_pkt));
+        frappe.model.set_value(cdt, cdn, 'rate', rm_price);
+        // end
 
     } else if (conversionType == 'PKT') {
+        // Adjust this part based on your requirements
         weightFactor = 15500;
         single_ream_pkt_weight = (parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor;
+         // for rate calculation
+         var rm_price =parseFloat(row.pkt_price) * (parseFloat(row.qty)/parseFloat(row.ream_pkt));
+        frappe.model.set_value(cdt, cdn, 'rate', rm_price);
+        // end
     } else {
         // Adjust this part based on your requirements
-        frappe.model.set_value(cdt, cdn, 'qty', 0); // Set to a default value or handle differently
-        return;
+        frappe.model.set_value(cdt, cdn, 'price', 0); // Set to a default value or handle differently
+        frappe.model.set_value(cdt, cdn, 'pkt_price', 0); // Set to a default value or handle differently
+       
     }
     if (row.ream_pkt !== null && row.ream_pkt !== undefined && row.ream_pkt !== "") {
         total_ream_pkt_weight = single_ream_pkt_weight * row.ream_pkt;
@@ -709,18 +718,25 @@ frappe.ui.form.on('Purchase Invoice Item', {
             }
         });
     },
-        ream_pkt: function (frm, cdt, cdn) {
+    ream_pkt: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = row.stock_type.trim();
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
 
     },
-      stock_type: function (frm, cdt, cdn) {
+    stock_type: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        var conversionType = row.stock_type.trim();
+        calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+
+    },
+    pkt_price: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = row.stock_type.trim();
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
 
     }
+
 
 
 
