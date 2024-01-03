@@ -1063,14 +1063,22 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
     if (conversionType == 'REAM') {
         weightFactor = 3100;
         single_ream_pkt_weight = (parseInt(row.width) * parseInt(row.gsm) * parseInt(row.length)) / weightFactor;
+         // for rate calculation
+         var rm_price = parseFloat(row.pkt_price)/single_ream_pkt_weight;
+        frappe.model.set_value(cdt, cdn, 'rate', rm_price);
+        // end
 
     } else if (conversionType == 'PKT') {
         weightFactor = 15500;
         single_ream_pkt_weight = (parseInt(row.width) * parseInt(row.gsm) * parseInt(row.length)) / weightFactor;
+         // for rate calculation
+         var rm_price = parseFloat(row.pkt_price)/single_ream_pkt_weight;
+        frappe.model.set_value(cdt, cdn, 'rate', rm_price);
+        // end
     } else {
         // Adjust this part based on your requirements
-        frappe.model.set_value(cdt, cdn, 'qty', 0); // Set to a default value or handle differently
-        return;
+        frappe.model.set_value(cdt, cdn, 'price', 0); // Set to a default value or handle differently
+        frappe.model.set_value(cdt, cdn, 'pkt_price', 0); // Set to a default value or handle differently
     }
     if (row.ream_pkt !== null && row.ream_pkt !== undefined && row.ream_pkt !== "") {
         total_ream_pkt_weight = single_ream_pkt_weight * row.ream_pkt;
@@ -1088,6 +1096,12 @@ frappe.ui.form.on('Sales Invoice Item', {
 
     },
     stock_type: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        var conversionType = row.stock_type.trim();
+        calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+
+    },
+        pkt_price: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = row.stock_type.trim();
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
