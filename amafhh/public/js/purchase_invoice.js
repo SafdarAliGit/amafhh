@@ -661,7 +661,7 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
         weightFactor = 3100;
         single_ream_pkt_weight = (parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor;
         // for rate calculation
-         var rm_price =parseFloat(row.pkt_price) * (parseFloat(row.qty)/parseFloat(row.ream_pkt));
+         var rm_price = (parseFloat(row.qty)/parseFloat(row.ream_pkt))/parseFloat(row.pkt_price);
         frappe.model.set_value(cdt, cdn, 'rate', rm_price);
         // end
 
@@ -670,7 +670,7 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
         weightFactor = 15500;
         single_ream_pkt_weight = (parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor;
          // for rate calculation
-         var rm_price =parseFloat(row.pkt_price) * (parseFloat(row.qty)/parseFloat(row.ream_pkt));
+         var rm_price = (parseFloat(row.qty)/parseFloat(row.ream_pkt))/parseFloat(row.pkt_price);
         frappe.model.set_value(cdt, cdn, 'rate', rm_price);
         // end
     } else {
