@@ -23,9 +23,10 @@ class RollToRollConversion(Document):
                 filters={
                     'batch_no_target': ('like', f'{self.roll_to_roll_conversion_source[0].batch_no_source}-%')},
                 fields=['batch_no_target'],
-                order_by='CAST(REPLACE(batch_no_target, "-", "") AS SIGNED) DESC',
+                order_by='CAST(SUBSTRING_INDEX(batch_no_target, "-", -1) AS SIGNED) DESC, batch_no_target DESC',
                 limit=1
             )
+
             if last_record:
                 last_batch_number = int(last_record[0]['batch_no_target'].split('-')[-1])
                 if self.roll_to_roll_conversion_source[0].batch_no_source in batches:
@@ -55,6 +56,7 @@ class RollToRollConversion(Document):
             batch.rate = item.rate
             batch.amount = item.amount
             batch.ref_no = self.name
+            batch.item_group = 'Roll'
             batch.ref_type = "Roll To Roll Conversion"
             try:
                 batch.save()
