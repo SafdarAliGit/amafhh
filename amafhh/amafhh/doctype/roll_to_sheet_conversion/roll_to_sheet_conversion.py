@@ -49,6 +49,7 @@ class RollToSheetConversion(Document):
             batch.rate = item.rate
             batch.amount = item.amount
             batch.ref_no = self.name
+            batch.import_file = item.import_file
             batch.ref_type = "Roll To Sheet Conversion"
             try:
                 batch.save()

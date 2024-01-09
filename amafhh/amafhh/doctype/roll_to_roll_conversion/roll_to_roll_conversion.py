@@ -57,6 +57,7 @@ class RollToRollConversion(Document):
             batch.amount = item.amount
             batch.ref_no = self.name
             batch.item_group = 'Roll'
+            batch.import_file = item.import_file
             batch.ref_type = "Roll To Roll Conversion"
             try:
                 batch.save()

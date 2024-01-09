@@ -14,6 +14,7 @@ class PurchaseInvoiceOverrides(PurchaseInvoice):
             batch.amount = item.amount
             batch.item_group = item.item_group
             batch.ref_no = self.name
+            batch.import_file = item.import_file
             batch.ref_type = "Purchase Invoice"
             try:
                 batch.save()

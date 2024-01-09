@@ -60,6 +60,7 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
                         frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
+                        frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
                         frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
 
                         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
@@ -101,6 +102,7 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
     roll_to_roll_conversion_target_add: function (frm, cdt, cdn) {
         frappe.model.set_value(cdt, cdn, 'gsm', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].gsm);
         frappe.model.set_value(cdt, cdn, 'rate', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].rate);
+        frappe.model.set_value(cdt, cdn, 'import_file', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].import_file);
     },
     weight_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];

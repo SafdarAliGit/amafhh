@@ -22,7 +22,8 @@
   "weight_target",
   "rate",
   "amount",
-  "batch_no_target"
+  "batch_no_target",
+  "import_file"
  ],
  "fields": [
   {
@@ -129,12 +130,18 @@
    "fieldname": "length_source",
    "fieldtype": "Data",
    "label": "SRC Len"
+  },
+  {
+   "fieldname": "import_file",
+   "fieldtype": "Link",
+   "label": "Import File",
+   "options": "Import File"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-30 18:00:03.741554",
+ "modified": "2024-01-09 15:50:25.835098",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion Items",

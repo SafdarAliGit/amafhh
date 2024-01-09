@@ -14,7 +14,8 @@
   "weight_target",
   "rate",
   "amount",
-  "stock_type_target"
+  "stock_type_target",
+  "import_file"
  ],
  "fields": [
   {
@@ -72,12 +73,18 @@
    "fieldtype": "Select",
    "label": "Stock",
    "options": "Finished\nSemi-Finished\nDamaged"
+  },
+  {
+   "fieldname": "import_file",
+   "fieldtype": "Link",
+   "label": "Import File",
+   "options": "Import File"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-02 12:37:38.620384",
+ "modified": "2024-01-09 15:36:56.529793",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion Target",
