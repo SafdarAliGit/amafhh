@@ -1,7 +1,7 @@
 # Copyright (c) 2023, Tech Ventures and contributors
 # For license information, please see license.txt
 import frappe
-# import frappe
+from decimal import Decimal
 from frappe.model.document import Document
 from frappe.utils import nowdate
 from frappe import _, throw
@@ -11,8 +11,8 @@ class RollToRollConversion(Document):
     def validate(self):
         sum_of_target_width = 0
         for i in self.roll_to_roll_conversion_target:
-            sum_of_target_width += float(i.width)
-        if sum_of_target_width != float(self.roll_to_roll_conversion_source[0].width):
+            sum_of_target_width += Decimal(i.width)
+        if float(sum_of_target_width) != float(self.roll_to_roll_conversion_source[0].width):
             frappe.throw("Source And Target Total Width Should Be Same")
     def before_insert(self):
         # super(SheetToSheetConversion, self).before_insert()
