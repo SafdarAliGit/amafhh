@@ -611,6 +611,11 @@ cur_frm.set_query("asset", "items", function (doc, cdt, cdn) {
 });
 
 frappe.ui.form.on('Sales Invoice', {
+    fetch: function (frm) {
+
+        frm.set_value('scan_barcode', frm.doc.batch_no);
+
+    },
     setup: function (frm) {
         frm.add_fetch('customer', 'tax_id', 'tax_id');
         frm.add_fetch('payment_term', 'invoice_portion', 'invoice_portion');
@@ -1088,7 +1093,9 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
 }
 
 frappe.ui.form.on('Sales Invoice Item', {
-
+    batch_no: function (frm) {
+        frm.set_value('scan_barcode', frm.doc.batch_no);
+    },
     ream_pkt: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = row.stock_type.trim();
@@ -1106,6 +1113,10 @@ frappe.ui.form.on('Sales Invoice Item', {
         var conversionType = row.stock_type.trim();
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
 
-    }
+    },
+
+
 
 });
+
+
