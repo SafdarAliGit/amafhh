@@ -11,7 +11,7 @@ class RollToRollConversion(Document):
     def validate(self):
         sum_of_target_width = 0
         for i in self.roll_to_roll_conversion_target:
-            sum_of_target_width += Decimal(i.width)
+            sum_of_target_width += Decimal(i.width) if i.width else 0
         if float(sum_of_target_width) != float(self.roll_to_roll_conversion_source[0].width):
             frappe.throw("Source And Target Total Width Should Be Same")
     def before_insert(self):
