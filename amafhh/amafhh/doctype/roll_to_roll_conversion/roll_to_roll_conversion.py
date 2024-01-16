@@ -54,7 +54,7 @@ class RollToRollConversion(Document):
                 filters={
                     'batch_no_target': ('like', f'{self.roll_to_roll_conversion_source[0].batch_no_source}-%')},
                 fields=['batch_no_target'],
-                order_by='CAST(SUBSTRING_INDEX(batch_no_target, "-", -1) AS SIGNED) DESC, batch_no_target DESC',
+                order_by='CAST(REPLACE(batch_no_target, "-", "") AS SIGNED) DESC',
                 limit=1
             )
 
