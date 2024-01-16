@@ -12,19 +12,22 @@ frappe.ui.form.on('Roll To Roll Conversion', {
                 ]
             };
         });
-         frm.set_query('item_code', 'roll_to_roll_conversion_target', function (doc, cdt, cdn) {
+        frm.set_query('item_code', 'roll_to_roll_conversion_target', function (doc, cdt, cdn) {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Item", "item_group", "=", "Roll"]
+                    ["Item", "item_group", "=", "Roll"],
+                    ["Item", "gsm", "=", frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].gsm]
                 ]
             };
         });
+
         frm.set_query('batch_no_source', 'roll_to_roll_conversion_source', function (doc, cdt, cdn) {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Batch", "item_group", "=", "Roll"]
+                    ["Batch", "item_group", "=", "Roll"],
+                    ["Batch", "batch_qty", ">", 0]
                 ]
             };
         });

@@ -15,7 +15,8 @@ frappe.ui.form.on('Sheet To Sheet Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Batch", "item_group", "=", 'Sheet']
+                    ["Batch", "item_group", "=", 'Sheet'],
+                    ["Batch", "batch_qty", ">", 0]
                 ]
             };
         });
@@ -23,7 +24,8 @@ frappe.ui.form.on('Sheet To Sheet Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Item", "item_group", "=", 'Sheet']
+                    ["Item", "item_group", "=", 'Sheet'],
+                     ["Item", "gsm", "=", d.gsm_source]
                 ]
             };
         });

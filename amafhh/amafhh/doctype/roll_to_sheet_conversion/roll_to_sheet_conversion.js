@@ -7,7 +7,8 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Batch", "item_group", "=", "Roll"]
+                    ["Batch", "item_group", "=", "Roll"],
+                    ["Batch", "batch_qty", ">", 0]
                 ]
             };
         });
@@ -15,7 +16,8 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Item", "item_group", "=", "Sheet"]
+                    ["Item", "item_group", "=", "Sheet"],
+                    ["Item", "gsm", "=", d.gsm_source]
                 ]
             };
         });
@@ -24,6 +26,7 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
             return {
                 filters: [
                     ["Item", "item_group", "=", "Roll"]
+
                 ]
             };
         });
