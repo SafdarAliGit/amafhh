@@ -11,64 +11,35 @@ class SheetToSheetConversion(Document):
     #     if self.source_weight != self.target_weight:
     #         frappe.throw("Total Source And Target Weight Should Be Same")
 
-    def on_update(self):
-        batches = {}
-
-        for i in self.sheet_to_sheet_conversion_items:
-            last_record = frappe.get_all(
-                'Sheet To Sheet Conversion Items',
-                filters={'batch_no_target': ('like', f'{i.batch_no_source}-%')},
-                fields=['batch_no_target'],
-                order_by='CAST(SUBSTRING_INDEX(batch_no_target, "-", -1) AS SIGNED) DESC, batch_no_target DESC',
-                limit=1
-            )
-            if last_record:
-                last_batch_number = int(last_record[0]['batch_no_target'].split('-')[-1])
-                if i.batch_no_source in batches:
-                    i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + batches[i.batch_no_source]}"
-                else:
-                    batches[i.batch_no_source] = 1
-                    i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + 1}"
-            else:
-                if i.batch_no_source in batches:
-                    i.batch_no_target = f"{i.batch_no_source}-{batches[i.batch_no_source]}"
-                else:
-                    batches[i.batch_no_source] = 1
-                    i.batch_no_target = f"{i.batch_no_source}-{1}"
-
-            i.save()
-
-        frappe.db.commit()
-
-    def before_insert(self):
-        # super(SheetToSheetConversion, self).before_insert()
-        batches = {}
-
-        for i in self.sheet_to_sheet_conversion_items:
-            last_record = frappe.get_all(
-                'Sheet To Sheet Conversion Items',
-                filters={'batch_no_target': ('like', f'{i.batch_no_source}-%')},
-                fields=['batch_no_target'],
-                order_by='CAST(REPLACE(batch_no_target, "-", "") AS SIGNED) DESC',
-                limit=1
-            )
-            if last_record:
-                last_batch_number = int(last_record[0]['batch_no_target'].split('-')[-1])
-                if i.batch_no_source in batches:
-                    i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + batches[i.batch_no_source]}"
-                else:
-                    batches[i.batch_no_source] = 1
-                    i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + 1}"
-            else:
-                if i.batch_no_source in batches:
-                    i.batch_no_target = f"{i.batch_no_source}-{batches[i.batch_no_source]}"
-                else:
-                    batches[i.batch_no_source] = 1
-                    i.batch_no_target = f"{i.batch_no_source}-{1}"
-
-            i.save()
-
-        frappe.db.commit()
+    # def before_insert(self):
+    #     # super(SheetToSheetConversion, self).before_insert()
+    #     batches = {}
+    #
+    #     for i in self.sheet_to_sheet_conversion_items:
+    #         last_record = frappe.get_all(
+    #             'Sheet To Sheet Conversion Items',
+    #             filters={'batch_no_target': ('like', f'{i.batch_no_source}-%')},
+    #             fields=['batch_no_target'],
+    #             order_by='CAST(REPLACE(batch_no_target, "-", "") AS SIGNED) DESC',
+    #             limit=1
+    #         )
+    #         if last_record:
+    #             last_batch_number = int(last_record[0]['batch_no_target'].split('-')[-1])
+    #             if i.batch_no_source in batches:
+    #                 i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + batches[i.batch_no_source]}"
+    #             else:
+    #                 batches[i.batch_no_source] = 1
+    #                 i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + 1}"
+    #         else:
+    #             if i.batch_no_source in batches:
+    #                 i.batch_no_target = f"{i.batch_no_source}-{batches[i.batch_no_source]}"
+    #             else:
+    #                 batches[i.batch_no_source] = 1
+    #                 i.batch_no_target = f"{i.batch_no_source}-{1}"
+    #
+    #         i.save()
+    #
+    #     frappe.db.commit()
 
     def on_submit(self):
         # super(SheetToSheetConversion, self).on_submit()
@@ -132,5 +103,3 @@ class SheetToSheetConversion(Document):
                 self.save()
             except Exception as e:
                 frappe.throw(frappe._("Error submitting Stock Entry: {0}".format(str(e))))
-
-
