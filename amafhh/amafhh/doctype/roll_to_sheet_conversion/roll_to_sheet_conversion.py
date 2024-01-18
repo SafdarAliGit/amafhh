@@ -51,6 +51,8 @@ class RollToSheetConversion(Document):
             batch.amount = item.amount
             batch.ref_no = self.name
             batch.item_group = 'Sheet'
+            batch.ream_pkt_target = item.ream_pkt_target
+            batch.gsm = item.gsm_source
             batch.import_file = item.import_file
             batch.ref_type = "Roll To Sheet Conversion"
             try:
