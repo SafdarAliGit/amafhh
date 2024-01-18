@@ -227,6 +227,32 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
 
         check_net_total(frm);
 
-    }
+    },
+            item_code_target: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if (row.item_code_target) {
+            frappe.call({
+                method: 'amafhh.amafhh.doctype.utils.get_by_item_code.get_by_item_code',
+
+                args: {
+                    item_code: row.item_code_target
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        frappe.model.set_value(cdt, cdn, 'width_target', response.message.width);
+                        frappe.model.set_value(cdt, cdn, 'length_target', response.message.length || 0);
+
+                        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
+                    } else {
+                        frappe.msgprint(__('Record not found for Item: {0}', [row.item_code]));
+                    }
+
+
+                }
+            });
+        }
+
+
+    },
 
 });
