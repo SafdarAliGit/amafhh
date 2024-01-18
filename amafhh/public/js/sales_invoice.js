@@ -615,7 +615,7 @@ frappe.ui.form.on('Sales Invoice', {
 
         frm.set_value('scan_barcode', frm.doc.batch_no);
 
-    },
+     },
     setup: function (frm) {
         frm.add_fetch('customer', 'tax_id', 'tax_id');
         frm.add_fetch('payment_term', 'invoice_portion', 'invoice_portion');
