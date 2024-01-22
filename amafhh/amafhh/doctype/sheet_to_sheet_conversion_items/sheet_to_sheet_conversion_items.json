@@ -147,8 +147,7 @@
    "fieldname": "batch_no_target",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "TRG BN",
-   "reqd": 1
+   "label": "TRG BN"
   },
   {
    "default": "0",
@@ -175,7 +174,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-18 19:00:51.842549",
+ "modified": "2024-01-22 23:24:41.792189",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion Items",

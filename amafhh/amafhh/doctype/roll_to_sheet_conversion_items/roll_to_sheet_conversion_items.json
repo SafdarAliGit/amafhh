@@ -121,8 +121,7 @@
    "fieldname": "batch_no_target",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "TRG BN",
-   "reqd": 1
+   "label": "TRG BN"
   },
   {
    "fieldname": "column_break_sitpy",
@@ -143,7 +142,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-17 15:30:25.367456",
+ "modified": "2024-01-22 23:25:02.373098",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion Items",
