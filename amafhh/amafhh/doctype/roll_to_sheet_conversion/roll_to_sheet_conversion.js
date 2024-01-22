@@ -163,6 +163,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                     if (response.message) {
                         frappe.model.set_value(cdt, cdn, 'width_target', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'length_target', response.message.length || 0);
+                        frappe.model.set_value(cdt, cdn, 'batch_no_target', row.item_code_target);
 
                         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
                     } else {

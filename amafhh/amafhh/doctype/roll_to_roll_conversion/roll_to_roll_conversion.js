@@ -160,6 +160,7 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
                         frappe.model.set_value(cdt, cdn, 'width', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
                         frappe.model.set_value(cdt, cdn, 'length', response.message.length || 0);
+                        frappe.model.set_value(cdt, cdn, 'batch_no_target', row.item_code);
 
                         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
                     } else {

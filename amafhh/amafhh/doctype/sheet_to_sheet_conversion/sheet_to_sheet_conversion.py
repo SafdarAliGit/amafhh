@@ -7,9 +7,9 @@ from frappe.utils import nowdate
 
 
 class SheetToSheetConversion(Document):
-    # def validate(self):
-    #     if self.source_weight != self.target_weight:
-    #         frappe.throw("Total Source And Target Weight Should Be Same")
+    def validate(self):
+        if self.source_weight != self.target_weight:
+            frappe.throw("Total Source And Target Weight Should Be Same")
 
     # def before_insert(self):
     #     # super(SheetToSheetConversion, self).before_insert()
@@ -82,19 +82,23 @@ class SheetToSheetConversion(Document):
                 target_warehouse = 'Damaged - A'
 
             doc.append("items", {
+                "set_basic_rate_manually": 1,
                 "s_warehouse": source_warehouse,
                 "t_warehouse": "",
                 "item_code": item.item_code_source,
                 "qty": item.weight_target,
+                "valuation_rate": item.rate,
                 "basic_rate": item.rate,
                 "amount": item.amount,
                 "batch_no": item.batch_no_source
             })
             doc.append("items", {
+                "set_basic_rate_manually": 1,
                 "s_warehouse": "",
                 "t_warehouse": target_warehouse,
                 "item_code": item.item_code_target,
                 "qty": item.weight_target,
+                "valuation_rate": item.rate,
                 "basic_rate": item.rate,
                 "amount": item.amount,
                 "batch_no": item.batch_no_target

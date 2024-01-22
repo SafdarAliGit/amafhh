@@ -78,6 +78,7 @@ class RollToRollConversion(Document):
 
         # Append source item
         it = doc.append("items", {})
+        it.set_basic_rate_manually = 1
         it.s_warehouse = source_warehouse
         it.item_code = self.roll_to_roll_conversion_source[0].item_code
         it.qty = self.target_weight
@@ -89,6 +90,7 @@ class RollToRollConversion(Document):
         for item in self.roll_to_roll_conversion_target:
             it = doc.append("items", {})
             target_warehouse = 'Stores - A'
+            it.set_basic_rate_manually = 1
             # if item.stock_type_target == "Finished":
             #     target_warehouse = 'Finished Goods - A'
             # elif item.stock_type_target == "Semi-Finished":
@@ -98,6 +100,7 @@ class RollToRollConversion(Document):
             it.t_warehouse = target_warehouse
             it.item_code = item.item_code
             it.qty = item.weight_target
+            it.valuation_rate = item.rate
             it.basic_rate = item.rate
             it.amount = item.amount
             it.batch_no = item.batch_no_target
