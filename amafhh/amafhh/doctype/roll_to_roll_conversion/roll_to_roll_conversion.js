@@ -116,7 +116,7 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
             $.each(frm.doc.roll_to_roll_conversion_target || [], function (i, d) {
                 target_weight += flt(d.weight_target);
             });
-            frm.set_value("target_weight", parseFloat(target_weight).toFixed(0))
+            frm.set_value("target_weight", parseFloat(target_weight).toFixed(3))
         }
 
         calculate_net_total(frm);
