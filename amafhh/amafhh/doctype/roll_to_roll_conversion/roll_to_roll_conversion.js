@@ -88,7 +88,7 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
             $.each(frm.doc.roll_to_roll_conversion_source || [], function (i, d) {
                 source_weight += flt(d.weight_source);
             });
-            frm.set_value("source_weight", source_weight)
+            frm.set_value("source_weight", parseFloat(source_weight).toFixed(3))
         }
 
         calculate_net_total(frm);
@@ -143,7 +143,7 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
         }
         if (frm.doc.cut_option == 'Full Width') {
             var weight_target = (parseFloat(row.width) / frm.doc.roll_to_roll_conversion_source[0].width) * frm.doc.roll_to_roll_conversion_source[0].weight_source;
-            frappe.model.set_value(cdt, cdn, 'weight_target', weight_target);
+            frappe.model.set_value(cdt, cdn, 'weight_target', parseFloat(weight_target).toFixed(3));
         }
     },
     item_code: function (frm, cdt, cdn) {
