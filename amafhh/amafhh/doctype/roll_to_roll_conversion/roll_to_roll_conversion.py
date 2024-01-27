@@ -50,6 +50,22 @@ class RollToRollConversion(Document):
         # super(RollToRollConversion, self).save()
         # CREATING BATCH NO
         for item in self.roll_to_roll_conversion_target:
+            product_item = frappe.new_doc("Item")
+            product_item.item_code = item.item_code
+            product_item.item_name = item.item_code
+            product_item.item_group = 'Roll'
+            product_item.gsm = item.gsm
+            product_item.width = item.width
+            product_item.length = item.length
+            product_item.stock_uom = 'Kg'
+            product_item.is_stock_item = 1
+            product_item.standard_rate = item.rate
+            try:
+                product_item.save()
+                # frappe.db.commit()
+            except Exception as e:
+                frappe.throw(frappe._("Error saving Item: {0}".format(str(e))))
+
             batch = frappe.new_doc("Batch")
             batch.item = item.item_code
             batch.batch_id = item.batch_no_target

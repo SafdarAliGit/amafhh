@@ -52,9 +52,9 @@ frappe.ui.form.on("Item", {
 		}
 	},
 	// CUSTOM WORK
-	brand_item: function(frm) {
-		frm.set_value('item_name', frm.doc.brand_item);
-	},
+	// brand_item: function(frm) {
+	// 	frm.set_value('item_name', frm.doc.brand_item);
+	// },
 	refresh: function(frm) {
 		if (frm.doc.is_stock_item) {
 			frm.add_custom_button(__("Stock Balance"), function() {

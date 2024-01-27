@@ -106,6 +106,29 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
         frappe.model.set_value(cdt, cdn, 'gsm', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].gsm);
         frappe.model.set_value(cdt, cdn, 'rate', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].rate);
         frappe.model.set_value(cdt, cdn, 'import_file', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].import_file);
+        // ADD NEW ITEM CODE CUSTOM WORK
+        // Iterate through each row in the child table
+        frm.doc.roll_to_roll_conversion_target.forEach(function (item, index) {
+            // Check if the item code is empty
+            if (!item.item_code) {
+                //     // Get the last item code in the child table
+                //     var lastItemCode = frm.doc.roll_to_roll_conversion_source[0]?.item_code || '';
+                // } else {
+                var lastItemCode = frm.doc.roll_to_roll_conversion_target[index - 1]?.item_code || '';
+
+                // Extract the numeric part of the last item code
+                var numericPart = lastItemCode.match(/\d+$/);
+
+                // Increment the numeric part and append it to the parent's item code
+                var newItemCode = frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].item_code.toString()+ '-' + (numericPart ? (parseInt(numericPart[0]) + 1) : 1);
+
+                // Set the new item code in the current row
+                frappe.model.set_value(item.doctype, item.name, 'item_code', newItemCode);
+                frappe.model.set_value(cdt, cdn,'batch_no_target', newItemCode);
+            }
+        });
+
+        // END CUSTOM
     },
     weight_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
@@ -173,6 +196,6 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
         }
 
 
-    },
+    }
 
 });
