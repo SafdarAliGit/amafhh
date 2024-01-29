@@ -79,6 +79,39 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
 
 
     },
+    item_code: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if (row.item_code) {
+            frappe.call({
+                method: 'amafhh.amafhh.doctype.utils.get_by_item_code.get_by_item_code',
+
+                args: {
+                    item_code: row.item_code
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        frappe.model.set_value(cdt, cdn, 'item_code', response.message.item_code);
+                        frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
+                        frappe.model.set_value(cdt, cdn, 'amount', response.message.amount);
+                        frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
+                        frappe.model.set_value(cdt, cdn, 'width', response.message.width);
+                        frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
+                        frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
+
+                        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
+                    } else {
+                        frappe.msgprint(__('Record not found for SR No: {0}', [row.batch_no_source]));
+                        frappe.model.set_value(cdt, cdn, 'item_code', '');
+                    }
+
+
+                }
+            });
+        }
+
+
+    },
     weight_source: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
@@ -145,7 +178,7 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
         calculate_net_total(frm);
         var source_weight = frm.doc.source_weight || 0;
         var target_weight = frm.doc.target_weight || 0;
-        if (target_weight > source_weight) {
+        if (parseFloat(target_weight) > parseFloat(source_weight)) {
             frappe.model.set_value(cdt, cdn, 'weight_target', null);
             frappe.throw(__("Target Weight cannot be greater than Source Weight"));
         }

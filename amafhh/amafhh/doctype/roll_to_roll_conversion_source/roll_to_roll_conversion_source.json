@@ -19,9 +19,10 @@
  "fields": [
   {
    "fieldname": "item_code",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Item Code"
+   "label": "Item Code",
+   "options": "Item"
   },
   {
    "fieldname": "width",
@@ -79,7 +80,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-09 15:29:39.854745",
+ "modified": "2024-01-29 18:14:42.626796",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion Source",

@@ -59,29 +59,34 @@ class RollToRollConversion(Document):
             product_item.length = item.length
             product_item.stock_uom = 'Kg'
             product_item.is_stock_item = 1
-            product_item.standard_rate = item.rate
+            product_item.rate = item.rate
+            product_item.amount = item.amount
+            product_item.qty = item.weight_target
+            product_item.import_file = item.import_file
+            product_item.ref_no = self.name
+            product_item.ref_type = "Roll To Roll Conversion"
             try:
                 product_item.save()
                 # frappe.db.commit()
             except Exception as e:
                 frappe.throw(frappe._("Error saving Item: {0}".format(str(e))))
-
-            batch = frappe.new_doc("Batch")
-            batch.item = item.item_code
-            batch.batch_id = item.batch_no_target
-            batch.batch_qty = item.weight_target
-            batch.rate = item.rate
-            batch.amount = item.amount
-            batch.ref_no = self.name
-            batch.item_group = 'Roll'
-            batch.gsm = item.gsm
-            batch.import_file = item.import_file
-            batch.ref_type = "Roll To Roll Conversion"
-            try:
-                batch.save()
-                # frappe.db.commit()
-            except Exception as e:
-                frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))
+            if item.batch_no_target:
+                batch = frappe.new_doc("Batch")
+                batch.item = item.item_code
+                batch.batch_id = item.batch_no_target
+                batch.batch_qty = item.weight_target
+                batch.rate = item.rate
+                batch.amount = item.amount
+                batch.ref_no = self.name
+                batch.item_group = 'Roll'
+                batch.gsm = item.gsm
+                batch.import_file = item.import_file
+                batch.ref_type = "Roll To Roll Conversion"
+                try:
+                    batch.save()
+                    # frappe.db.commit()
+                except Exception as e:
+                    frappe.throw(frappe._("Error saving BATCH NO: {0}".format(str(e))))
 
         # STOCK ENTRY SAVING
         doc = frappe.new_doc("Stock Entry")
