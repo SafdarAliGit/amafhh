@@ -51,6 +51,8 @@ class RollToRollConversion(Document):
         # CREATING BATCH NO
         for item in self.roll_to_roll_conversion_target:
             product_item = frappe.new_doc("Item")
+            if self.generate_batch == 1:
+                product_item.has_batch_no = 1
             product_item.item_code = item.item_code
             product_item.item_name = item.item_code
             product_item.item_group = 'Roll'
@@ -92,7 +94,7 @@ class RollToRollConversion(Document):
         doc = frappe.new_doc("Stock Entry")
         doc.stock_entry_type = "Repack"
         doc.purpose = "Repack"
-        doc.batch_no = self.roll_to_roll_conversion_source[0].batch_no_source
+        doc.batch_no = self.roll_to_roll_conversion_source[0].batch_no_source if self.roll_to_roll_conversion_source[0].batch_no_source else None
         doc.posting_date = nowdate()
         doc.roll_to_roll_conversion = self.name
         source_warehouse = self.warehouse
@@ -105,7 +107,7 @@ class RollToRollConversion(Document):
         it.qty = self.target_weight
         it.basic_rate = self.roll_to_roll_conversion_source[0].rate
         it.amount = self.roll_to_roll_conversion_source[0].amount
-        it.batch_no = self.roll_to_roll_conversion_source[0].batch_no_source
+        it.batch_no = self.roll_to_roll_conversion_source[0].batch_no_source if self.roll_to_roll_conversion_source[0].batch_no_source else None
 
         # Append target items using a loop
         for item in self.roll_to_roll_conversion_target:

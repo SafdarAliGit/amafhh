@@ -15,7 +15,10 @@
   "warehouse",
   "section_break_iyspz",
   "roll_to_roll_conversion_source",
+  "section_break_majig",
   "source_weight",
+  "column_break_ixe45",
+  "generate_batch",
   "section_break_htdgb",
   "roll_to_roll_conversion_target",
   "target_weight",
@@ -91,6 +94,21 @@
   {
    "fieldname": "column_break_y0xdh",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "generate_batch",
+   "fieldtype": "Check",
+   "label": "Generate Batch For Target item",
+   "options": "0"
+  },
+  {
+   "fieldname": "column_break_ixe45",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_majig",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -101,7 +119,7 @@
    "link_fieldname": "roll_to_roll_conversion"
   }
  ],
- "modified": "2023-12-27 15:11:33.031130",
+ "modified": "2024-01-29 22:45:48.142245",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion",

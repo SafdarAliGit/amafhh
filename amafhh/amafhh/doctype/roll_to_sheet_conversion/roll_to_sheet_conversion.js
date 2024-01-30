@@ -2,8 +2,8 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Roll To Sheet Conversion', {
-    refresh: function(frm) {
-      frm.set_query('batch_no_source', 'roll_to_sheet_conversion_items', function (doc, cdt, cdn) {
+    refresh: function (frm) {
+        frm.set_query('batch_no_source', 'roll_to_sheet_conversion_items', function (doc, cdt, cdn) {
             var d = locals[cdt][cdn];
             return {
                 filters: [
@@ -21,7 +21,7 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
                 ]
             };
         });
-         frm.set_query('item_code_source', 'roll_to_sheet_conversion_items', function (doc, cdt, cdn) {
+        frm.set_query('item_code_source', 'roll_to_sheet_conversion_items', function (doc, cdt, cdn) {
             var d = locals[cdt][cdn];
             return {
                 filters: [
@@ -39,12 +39,12 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
 
     if (conversionType == 'REAM') {
         weightFactor = 3100;
-         single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
-         single_sheet_weight = single_ream_pkt_weight / 500;
+        single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
+        single_sheet_weight = single_ream_pkt_weight / 500;
     } else if (conversionType == 'PKT') {
         weightFactor = 15500;
-         single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
-         single_sheet_weight = single_ream_pkt_weight / 100;
+        single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
+        single_sheet_weight = single_ream_pkt_weight / 100;
     } else {
         // Adjust this part based on your requirements
         frappe.model.set_value(cdt, cdn, 'sheet_target', 0); // Set to a default value or handle differently
@@ -84,9 +84,125 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source);
                         frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
                         frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
+                        // ADD NEW ITEM CODE CUSTOM WORK
+                        // Iterate through each row in the child table
+                        var itemCodeCount = {};
+
+                        frm.doc.roll_to_sheet_conversion_items.forEach(function (item, index) {
+                            // Check if the item code is empty
+                            if (!item.item_code_target) {
+                                var itemCodeSource = row.item_code_source.toString();
+
+                                // Check if the item_code_source has occurred before
+                                if (itemCodeCount[itemCodeSource]) {
+                                    // Increment the count
+                                    itemCodeCount[itemCodeSource]++;
+                                } else {
+                                    // Initialize the count
+                                    itemCodeCount[itemCodeSource] = 1;
+                                }
+
+                                // Check for duplicates and update item_code_target
+                                for (var i = 0; i < frm.doc.roll_to_sheet_conversion_items.length; i++) {
+                                    if (i !== index && frm.doc.roll_to_sheet_conversion_items[i].item_code_source === itemCodeSource) {
+                                        itemCodeCount[itemCodeSource]++;
+                                        var newItemCode = itemCodeSource + '-' + itemCodeCount[itemCodeSource];
+                                        frappe.model.set_value(cdt, cdn, 'item_code_target', newItemCode);
+                                        if (frm.doc.generate_batch == 1) {
+                                            frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
+                                        }
+                                        break; // Exit the loop if a duplicate is found
+                                    }
+                                }
+
+                                // If no duplicate is found, set the new item code
+                                if (!frm.doc.roll_to_sheet_conversion_items[index].item_code_target) {
+                                    var newItemCode = itemCodeSource + '-' + itemCodeCount[itemCodeSource];
+                                    frappe.model.set_value(cdt, cdn, 'item_code_target', newItemCode);
+                                    if (frm.doc.generate_batch == 1) {
+                                        frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
+                                    }
+                                }
+                            }
+                        });
+
+
+                        // END CUSTOM
                     } else {
                         frappe.msgprint(__('Record not found for SR No: {0}', [row.batch_no_source]));
-                        frappe.model.set_value(cdt, cdn, 'item_code', '');
+                        frappe.model.set_value(cdt, cdn, 'item_code_source', '');
+                    }
+                }
+            });
+        }
+    },
+    item_code_source: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if (row.item_code_source) {
+            frappe.call({
+                method: 'amafhh.amafhh.doctype.utils.get_by_item_code.get_by_item_code',
+
+                args: {
+                    item_code: row.item_code_source
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        frappe.model.set_value(cdt, cdn, 'item_code_source', response.message.item_code);
+                        frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
+                        frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
+                        frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
+                        frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
+                        frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source);
+                        frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
+                        // ADD NEW ITEM CODE CUSTOM WORK
+                        // Iterate through each row in the child table
+                        var itemCodeCount = {};
+
+                        frm.doc.roll_to_sheet_conversion_items.forEach(function (item, index) {
+                            // Check if the item code is empty
+                            if (!item.item_code_target) {
+                                var itemCodeSource = row.item_code_source.toString();
+
+                                // Check if the item_code_source has occurred before
+                                if (itemCodeCount[itemCodeSource]) {
+                                    // Increment the count
+                                    itemCodeCount[itemCodeSource]++;
+                                } else {
+                                    // Initialize the count
+                                    itemCodeCount[itemCodeSource] = 1;
+                                }
+
+                                // Check for duplicates and update item_code_target
+                                for (var i = 0; i < frm.doc.roll_to_sheet_conversion_items.length; i++) {
+                                    if (i !== index && frm.doc.roll_to_sheet_conversion_items[i].item_code_source === itemCodeSource) {
+                                        itemCodeCount[itemCodeSource]++;
+                                        var newItemCode = itemCodeSource + '-' + itemCodeCount[itemCodeSource];
+                                        frappe.model.set_value(cdt, cdn, 'item_code_target', newItemCode);
+                                        if (frm.doc.generate_batch == 1) {
+                                            frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
+                                        }
+                                        break; // Exit the loop if a duplicate is found
+                                    }
+                                }
+
+                                // If no duplicate is found, set the new item code
+                                if (!frm.doc.roll_to_sheet_conversion_items[index].item_code_target) {
+                                    var newItemCode = itemCodeSource + '-' + itemCodeCount[itemCodeSource];
+                                    frappe.model.set_value(cdt, cdn, 'item_code_target', newItemCode);
+                                    if (frm.doc.generate_batch == 1) {
+                                        frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
+                                    }
+                                }
+                            }
+                        });
+
+
+                        // END CUSTOM
+                    } else {
+                        frappe.msgprint(__('Record not found for SR No: {0}', [row.batch_no_source]));
+                        frappe.model.set_value(cdt, cdn, 'item_code_source', '');
                     }
                 }
             });
@@ -150,32 +266,32 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
             calculateWeightAndSetValues(row, conversionType, cdt, cdn);
         }
     },
-        item_code_target: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        if (row.item_code_target) {
-            frappe.call({
-                method: 'amafhh.amafhh.doctype.utils.get_by_item_code.get_by_item_code',
-
-                args: {
-                    item_code: row.item_code_target
-                },
-                callback: function (response) {
-                    if (response.message) {
-                        frappe.model.set_value(cdt, cdn, 'width_target', response.message.width);
-                        frappe.model.set_value(cdt, cdn, 'length_target', response.message.length || 0);
-                        frappe.model.set_value(cdt, cdn, 'batch_no_target', row.item_code_target);
-
-                        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
-                    } else {
-                        frappe.msgprint(__('Record not found for Item: {0}', [row.item_code]));
-                    }
-
-
-                }
-            });
-        }
-
-
-    },
+    //     item_code_target: function (frm, cdt, cdn) {
+    //     var row = locals[cdt][cdn];
+    //     if (row.item_code_target) {
+    //         frappe.call({
+    //             method: 'amafhh.amafhh.doctype.utils.get_by_item_code.get_by_item_code',
+    //
+    //             args: {
+    //                 item_code: row.item_code_target
+    //             },
+    //             callback: function (response) {
+    //                 if (response.message) {
+    //                     frappe.model.set_value(cdt, cdn, 'width_target', response.message.width);
+    //                     frappe.model.set_value(cdt, cdn, 'length_target', response.message.length || 0);
+    //                     frappe.model.set_value(cdt, cdn, 'batch_no_target', row.item_code_target);
+    //
+    //                     frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
+    //                 } else {
+    //                     frappe.msgprint(__('Record not found for Item: {0}', [row.item_code]));
+    //                 }
+    //
+    //
+    //             }
+    //         });
+    //     }
+    //
+    //
+    // },
 
 });

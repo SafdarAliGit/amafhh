@@ -153,11 +153,13 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
                 var numericPart = lastItemCode.match(/\d+$/);
 
                 // Increment the numeric part and append it to the parent's item code
-                var newItemCode = frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].item_code.toString()+ '-' + (numericPart ? (parseInt(numericPart[0]) + 1) : 1);
+                var newItemCode = frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].item_code.toString() + '-' + (numericPart ? (parseInt(numericPart[0]) + 1) : 1);
 
                 // Set the new item code in the current row
+                if (frm.doc.generate_batch == 1) {
+                    frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
+                }
                 frappe.model.set_value(item.doctype, item.name, 'item_code', newItemCode);
-                frappe.model.set_value(cdt, cdn,'batch_no_target', newItemCode);
             }
         });
 

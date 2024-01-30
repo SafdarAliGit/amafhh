@@ -13,11 +13,15 @@
   "posting_date",
   "column_break_gfau7",
   "warehouse",
+  "column_break_60nkh",
+  "generate_batch",
   "section_break_zuehv",
-  "source_weight",
   "section_break_j29ig",
-  "target_weight",
   "roll_to_sheet_conversion_items",
+  "section_break_xyzn8",
+  "source_weight",
+  "column_break_jvy0u",
+  "target_weight",
   "amended_from"
  ],
  "fields": [
@@ -82,6 +86,25 @@
    "fieldtype": "Table",
    "label": "Roll To Sheet Conversion Items",
    "options": "Roll To Sheet Conversion Items"
+  },
+  {
+   "fieldname": "section_break_xyzn8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_jvy0u",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_60nkh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "generate_batch",
+   "fieldtype": "Check",
+   "label": "Generate Batch For Target item",
+   "options": "0"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -92,7 +115,7 @@
    "link_fieldname": "roll_to_sheet_conversion"
   }
  ],
- "modified": "2023-12-21 10:25:22.224379",
+ "modified": "2024-01-30 17:47:32.645808",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion",

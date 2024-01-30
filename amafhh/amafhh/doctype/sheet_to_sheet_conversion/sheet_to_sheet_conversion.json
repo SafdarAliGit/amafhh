@@ -13,6 +13,8 @@
   "posting_date",
   "column_break_i2ide",
   "source_warehouse",
+  "column_break_0xkgr",
+  "generate_batch",
   "section_break_oplev",
   "amended_from",
   "sheet_to_sheet_conversion_items",
@@ -23,6 +25,7 @@
  ],
  "fields": [
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date"
@@ -87,12 +90,23 @@
    "fieldtype": "Data",
    "label": "Target Weight",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_0xkgr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "generate_batch",
+   "fieldtype": "Check",
+   "label": " Generate Batch For Target item",
+   "options": "0"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-25 16:34:09.650886",
+ "modified": "2024-01-30 19:55:44.055497",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion",
