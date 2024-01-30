@@ -44,7 +44,7 @@ class SheetToSheetConversion(Document):
     def on_submit(self):
         for item in self.sheet_to_sheet_conversion_items:
             product_item = frappe.new_doc("Item")
-            if self.generate_batch == 1:
+            if item.batch_no_target:
                 product_item.has_batch_no = 1
             product_item.item_code = item.item_code_target
             product_item.item_name = item.item_code_target

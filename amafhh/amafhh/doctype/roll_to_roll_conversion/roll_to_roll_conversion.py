@@ -51,7 +51,7 @@ class RollToRollConversion(Document):
         # CREATING BATCH NO
         for item in self.roll_to_roll_conversion_target:
             product_item = frappe.new_doc("Item")
-            if self.generate_batch == 1:
+            if item.batch_no_target:
                 product_item.has_batch_no = 1
             product_item.item_code = item.item_code
             product_item.item_name = item.item_code
