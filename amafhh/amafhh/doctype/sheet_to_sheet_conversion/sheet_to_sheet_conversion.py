@@ -108,7 +108,7 @@ class SheetToSheetConversion(Document):
                 "s_warehouse": source_warehouse,
                 "t_warehouse": "",
                 "item_code": item.item_code_source,
-                "qty": item.stock_weight_source,
+                "qty": item.weight_target,
                 "valuation_rate": item.rate,
                 "basic_rate": item.rate,
                 "amount": item.amount,
