@@ -91,7 +91,7 @@ class SheetToSheetConversion(Document):
             doc = frappe.new_doc("Stock Entry")
             doc.stock_entry_type = "Repack"
             doc.purpose = "Repack"
-            doc.batch_no = item.batch_no_source
+            doc.batch_no = item.batch_no_source if item.batch_no_source else None
             doc.posting_date = nowdate()
             doc.sheet_to_sheet_conversion = self.name
             source_warehouse = self.source_warehouse
@@ -108,7 +108,7 @@ class SheetToSheetConversion(Document):
                 "s_warehouse": source_warehouse,
                 "t_warehouse": "",
                 "item_code": item.item_code_source,
-                "qty": item.weight_target,
+                "qty": round(float(item.weight_source),3),
                 "valuation_rate": item.rate,
                 "basic_rate": item.rate,
                 "amount": item.amount,
@@ -119,7 +119,7 @@ class SheetToSheetConversion(Document):
                 "s_warehouse": "",
                 "t_warehouse": target_warehouse,
                 "item_code": item.item_code_target,
-                "qty": item.weight_target,
+                "qty": round(float(item.weight_source),3),
                 "valuation_rate": item.rate,
                 "basic_rate": item.rate,
                 "amount": item.amount,
