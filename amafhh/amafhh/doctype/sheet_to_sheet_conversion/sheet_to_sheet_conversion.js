@@ -142,7 +142,16 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
                         frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
-                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length || 0);
+                        frappe.model.set_value(cdt, cdn, 'item_category', response.message.item_category || '');
+                        frappe.model.set_value(cdt, cdn, 'brand', response.message.brand || '');
+                        var weight_factor = 1;
+                        if (frm.doc.conversion_type == 'REAM') {
+                            weight_factor = 3100;
+                        } else {
+                            weight_factor = 15500;
+                        }
+                        frappe.model.set_value(cdt, cdn, 'ream_pkt_source', parseFloat(row.stock_weight_source) / ((parseFloat(row.width_source) * parseFloat(row.length_source) * parseFloat(row.gsm_source)) / weight_factor));
 
 
                         // ADD NEW ITEM CODE CUSTOM WORK
@@ -186,7 +195,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                                 }
                             }
                         });
-                         calculate_source_target_weight_total(frm);
+                        calculate_source_target_weight_total(frm);
 
                         // END CUSTOM
 
@@ -218,11 +227,14 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
                         frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
-                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
-
-
-                        // ADD NEW ITEM CODE CUSTOM WORK
-                        // Iterate through each row in the child table
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length || 0);
+                        var weight_factor = 1;
+                        if (frm.doc.conversion_type == 'REAM') {
+                            weight_factor = 3100;
+                        } else {
+                            weight_factor = 15500;
+                        }
+                        frappe.model.set_value(cdt, cdn, 'ream_pkt_source', parseFloat(row.stock_weight_source) / ((parseFloat(row.width_source) * parseFloat(row.length_source) * parseFloat(row.gsm_source)) / weight_factor));
                         var itemCodeCount = {};
 
                         frm.doc.sheet_to_sheet_conversion_items.forEach(function (item, index) {
@@ -263,7 +275,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                             }
                         });
 
-                         calculate_source_target_weight_total(frm);
+                        calculate_source_target_weight_total(frm);
                         // END CUSTOM
                     } else {
                         frappe.msgprint(__('Record not found for Batch No: {0}', [row.batch_no_source]));

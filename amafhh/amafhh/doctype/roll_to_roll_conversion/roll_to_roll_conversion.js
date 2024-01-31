@@ -64,7 +64,9 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
                         frappe.model.set_value(cdt, cdn, 'width', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
                         frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
-                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
+                        frappe.model.set_value(cdt, cdn, 'length', response.message.length || 0);
+                        frappe.model.set_value(cdt, cdn, 'item_category', response.message.item_category || '');
+                        frappe.model.set_value(cdt, cdn, 'brand', response.message.brand || '');
 
                         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
                     } else {
@@ -81,36 +83,36 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
     },
     item_code: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (row.item_code) {
-            frappe.call({
-                method: 'amafhh.amafhh.doctype.utils.get_by_item_code.get_by_item_code',
+        // if (row.item_code) {
+        //     frappe.call({
+        //         method: 'amafhh.amafhh.doctype.utils.get_by_item_code.get_by_item_code',
+        //
+        //         args: {
+        //             item_code: row.item_code
+        //         },
+        //         callback: function (response) {
+        //             if (response.message) {
+        //                 frappe.model.set_value(cdt, cdn, 'item_code', response.message.item_code);
+        //                 frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
+        //                 frappe.model.set_value(cdt, cdn, 'amount', response.message.amount);
+        //                 frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
+        //                 frappe.model.set_value(cdt, cdn, 'width', response.message.width);
+        //                 frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
+        //                 frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
+        //                 frappe.model.set_value(cdt, cdn, 'length', response.message.length || 0);
+        //
+        //
+        //             } else {
+        //                 frappe.msgprint(__('Record not found for SR No: {0}', [row.batch_no_source]));
+        //                 frappe.model.set_value(cdt, cdn, 'item_code', '');
+        //             }
+        //
+        //
+        //         }
+        //     });
+        // }
 
-                args: {
-                    item_code: row.item_code
-                },
-                callback: function (response) {
-                    if (response.message) {
-                        frappe.model.set_value(cdt, cdn, 'item_code', response.message.item_code);
-                        frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
-                        frappe.model.set_value(cdt, cdn, 'amount', response.message.amount);
-                        frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
-                        frappe.model.set_value(cdt, cdn, 'width', response.message.width);
-                        frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
-                        frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
-                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
-
-                        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
-                    } else {
-                        frappe.msgprint(__('Record not found for SR No: {0}', [row.batch_no_source]));
-                        frappe.model.set_value(cdt, cdn, 'item_code', '');
-                    }
-
-
-                }
-            });
-        }
-
-
+        frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
     },
     weight_source: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
@@ -139,6 +141,8 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
         frappe.model.set_value(cdt, cdn, 'gsm', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].gsm);
         frappe.model.set_value(cdt, cdn, 'rate', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].rate);
         frappe.model.set_value(cdt, cdn, 'import_file', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].import_file);
+        frappe.model.set_value(cdt, cdn, 'item_category', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].item_category);
+        frappe.model.set_value(cdt, cdn, 'brand', frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].brand);
         // ADD NEW ITEM CODE CUSTOM WORK
         // Iterate through each row in the child table
         frm.doc.roll_to_roll_conversion_target.forEach(function (item, index) {

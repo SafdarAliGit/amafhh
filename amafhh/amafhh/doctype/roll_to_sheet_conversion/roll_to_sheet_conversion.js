@@ -25,7 +25,8 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Item", "item_group", "=", "Roll"]
+                    ["Item", "item_group", "=", "Roll"],
+                     ["Item", "qty", ">", 0]
 
                 ]
             };
@@ -81,9 +82,10 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
-                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source);
                         frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
-                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length || 0);
+                        frappe.model.set_value(cdt, cdn, 'item_category', response.message.item_category || '');
+                        frappe.model.set_value(cdt, cdn, 'brand', response.message.brand || '');
                         // ADD NEW ITEM CODE CUSTOM WORK
                         // Iterate through each row in the child table
                         var itemCodeCount = {};
@@ -153,9 +155,8 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                         frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm_source', response.message.gsm);
-                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source);
                         frappe.model.set_value(cdt, cdn, 'import_file', response.message.import_file);
-                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length_source || 0);
+                        frappe.model.set_value(cdt, cdn, 'length_source', response.message.length || 0);
                         // ADD NEW ITEM CODE CUSTOM WORK
                         // Iterate through each row in the child table
                         var itemCodeCount = {};
