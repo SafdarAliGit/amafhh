@@ -38,7 +38,7 @@ def get_batch_no(batch_no):
                     "gsm": item.gsm,
                     "length": item.length,
                     "item_category": item.item_category,
-                    "brand": item.brand
+                    "brand": item.brand_item
                 }
             )
         return data

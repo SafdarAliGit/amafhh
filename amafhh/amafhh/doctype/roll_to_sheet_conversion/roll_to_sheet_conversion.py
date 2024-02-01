@@ -61,7 +61,7 @@ class RollToSheetConversion(Document):
             product_item.ref_no = self.name
             product_item.ref_type = "Roll To Sheet Conversion"
             product_item.item_category = item.item_category if item.item_category else ""
-            product_item.brand = item.brand if item.brand else ""
+            product_item.brand_item = item.brand if item.brand else ""
             try:
                 product_item.save()
                 # frappe.db.commit()

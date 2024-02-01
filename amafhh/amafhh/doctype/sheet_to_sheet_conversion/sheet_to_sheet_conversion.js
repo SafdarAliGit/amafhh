@@ -151,7 +151,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                         } else {
                             weight_factor = 15500;
                         }
-                        frappe.model.set_value(cdt, cdn, 'ream_pkt_source', parseFloat(row.stock_weight_source) / ((parseFloat(row.width_source) * parseFloat(row.length_source) * parseFloat(row.gsm_source)) / weight_factor));
+                        frappe.model.set_value(cdt, cdn, 'calculated_rp', parseFloat(row.stock_weight_source) / ((parseFloat(row.width_source) * parseFloat(row.length_source) * parseFloat(row.gsm_source)) / weight_factor));
 
 
                         // ADD NEW ITEM CODE CUSTOM WORK
@@ -234,7 +234,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                         } else {
                             weight_factor = 15500;
                         }
-                        frappe.model.set_value(cdt, cdn, 'ream_pkt_source', parseFloat(row.stock_weight_source) / ((parseFloat(row.width_source) * parseFloat(row.length_source) * parseFloat(row.gsm_source)) / weight_factor));
+                        frappe.model.set_value(cdt, cdn, 'calculated_rp', parseFloat(row.stock_weight_source) / ((parseFloat(row.width_source) * parseFloat(row.length_source) * parseFloat(row.gsm_source)) / weight_factor));
                         var itemCodeCount = {};
 
                         frm.doc.sheet_to_sheet_conversion_items.forEach(function (item, index) {

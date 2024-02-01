@@ -19,6 +19,7 @@
   "ream_pkt_target",
   "sheet_target",
   "stock_type_target",
+  "column_break_wnq1a",
   "weight_target",
   "rate",
   "amount",
@@ -114,6 +115,7 @@
   {
    "fieldname": "batch_no_source",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "SRC BN",
    "options": "Batch"
@@ -121,6 +123,7 @@
   {
    "fieldname": "batch_no_target",
    "fieldtype": "Data",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "TRG BN"
   },
@@ -151,19 +154,23 @@
    "options": "Item Category"
   },
   {
-   "fetch_from": "item_code_source.brand",
+   "fetch_from": "item_code_source.brand_item",
    "fieldname": "brand",
    "fieldtype": "Link",
    "hidden": 1,
    "in_list_view": 1,
    "label": "Brand",
    "options": "Brand"
+  },
+  {
+   "fieldname": "column_break_wnq1a",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-31 17:21:13.696753",
+ "modified": "2024-02-01 17:16:40.050792",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion Items",
