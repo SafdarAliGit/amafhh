@@ -94,7 +94,7 @@ class RollToSheetConversion(Document):
             doc.purpose = "Repack"
             if item.batch_no_target:
                 doc.batch_no = item.batch_no_target
-            doc.posting_date = nowdate()
+            doc.posting_date = self.posting_date
             doc.roll_to_sheet_conversion = self.name
             source_warehouse = self.warehouse
             target_warehouse = None

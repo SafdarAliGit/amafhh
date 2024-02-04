@@ -29,7 +29,8 @@
   "amount",
   "import_file",
   "item_category",
-  "brand"
+  "brand",
+  "ream_pkt_projected"
  ],
  "fields": [
   {
@@ -193,15 +194,24 @@
    "options": "Brand"
   },
   {
+   "default": "0",
    "fieldname": "calculated_rp",
    "fieldtype": "Data",
-   "label": "Calculated RP"
+   "label": "Calculated RP",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "ream_pkt_projected",
+   "fieldtype": "Data",
+   "label": "Projected RM/Pkt",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-04 17:38:17.006084",
+ "modified": "2024-02-04 22:22:38.684233",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion Items",

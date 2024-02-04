@@ -120,6 +120,16 @@ function check_net_total(frm) {
     }
 
 }
+function target_ream_pkt(frm, cdt, cdn) {
+    var row = locals[cdt][cdn];
+    var weight_factor = 1;
+    if (frm.doc.conversion_type == 'REAM') {
+        weight_factor = 3100;
+    } else {
+        weight_factor = 15500;
+    }
+    frappe.model.set_value(cdt, cdn, 'ream_pkt_projected', parseFloat(row.stock_weight_source) / ((parseFloat(row.width_target) * parseFloat(row.length_target) * parseFloat(row.gsm_source)) / weight_factor));
+}
 
 frappe.ui.form.on('Sheet To Sheet Conversion Items', {
 
@@ -325,6 +335,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
         calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
         calculate_source_target_weight_total(frm);
         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
+        target_ream_pkt(frm, cdt, cdn);
     },
     width_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
@@ -336,6 +347,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
             calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
             calculate_source_target_weight_total(frm);
             frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
+            target_ream_pkt(frm, cdt, cdn);
         }
         if (parseFloat(row.width_target) < 1) {
             frappe.model.set_value(cdt, cdn, 'width_target', null);
@@ -345,6 +357,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
             calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
             calculate_source_target_weight_total(frm);
             frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
+            target_ream_pkt(frm, cdt, cdn);
         }
     },
     // item_code_source: function (frm, cdt, cdn) {
@@ -398,3 +411,5 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
     // },
 
 });
+
+
