@@ -43,14 +43,14 @@
    "options": "Warehouse"
   },
   {
-   "default": "None",
+   "default": "0",
    "fieldname": "source_weight",
    "fieldtype": "Data",
    "label": "Source Weight",
    "read_only": 1
   },
   {
-   "default": "None",
+   "default": "0",
    "fieldname": "target_weight",
    "fieldtype": "Data",
    "label": "Target Weight",
@@ -116,7 +116,7 @@
    "link_fieldname": "roll_to_sheet_conversion"
   }
  ],
- "modified": "2024-02-01 17:16:10.507634",
+ "modified": "2024-02-05 07:59:45.637769",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion",

@@ -29,7 +29,8 @@ frappe.ui.form.on('Sheet To Sheet Conversion', {
                 ]
             };
         });
-    }
+    },
+
 });
 // CUSTOM ID
 var maxSubBatchManager = {

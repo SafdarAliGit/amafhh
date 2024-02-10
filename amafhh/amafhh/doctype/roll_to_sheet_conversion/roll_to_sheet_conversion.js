@@ -26,7 +26,7 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
             return {
                 filters: [
                     ["Item", "item_group", "=", "Roll"],
-                     ["Item", "qty", ">", 0]
+                    ["Item", "qty", ">", 0]
 
                 ]
             };
@@ -42,10 +42,12 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
         weightFactor = 3100;
         single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
         single_sheet_weight = single_ream_pkt_weight / 500;
+
     } else if (conversionType == 'PKT') {
         weightFactor = 15500;
         single_ream_pkt_weight = (row.width_target * row.gsm_source * row.length_target) / weightFactor;
         single_sheet_weight = single_ream_pkt_weight / 100;
+
     } else {
         // Adjust this part based on your requirements
         frappe.model.set_value(cdt, cdn, 'sheet_target', 0); // Set to a default value or handle differently
@@ -55,6 +57,7 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
 
     if (row.ream_pkt_target !== null && row.ream_pkt_target !== undefined && row.ream_pkt_target !== "") {
         total_ream_pkt_weight = single_ream_pkt_weight * row.ream_pkt_target;
+
     }
     if (row.sheet_target !== null && row.sheet_target !== undefined && row.sheet_target !== "") {
         total_sheet_weight = single_sheet_weight * row.sheet_target;
@@ -62,6 +65,17 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
     frappe.model.set_value(cdt, cdn, 'weight_target', total_ream_pkt_weight + total_sheet_weight);
 }
 
+function calculate_source_target_weight_total(frm) {
+    var weight_source = 0;
+    var weight_target = 0;
+    $.each(frm.doc.roll_to_sheet_conversion_items || [], function (i, d) {
+
+        weight_source += flt(d.weight_source);
+        weight_target += flt(d.weight_target);
+    });
+    frm.set_value('source_weight', weight_source);
+    frm.set_value('target_weight', weight_target);
+}
 
 frappe.ui.form.on('Roll To Sheet Conversion Items', {
 
@@ -127,7 +141,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                                 }
                             }
                         });
-
+                        calculate_source_target_weight_total(frm);
 
                         // END CUSTOM
                     } else {
@@ -198,7 +212,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
                                 }
                             }
                         });
-
+                    calculate_source_target_weight_total(frm);
 
                         // END CUSTOM
                     } else {
@@ -238,17 +252,20 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+        calculate_source_target_weight_total(frm);
     },
     ream_pkt_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+        calculate_source_target_weight_total(frm);
     },
 
     length_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         var conversionType = frm.doc.conversion_type;
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+        calculate_source_target_weight_total(frm);
     },
     width_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
@@ -258,6 +275,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
         } else {
             var conversionType = frm.doc.conversion_type;
             calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+            calculate_source_target_weight_total(frm);
         }
         if (parseFloat(row.width_target) < 1) {
             frappe.model.set_value(cdt, cdn, 'width_target', null);
@@ -265,6 +283,7 @@ frappe.ui.form.on('Roll To Sheet Conversion Items', {
         } else {
             var conversionType = frm.doc.conversion_type;
             calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+            calculate_source_target_weight_total(frm);
         }
     },
     //     item_code_target: function (frm, cdt, cdn) {

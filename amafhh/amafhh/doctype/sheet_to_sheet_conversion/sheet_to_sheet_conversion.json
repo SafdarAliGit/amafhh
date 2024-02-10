@@ -99,6 +99,7 @@
    "default": "0",
    "fieldname": "generate_batch",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": " Generate Batch For Target item",
    "options": "0"
   }
@@ -106,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-30 19:55:44.055497",
+ "modified": "2024-02-05 07:00:27.303934",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion",
