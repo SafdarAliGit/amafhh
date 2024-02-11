@@ -16,7 +16,7 @@ frappe.query_reports["Daily Activity Report"] = {
             "fieldname": "transaction_types",
             "label": __("Transaction Types"),
             "fieldtype": "Select",
-            "options": ["All","Sales", "Purchases","Cash Receipt","Cash Payment","Bank Receipt","Bank Payment"],
+            "options": ["All","Sales", "Purchases","Cash Receipt","Cash Payment","Bank Receipt","Bank Payment","Journal Entry"],
             "default": ["All"]  // Preselecting "Sales"
         }
 	]

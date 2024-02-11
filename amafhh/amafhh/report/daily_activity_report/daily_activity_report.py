@@ -86,6 +86,13 @@ def get_columns():
             "width": 120
         },
         {
+            "label": _("Import File"),
+            "fieldname": "import_file",
+            "fieldtype": "Link",
+            "options": "Import File",
+            "width": 120
+        },
+        {
             "label": _("Item"),
             "fieldname": "items",
             "fieldtype": "Data",
@@ -133,6 +140,7 @@ def get_data(filters):
                 `tabSales Invoice`.sale_challan_no,
                 `tabSales Invoice`.hub_challan_no,
                 `tabSales Invoice`.against_income_account as against,
+                `tabSales Invoice`.import_file,
                 GROUP_CONCAT(
                     CONCAT(
                         `tabSales Invoice Item`.item_code,
@@ -165,6 +173,7 @@ def get_data(filters):
                     `tabPurchase Invoice`.total_taxes_and_charges,
                     `tabPurchase Invoice`.grand_total,
                     `tabPurchase Invoice`.against_expense_account as against,
+                    `tabPurchase Invoice`.import_file,
                     GROUP_CONCAT(
                         CONCAT(
                             `tabPurchase Invoice Item`.item_code,
@@ -196,7 +205,8 @@ def get_data(filters):
                                             `tabGL Entry`.debit,
                                             `tabGL Entry`.credit,
                                             `tabGL Entry`.against,
-                                            `tabGL Entry`.remarks
+                                            `tabGL Entry`.remarks,
+                                            `tabGL Entry`.import_file
                                         FROM
                                             `tabGL Entry`
                                         WHERE
@@ -213,7 +223,8 @@ def get_data(filters):
                                     `tabGL Entry`.debit,
                                     `tabGL Entry`.credit,
                                     `tabGL Entry`.against,
-                                    `tabGL Entry`.remarks
+                                    `tabGL Entry`.remarks,
+                                    `tabGL Entry`.import_file
                                 FROM
                                     `tabGL Entry`
                                 WHERE
@@ -255,6 +266,28 @@ def get_data(filters):
                             AND `tabGL Entry`.credit >0
                             AND (SELECT `account_type` FROM `tabAccount` WHERE `name` = `tabGL Entry`.account) ='Bank'
                     """.format(conditions=get_conditions(filters, "GL Entry"))
+    je = """
+                SELECT
+                    `tabJournal Entry`.posting_date,
+                    `tabJournal Entry`.name as voucher_no,
+                    `tabJournal Entry`.remark as remarks,
+                    `tabJournal Entry Account`.party as against,
+                    `tabJournal Entry Account`.account as party,
+                    `tabJournal Entry Account`.debit,
+                    `tabJournal Entry Account`.credit,
+                    `tabJournal Entry Account`.import_file
+                FROM
+                    `tabJournal Entry`
+                LEFT JOIN
+                    `tabJournal Entry Account` ON `tabJournal Entry`.name = `tabJournal Entry Account`.parent
+                WHERE
+                    {conditions} AND `tabJournal Entry`.docstatus = 1
+                GROUP BY
+                    `tabJournal Entry`.name
+                ORDER BY
+                    `tabJournal Entry`.posting_date ASC
+            """.format(conditions=get_conditions(filters, "Journal Entry"))
+
 
     sale_result = frappe.db.sql(sale, filters, as_dict=1)
     purchase_result = frappe.db.sql(purchase, filters, as_dict=1)
@@ -262,6 +295,7 @@ def get_data(filters):
     cash_payment_result = frappe.db.sql(cash_payment, filters, as_dict=1)
     bank_receipt_result = frappe.db.sql(bank_receipt, filters, as_dict=1)
     bank_payment_result = frappe.db.sql(bank_payment, filters, as_dict=1)
+    je_result = frappe.db.sql(je, filters, as_dict=1)
 
     # ==================CALCULATING TOTAL IN SALES====================
 
@@ -269,10 +303,10 @@ def get_data(filters):
         {'voucher_type': '<b><u>Sales Invoice</u></b>', 'posting_date': '', 'voucher_no': '',
          'party': '', 'debit': '', 'credit': '',
          'grand_total': '',
-         'items': ''}]
+         'items': '','sale_challan_no':'', 'hub_challan_no':''},]
     sale_total_dict = {'voucher_type': '<b>Sum</b>', 'posting_date': '-------', 'voucher_no': '-------',
                        'party': '-------', 'debit': None, 'credit': None, 'grand_total': None,
-                       'remarks': '--------------', 'items': '--------------'}
+                       'remarks': '--------------', 'sale_challan_no': '--------------', 'hub_challan_no': '--------------', 'items': '--------------','against':'-------','import_file':'-------'}
     total = 0
     total_taxes_and_charges = 0
     grand_total = 0
@@ -293,7 +327,7 @@ def get_data(filters):
                              'items': ''}]
     purchase_total_dict = {'voucher_type': '<b>Sum</b>', 'posting_date': '-------', 'voucher_no': '-------',
                            'party': '-------', 'debit': None, 'credit': None, 'grand_total': None,
-                           'remarks': '--------------', 'items': '--------------'}
+                           'remarks': '--------------', 'sale_challan_no': '--------------', 'hub_challan_no': '--------------', 'items': '--------------','against':'-------','import_file':'-------'}
     total = 0
     total_taxes_and_charges = 0
     grand_total = 0
@@ -314,7 +348,7 @@ def get_data(filters):
                                  'items': ''}]
     cash_receipt_total_dict = {'voucher_type': '<b>Sum</b>', 'posting_date': '-------', 'voucher_no': '-------',
                                'party': '-------', 'debit': None, 'credit': 0, 'grand_total': 0,
-                               'remarks': '--------------', 'items': '--------------'}
+                               'remarks': '--------------', 'sale_challan_no': '--------------', 'hub_challan_no': '--------------', 'items': '--------------','against':'-------','import_file':'-------'}
     total = 0
     for index, cr in enumerate(cash_receipt_result):
         total += cr.debit
@@ -332,7 +366,7 @@ def get_data(filters):
                                  'items': ''}]
     cash_payment_total_dict = {'voucher_type': '<b>Sum</b>', 'posting_date': '-------', 'voucher_no': '-------',
                                'party': '-------', 'debit': None, 'credit': 0, 'grand_total': 0,
-                               'remarks': '--------------', 'items': '--------------'}
+                               'remarks': '--------------', 'sale_challan_no': '--------------', 'hub_challan_no': '--------------', 'items': '--------------','against':'-------','import_file':'-------'}
     total = 0
     for index, cr in enumerate(cash_payment_result):
         total += cr.credit
@@ -349,7 +383,7 @@ def get_data(filters):
                                  'items': ''}]
     bank_receipt_total_dict = {'voucher_type': '<b>Sum</b>', 'posting_date': '-------', 'voucher_no': '-------',
                                'party': '-------', 'debit': None, 'credit': 0, 'grand_total': 0,
-                               'remarks': '--------------', 'items': '--------------'}
+                               'remarks': '--------------', 'sale_challan_no': '--------------', 'hub_challan_no': '--------------', 'items': '--------------','against':'-------','import_file':'-------'}
     total = 0
     for index, cr in enumerate(bank_receipt_result):
         total += cr.debit
@@ -367,7 +401,7 @@ def get_data(filters):
                                  'items': ''}]
     bank_payment_total_dict = {'voucher_type': '<b>Sum</b>', 'posting_date': '-------', 'voucher_no': '-------',
                                'party': '-------', 'debit': None, 'credit': 0, 'grand_total': 0,
-                               'remarks': '--------------', 'items': '--------------'}
+                               'remarks': '--------------', 'sale_challan_no': '--------------', 'hub_challan_no': '--------------', 'items': '--------------','against':'-------','import_file':'-------'}
     total = 0
     for index, cr in enumerate(bank_payment_result):
         total += cr.credit
@@ -378,6 +412,33 @@ def get_data(filters):
     bank_payment_result = bank_payment_header_dict + bank_payment_result
     bank_payment_result.append(bank_payment_total_dict)
     # ====================CALCULATING TOTAL IN BANK PAID END====================
+    # ==================CALCULATING TOTAL IN JE====================
+
+    je_header_dict = [
+        {'voucher_type': '<b><u>Journal Entry</u></b>', 'posting_date': '', 'voucher_no': '',
+         'party': '', 'debit': '', 'credit': '',
+         'grand_total': '',
+         'items': ''}]
+    je_label = [
+        {'voucher_type': '', 'posting_date': '', 'voucher_no': '',
+         'party': '', 'debit': '', 'credit': '',
+         'grand_total': '','against':'<b>--PARTY--</b>',
+         'items': ''}]
+    je_total_dict = {'voucher_type': '<b>Sum</b>', 'posting_date': '-------', 'voucher_no': '-------',
+                     'party': '-------', 'debit': None, 'credit': None, 'grand_total': None,
+                     'remarks': '--------------', 'sale_challan_no': '--------------', 'hub_challan_no': '--------------', 'items': '--------------','against':'-------','import_file':'-------'}
+    total_debit = 0
+    total_credit = 0
+    grand_total = 0
+    for je in je_result:
+        total_debit += je.debit
+        total_credit += je.credit
+
+    je_total_dict['debit'] = total_debit
+    je_total_dict['credit'] = total_credit
+    je_result = je_header_dict + je_label + je_result
+    je_result.append(je_total_dict)
+    # ====================CALCULATING TOTAL IN JE END====================
     #
     # ====================TRANSACTION TYPE FILTER====================
     if filters.get('transaction_types') == "All":
@@ -387,6 +448,7 @@ def get_data(filters):
         data.extend(cash_payment_result)
         data.extend(bank_receipt_result)
         data.extend(bank_payment_result)
+        data.extend(je_result)
     if 'Sales' in filters.get('transaction_types'):
         data.extend(sale_result)
     if 'Purchases' in filters.get('transaction_types'):
@@ -399,6 +461,8 @@ def get_data(filters):
         data.extend(bank_receipt_result)
     if 'Bank Payment' in filters.get('transaction_types'):
         data.extend(bank_payment_result)
+    if 'Journal Entry' in filters.get('transaction_types'):
+        data.extend(je_result)
         # ====================FILTERS END====================
 
     return data
