@@ -114,15 +114,15 @@ class RollToRollConversion(Document):
         # Append target items using a loop
         for item in self.roll_to_roll_conversion_target:
             it = doc.append("items", {})
-            target_warehouse = None
+            # target_warehouse = None
             it.set_basic_rate_manually = 1
-            if item.stock_type_target == "Finished":
-                target_warehouse = 'Finished Goods - A'
-            elif item.stock_type_target == "Semi-Finished":
-                target_warehouse = 'Goods In Transit - A'
-            elif item.stock_type_target == "Damaged":
-                target_warehouse = 'Damaged - A'
-            it.t_warehouse = target_warehouse
+            # if item.stock_type_target == "Finished":
+            #     target_warehouse = 'Finished Goods - A'
+            # elif item.stock_type_target == "Semi-Finished":
+            #     target_warehouse = 'Goods In Transit - A'
+            # elif item.stock_type_target == "Damaged":
+            #     target_warehouse = 'Damaged - A'
+            it.t_warehouse = self.warehouse
             it.item_code = item.item_code
             it.qty = item.weight_target
             it.valuation_rate = item.rate
