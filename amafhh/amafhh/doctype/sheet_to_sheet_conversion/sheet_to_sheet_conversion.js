@@ -102,8 +102,8 @@ function calculate_source_target_weight_total(frm) {
         weight_source += flt(d.weight_source);
         weight_target += flt(d.weight_target);
     });
-    frm.set_value('source_weight', weight_source);
-    frm.set_value('target_weight', weight_target);
+    frm.set_value('source_weight', parseFloat(weight_source).toFixed(4));
+    frm.set_value('target_weight', parseFloat(weight_target).toFixed(4));
 }
 
 function check_net_total(frm) {
