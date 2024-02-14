@@ -1067,7 +1067,7 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
 
     if (conversionType == 'REAM') {
         weightFactor = 3100;
-        single_ream_pkt_weight = parseFloat((parseInt(row.width) * parseInt(row.gsm) * parseInt(row.length)) / weightFactor).toFixed(2);
+        single_ream_pkt_weight = parseFloat((parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor).toFixed(4);
          // for rate calculation
          var rm_price = parseFloat(row.pkt_price)/single_ream_pkt_weight;
         frappe.model.set_value(cdt, cdn, 'rate', rm_price);
@@ -1075,7 +1075,7 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
 
     } else if (conversionType == 'PKT') {
         weightFactor = 15500;
-        single_ream_pkt_weight = parseFloat((parseInt(row.width) * parseInt(row.gsm) * parseInt(row.length)) / weightFactor).toFixed(2);
+        single_ream_pkt_weight = parseFloat((parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor).toFixed(4);
          // for rate calculation
          var rm_price = parseFloat(row.pkt_price)/single_ream_pkt_weight;
         frappe.model.set_value(cdt, cdn, 'rate', rm_price);
