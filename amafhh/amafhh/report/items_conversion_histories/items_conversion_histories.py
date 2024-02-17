@@ -212,17 +212,17 @@ def get_data(filters):
     #         seen_values.append(key_values)
     #
     # # ==================second duplication removal=============================
-    # keys_to_check = ['rtrct_item_code', 'rtrct_width', 'rtrct_weight_target']
-    # seen_values = []
-    #
-    # for entry in conversion_query_result:
-    #     key_values = tuple(entry[key] for key in keys_to_check)
-    #
-    #     if key_values in seen_values:
-    #         for key in keys_to_check:
-    #             entry[key] = None
-    #     else:
-    #         seen_values.append(key_values)
+    keys_to_check = ['rtrct_item_code', 'rtrct_width', 'rtrct_weight_target']
+    seen_values = []
+
+    for entry in conversion_query_result:
+        key_values = tuple(entry[key] for key in keys_to_check)
+
+        if key_values in seen_values:
+            for key in keys_to_check:
+                entry[key] = None
+        else:
+            seen_values.append(key_values)
     #
     # # ==================third duplication removal=============================
     keys_to_check = ['rtsci_item_code_target', 'rtsci_width_target', 'rtsci_length_target', 'rtsci_weight_target','rtsci_ream_pkt_target']
