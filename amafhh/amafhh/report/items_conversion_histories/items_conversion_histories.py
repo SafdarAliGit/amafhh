@@ -237,18 +237,18 @@ def get_data(filters):
     #     else:
     #         seen_values.append(key_values)
     #     # ==================fourth duplication removal=============================
-    # keys_to_check = ['stsci_item_code_target', 'stsci_width_target', 'stsci_length_target', 'stsci_weight_target',
-    #                  'stsci_ream_pkt_target', 'stsci_rate', 'stsci_amount']
-    # seen_values = []
-    #
-    # for entry in conversion_query_result:
-    #     key_values = tuple(entry[key] for key in keys_to_check)
-    #
-    #     if key_values in seen_values:
-    #         for key in keys_to_check:
-    #             entry[key] = None
-    #     else:
-    #         seen_values.append(key_values)
+    keys_to_check = ['stsci_item_code_target', 'stsci_width_target', 'stsci_length_target', 'stsci_weight_target',
+                     'stsci_ream_pkt_target', 'stsci_rate', 'stsci_amount']
+    seen_values = []
+
+    for entry in conversion_query_result:
+        key_values = tuple(entry[key] for key in keys_to_check)
+
+        if key_values in seen_values:
+            for key in keys_to_check:
+                entry[key] = None
+        else:
+            seen_values.append(key_values)
 
     # END
     data.extend(conversion_query_result)
