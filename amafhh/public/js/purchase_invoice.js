@@ -661,7 +661,7 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
         weightFactor = 3100;
         single_ream_pkt_weight = parseFloat((parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor).toFixed(2);
         // for rate calculation
-         var rm_price = parseFloat(row.pkt_price)/single_ream_pkt_weight;
+        var rm_price = parseFloat(row.pkt_price) / single_ream_pkt_weight;
         frappe.model.set_value(cdt, cdn, 'rate', rm_price);
         // end
 
@@ -669,15 +669,15 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
         // Adjust this part based on your requirements
         weightFactor = 15500;
         single_ream_pkt_weight = parseFloat((parseFloat(row.width) * parseFloat(row.gsm) * parseFloat(row.length)) / weightFactor).toFixed(2);
-         // for rate calculation
-         var rm_price = parseFloat(row.pkt_price)/single_ream_pkt_weight;
+        // for rate calculation
+        var rm_price = parseFloat(row.pkt_price) / single_ream_pkt_weight;
         frappe.model.set_value(cdt, cdn, 'rate', rm_price);
         // end
     } else {
         // Adjust this part based on your requirements
         frappe.model.set_value(cdt, cdn, 'price', 0); // Set to a default value or handle differently
         frappe.model.set_value(cdt, cdn, 'pkt_price', 0); // Set to a default value or handle differently
-       
+
     }
     if (row.ream_pkt !== null && row.ream_pkt !== undefined && row.ream_pkt !== "") {
         total_ream_pkt_weight = single_ream_pkt_weight * row.ream_pkt;
@@ -735,7 +735,7 @@ frappe.ui.form.on('Purchase Invoice Item', {
         var conversionType = row.stock_type.trim();
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
 
-    }
+    },
 
 
 
@@ -830,5 +830,8 @@ frappe.ui.form.on('Purchase Invoice Item', {
     //
     // }
 
-
+    item_code: function (frm, cdt, cdn) {
+        var import_file = frm.doc.import_file;
+        frappe.model.set_value(cdt, cdn, 'import_file',import_file);
+    }
 });
