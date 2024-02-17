@@ -184,7 +184,7 @@ def get_data(filters):
                 LEFT JOIN `tabRoll To Roll Conversion Target` AS rtrct ON pii.import_file = rtrct.import_file
                 LEFT JOIN `tabRoll To Sheet Conversion Items` AS rtsci ON rtrct.import_file = rtsci.import_file
                 LEFT JOIN `tabSheet To Sheet Conversion Items` AS stsci ON rtsci.import_file = stsci.import_file
-                WHERE  pii.import_file = %(import_file)s OR rtrct.import_file = %(import_file)s OR rtsci.import_file = %(import_file)s OR stsci.import_file = %(import_file)s
+                WHERE  pii.import_file = %(import_file)s 
             """
     conversion_query_result = frappe.db.sql(conversion_query, filters, as_dict=1)
     # =========================================================================
