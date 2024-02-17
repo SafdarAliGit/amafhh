@@ -198,21 +198,11 @@ def get_data(filters):
 
     conversion_query_result = conversion_header_dict + conversion_query_result
 
-    # # ==================first duplication removal=============================
-    # keys_to_check = ['import_file', 'sale_item_code', 'sale_width', 'sale_gsm', 'sale_qty', 'sale_rate' ]
-    # seen_values = []
-    #
-    # for entry in conversion_query_result:
-    #     key_values = tuple(entry[key] for key in keys_to_check)
-    #
-    #     if key_values in seen_values:
-    #         for key in keys_to_check:
-    #             entry[key] = None
-    #     else:
-    #         seen_values.append(key_values)
-    #
-    # # ==================second duplication removal=============================
-    keys_to_check = ['rtrct_item_code', 'rtrct_width', 'rtrct_weight_target']
+    # TO REMOVE DUPLICATES
+    keys_to_check = ['import_file', 'sale_item_code', 'sale_width', 'sale_gsm', 'sale_qty', 'sale_rate',
+                     'rtsci_item_code_target', 'rtsci_width_target', 'rtsci_length_target', 'rtsci_weight_target',
+                     'rtsci_ream_pkt_target','stsci_item_code_target', 'stsci_width_target', 'stsci_length_target',
+                     'stsci_weight_target', 'stsci_ream_pkt_target', 'stsci_rate', 'stsci_amount']
     seen_values = []
 
     for entry in conversion_query_result:
@@ -223,32 +213,8 @@ def get_data(filters):
                 entry[key] = None
         else:
             seen_values.append(key_values)
-    #
-    # # ==================third duplication removal=============================
-    keys_to_check = ['rtsci_item_code_target', 'rtsci_width_target', 'rtsci_length_target', 'rtsci_weight_target','rtsci_ream_pkt_target']
-    seen_values = []
 
-    for entry in conversion_query_result:
-        key_values = tuple(entry[key] for key in keys_to_check)
 
-        if key_values in seen_values:
-            for key in keys_to_check:
-                entry[key] = None
-        else:
-            seen_values.append(key_values)
-    #     # ==================fourth duplication removal=============================
-    keys_to_check = ['stsci_item_code_target', 'stsci_width_target', 'stsci_length_target', 'stsci_weight_target',
-                     'stsci_ream_pkt_target', 'stsci_rate', 'stsci_amount']
-    seen_values = []
-
-    for entry in conversion_query_result:
-        key_values = tuple(entry[key] for key in keys_to_check)
-
-        if key_values in seen_values:
-            for key in keys_to_check:
-                entry[key] = None
-        else:
-            seen_values.append(key_values)
 
     # END
     data.extend(conversion_query_result)
