@@ -14,7 +14,7 @@ def execute(filters=None):
 def get_columns():
     columns = [
         {
-            "label": "Import File",
+            "label": "<b>IMPORT FILE</b>",
             "fieldname": "import_file",
             "fieldtype": "Link",
             "options": "Import File",
@@ -22,51 +22,51 @@ def get_columns():
         },
 
         {
-            "label": "Item Code",
+            "label": "<b>ITEM CODE</b>",
             "fieldname": "item_code",
             "fieldtype": "Link",
             "options": "Item",
             "width": 120
         },
         {
-            "label": "Width",
+            "label": "<b>WIDTH</b>",
             "fieldname": "width",
             "fieldtype": "Data",
             "width": 120
 
         },
         {
-            "label": "Length",
+            "label": "<b>LENGTH</b>",
             "fieldname": "length",
             "fieldtype": "Data",
             "width": 120
         },
         {
-            "label": "GSM",
+            "label": "<b>GSM</b>",
             "fieldname": "gsm",
             "fieldtype": "Data",
             "width": 120
         },
         {
-            "label": "Qty",
+            "label": "<b>QTY</b>",
             "fieldname": "qty",
             "fieldtype": "Data",
             "width": 120
         },
         {
-            "label": "Ream/Pkt",
+            "label": "<b>REAM/PKT</b>",
             "fieldname": "ream_pkt",
             "fieldtype": "Data",
             "width": 120
         },
         {
-            "label": "Rate",
+            "label": "<b>RATE</b>",
             "fieldname": "rate",
             "fieldtype": "Data",
             "width": 120
         },
         {
-            "label": "Amount",
+            "label": "<b>AMOUNT</b>",
             "fieldname": "amount",
             "fieldtype": "Data",
             "width": 120
@@ -142,16 +142,16 @@ def get_data(filters):
     # =========================================================================
     # Roll To Roll Conversion (source)
     purchase_header_dict = [
-        {'import_file': '<b><u>PURCHASE</u></b>', 'item_code': ' ', 'width': ' ',
+        {'import_file': '<b>PURCHASE</b>', 'item_code': ' ', 'width': ' ',
          'gsm': ' ', 'qty': ' ', 'rate': ' '}]
     rtrct_header_dict = [
-        {'import_file': '<b><u>SLITTING</u></b>', 'item_code': ' ', 'width': ' ',
+        {'import_file': '<b>SLITTING</b>', 'item_code': ' ', 'width': ' ',
          'gsm': ' ', 'qty': ' ', 'rate': ' '}]
     rtsci_header_dict = [
-        {'import_file': '<b><u>REEL TO SHEET</u></b>', 'item_code': ' ', 'width': ' ',
+        {'import_file': '<b>REEL TO SHEET</b>', 'item_code': ' ', 'width': ' ',
          'gsm': ' ', 'qty': ' ', 'rate': ' '}]
     stsci_header_dict = [
-        {'import_file': '<b><u>REEL TO SHEET</u></b>', 'item_code': ' ', 'width': ' ',
+        {'import_file': '<b>REEL TO SHEET</b>', 'item_code': ' ', 'width': ' ',
          'gsm': ' ', 'qty': ' ', 'rate': ' '}]
 
     purchase_query_result = purchase_header_dict + purchase_query_result
