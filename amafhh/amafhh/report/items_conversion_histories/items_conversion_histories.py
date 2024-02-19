@@ -10,6 +10,7 @@ def execute(filters=None):
     data = get_data(filters)
     return columns, data
 
+
 def get_columns():
     columns = [
         {
@@ -22,200 +23,145 @@ def get_columns():
 
         {
             "label": "Item Code",
-            "fieldname": "sale_item_code",
+            "fieldname": "item_code",
             "fieldtype": "Link",
             "options": "Item",
             "width": 120
         },
         {
             "label": "Width",
-            "fieldname": "sale_width",
+            "fieldname": "width",
             "fieldtype": "Data",
             "width": 120
 
+        },
+        {
+            "label": "Length",
+            "fieldname": "length",
+            "fieldtype": "Data",
+            "width": 120
         },
         {
             "label": "GSM",
-            "fieldname": "sale_gsm",
+            "fieldname": "gsm",
             "fieldtype": "Data",
             "width": 120
         },
         {
             "label": "Qty",
-            "fieldname": "sale_qty",
+            "fieldname": "qty",
+            "fieldtype": "Data",
+            "width": 120
+        },
+        {
+            "label": "Ream/Pkt",
+            "fieldname": "ream_pkt",
             "fieldtype": "Data",
             "width": 120
         },
         {
             "label": "Rate",
-            "fieldname": "sale_rate",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "Item Code",
-            "fieldname": "rtrct_item_code",
-            "fieldtype": "Link",
-            "options": "Item",
-            "width": 120
-        },
-        {
-            "label": "Width",
-            "fieldname": "rtrct_width",
-            "fieldtype": "Data",
-            "width": 120
-        },
-
-        {
-        "label": "Qty",
-            "fieldname": "rtrct_weight_target",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "Item Code",
-            "fieldname": "rtsci_item_code_target",
-            "fieldtype": "Link",
-            "options": "Item",
-            "width": 120
-        },
-        {
-            "label": "Width",
-            "fieldname": "rtsci_width_target",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "Length",
-            "fieldname": "rtsci_length_target",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "Qty",
-            "fieldname": "rtsci_weight_target",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "RM/PKT",
-            "fieldname": "rtsci_ream_pkt_target",
-            "fieldtype": "Data",
-            "width": 120
-        }
-        ,
-        {
-            "label": "Item Code",
-            "fieldname": "stsci_item_code_target",
-            "fieldtype": "Link",
-            "options": "Item",
-            "width": 120
-        },
-        {
-            "label": "Width",
-            "fieldname": "stsci_width_target",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "Length",
-            "fieldname": "stsci_length_target",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "Qty",
-            "fieldname": "stsci_weight_target",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "RM/PKT",
-            "fieldname": "stsci_ream_pkt_target",
-            "fieldtype": "Data",
-            "width": 120
-        },
-        {
-            "label": "Rate",
-            "fieldname": "stsci_rate",
+            "fieldname": "rate",
             "fieldtype": "Data",
             "width": 120
         },
         {
             "label": "Amount",
-            "fieldname": "stsci_amount",
+            "fieldname": "amount",
             "fieldtype": "Data",
             "width": 120
         }
-
 
     ]
     return columns
 
 
-
 def get_data(filters):
     data = []
+    purchase_query = """
+                    SELECT 
+                      pii.import_file,
+                      pii.item_code,
+                      pii.width,
+                      '' AS length,
+               		  pii.gsm,
+               		  pii.qty, 
+               		  '' AS ream_pkt,
+               		  pii.rate,
+               		  '' AS amount
+               		FROM `tabPurchase Invoice Item` AS pii
+               		WHERE  pii.import_file = %(import_file)s 
+               	"""
+    rtrct_query = """
+                    SELECT 
+                      '' AS import_file,
+                      rtrct.item_code,
+                      rtrct.width,
+                      '' AS length,
+                      '' AS gsm,
+                      rtrct.weight_target AS qty, 
+                      '' AS ream_pkt,
+                      '' AS rate,
+                      '' AS amount
+                    FROM `tabRoll To Roll Conversion Target` AS rtrct
+                    WHERE  rtrct.import_file = %(import_file)s 
+                """
+    rtsci_query = """
+                        SELECT 
+                          '' AS import_file,
+                          rtsci.item_code_target AS item_code,
+                          rtsci.width_target AS width,
+                          rtsci.length_target AS length,
+                   		  '' AS gsm,
+                   		  rtsci.weight_target AS qty, 
+                   		  rtsci.ream_pkt_target AS ream_pkt,
+                   		  '' AS rate,
+                   		  '' AS amount
+                   		FROM  `tabRoll To Sheet Conversion Items` AS rtsci
+                   		WHERE  rtsci.import_file = %(import_file)s 
+                   	"""
+    stsci_query = """
+                        SELECT 
+                          '' AS import_file,
+                          stsci.item_code_target AS item_code,
+                          stsci.width_target AS width,
+                          stsci.length_target AS length,
+                          '' AS gsm,
+                          stsci.weight_target AS qty, 
+                          stsci.ream_pkt_target AS ream_pkt,
+                          '' AS rate,
+                          stsci.amount
+                        FROM  `tabSheet To Sheet Conversion Items` AS stsci
+                        WHERE  stsci.import_file = %(import_file)s 
+                    """
 
-    conversion_query = """
-                SELECT 
-                  pii.import_file,
-                  pii.item_code AS sale_item_code,
-                  pii.width AS sale_width,
-           		  pii.gsm AS sale_gsm,
-           		  pii.qty AS sale_qty, 
-           		  pii.rate AS sale_rate,
-           		  rtrct.item_code AS rtrct_item_code,
-           		  rtrct.width AS rtrct_width,
-           		  rtrct.weight_target AS rtrct_weight_target,
-           		  rtsci.item_code_target AS rtsci_item_code_target,
-           		  rtsci.width_target AS rtsci_width_target,
-           		  rtsci.length_target AS rtsci_length_target,
-           		  rtsci.weight_target AS rtsci_weight_target,
-           		  rtsci.ream_pkt_target AS rtsci_ream_pkt_target,
-           		  stsci.item_code_target AS stsci_item_code_target,
-           		  stsci.width_target AS stsci_width_target,
-           		  stsci.length_target AS stsci_length_target,
-           		  stsci.weight_target AS stsci_weight_target,
-           		  stsci.ream_pkt_target AS stsci_ream_pkt_target,
-           		  stsci.rate AS stsci_rate,
-           		  stsci.amount AS stsci_amount
-    			FROM `tabPurchase Invoice Item` AS pii
-                LEFT JOIN `tabRoll To Roll Conversion Target` AS rtrct ON pii.import_file = rtrct.import_file
-                LEFT JOIN `tabRoll To Sheet Conversion Items` AS rtsci ON rtrct.import_file = rtsci.import_file
-                LEFT JOIN `tabSheet To Sheet Conversion Items` AS stsci ON rtsci.import_file = stsci.import_file
-                WHERE  pii.import_file = %(import_file)s 
-            """
-    conversion_query_result = frappe.db.sql(conversion_query, filters, as_dict=1)
+    purchase_query_result = frappe.db.sql(purchase_query, filters, as_dict=1)
+    rtrct_query_result = frappe.db.sql(rtrct_query, filters, as_dict=1)
+    rtsci_query_result = frappe.db.sql(rtsci_query, filters, as_dict=1)
+    stsci_query_result = frappe.db.sql(stsci_query, filters, as_dict=1)
     # =========================================================================
     # Roll To Roll Conversion (source)
-    conversion_header_dict = [
-        {'import_file': '<--------------', 'sale_item_code': '--------------', 'sale_width': '<sapan style="color:green"><b>PURCHASE</b></span>', 'sale_gsm': '--------------',
-         'sale_qty': '--------------', 'sale_rate': '-------------->', 'rtrct_item_code': '<--------------', 'rtrct_width': '<sapan style="color:blue"><b>SLITTING</b></span>',
-         'rtrct_weight_target': '-------------->','rtsci_item_code_target':'<--------------', 'rtsci_width_target':'--------------',
-         'rtsci_length_target':'<sapan style="color:orange"><b>REEL TO SHEET</b></span>', 'rtsci_weight_target':'--------------', 'rtsci_ream_pkt_target':'-------------->',
-           'stsci_item_code_target':'<--------------', 'stsci_width_target':'--------------', 'stsci_length_target':'--------------', 'stsci_weight_target':'<sapan style="color:red"><b>SHEET TO SHEET</b></span>', 'stsci_ream_pkt_target':'--------------', 'stsci_rate':'--------------', 'stsci_amount':'-------------->'} ]
+    purchase_header_dict = [
+        {'import_file': '<b><u>PURCHASE</u></b>', 'item_code': ' ', 'width': ' ',
+         'gsm': ' ', 'qty': ' ', 'rate': ' '}]
+    rtrct_header_dict = [
+        {'import_file': '<b><u>SLITTING</u></b>', 'item_code': ' ', 'width': ' ',
+         'gsm': ' ', 'qty': ' ', 'rate': ' '}]
+    rtsci_header_dict = [
+        {'import_file': '<b><u>REEL TO SHEET</u></b>', 'item_code': ' ', 'width': ' ',
+         'gsm': ' ', 'qty': ' ', 'rate': ' '}]
+    stsci_header_dict = [
+        {'import_file': '<b><u>REEL TO SHEET</u></b>', 'item_code': ' ', 'width': ' ',
+         'gsm': ' ', 'qty': ' ', 'rate': ' '}]
 
-    conversion_query_result = conversion_header_dict + conversion_query_result
-
-    # TO REMOVE DUPLICATES
-    keys_to_check = ['import_file', 'sale_item_code', 'sale_width', 'sale_gsm', 'sale_qty', 'sale_rate',
-                     'rtsci_item_code_target', 'rtsci_width_target', 'rtsci_length_target', 'rtsci_weight_target',
-                     'rtsci_ream_pkt_target','stsci_item_code_target', 'stsci_width_target', 'stsci_length_target',
-                     'stsci_weight_target', 'stsci_ream_pkt_target', 'stsci_rate', 'stsci_amount']
-    seen_values = []
-
-    for entry in conversion_query_result:
-        key_values = tuple(entry[key] for key in keys_to_check)
-
-        if key_values in seen_values:
-            for key in keys_to_check:
-                entry[key] = None
-        else:
-            seen_values.append(key_values)
+    purchase_query_result = purchase_header_dict + purchase_query_result
+    rtrct_query_result = rtrct_header_dict + rtrct_query_result
+    rtsci_query_result = rtsci_header_dict + rtsci_query_result
+    stsci_query_result = stsci_header_dict + stsci_query_result
 
 
-
-    # END
-    data.extend(conversion_query_result)
+    data.extend(purchase_query_result)
+    data.extend(rtrct_query_result)
+    data.extend(rtsci_query_result)
+    data.extend(stsci_query_result)
     return data

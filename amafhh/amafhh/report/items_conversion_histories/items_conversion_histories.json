@@ -1,5 +1,5 @@
 {
- "add_total_row": 1,
+ "add_total_row": 0,
  "columns": [],
  "creation": "2024-02-17 07:14:22.265317",
  "disable_prepared_report": 0,
@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2024-02-17 16:59:51.199262",
+ "modified": "2024-02-19 15:29:39.649254",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Items Conversion Histories",
