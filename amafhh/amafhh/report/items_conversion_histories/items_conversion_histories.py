@@ -211,7 +211,7 @@ def get_data(filters):
         {'import_file': '<b>REEL TO SHEET</b>', 'item_code': ' ', 'width': ' ',
          'gsm': ' ', 'qty': ' ', 'rate': ' '}]
     stsci_header_dict = [
-        {'import_file': '<b>REEL TO SHEET</b>', 'item_code': ' ', 'width': ' ',
+        {'import_file': '<b>SHEET TO SHEET</b>', 'item_code': ' ', 'width': ' ',
          'gsm': ' ', 'qty': ' ', 'rate': ' '}]
     sale_header_dict = [
         {'import_file': '<b>SALE</b>', 'item_code': ' ', 'width': ' ',
