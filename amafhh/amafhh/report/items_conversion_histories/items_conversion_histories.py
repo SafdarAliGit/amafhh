@@ -186,7 +186,7 @@ def get_data(filters):
     stsci_sum_dict = [
         {'import_file': '<b>TOTAL =></b>', 'item_code': ' ', 'width': ' ',
          'gsm': ' ', 'qty': ' ', 'rate': ' '}]
-    total_stsci_qty = 0
+    total_stsci_qty =0
     for i in stsci_query_result:
         total_stsci_qty += Decimal(i.qty) if i.qty else 0
     stsci_sum_dict[0]['qty'] = f"<b>{total_stsci_qty:.4f}</b>" if total_stsci_qty else 0
