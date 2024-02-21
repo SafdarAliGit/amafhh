@@ -9,35 +9,6 @@ from frappe import _, throw
 
 class RollToSheetConversion(Document):
 
-    # def before_insert(self):
-    #     # super(SheetToSheetConversion, self).before_insert()
-    #     batches = {}
-    #
-    #     for i in self.roll_to_sheet_conversion_items:
-    #         last_record = frappe.get_all(
-    #             'Roll To Sheet Conversion Items',
-    #             filters={'batch_no_target': ('like', f'{i.batch_no_source}-%')},
-    #             fields=['batch_no_target'],
-    #             order_by='CAST(REPLACE(batch_no_target, "-", "") AS SIGNED) DESC',
-    #             limit=1
-    #         )
-    #         if last_record:
-    #             last_batch_number = int(last_record[0]['batch_no_target'].split('-')[-1])
-    #             if i.batch_no_source in batches:
-    #                 i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + batches[i.batch_no_source]}"
-    #             else:
-    #                 batches[i.batch_no_source] = 1
-    #                 i.batch_no_target = f"{i.batch_no_source}-{last_batch_number + 1}"
-    #         else:
-    #             if i.batch_no_source in batches:
-    #                 i.batch_no_target = f"{i.batch_no_source}-{batches[i.batch_no_source]}"
-    #             else:
-    #                 batches[i.batch_no_source] = 1
-    #                 i.batch_no_target = f"{i.batch_no_source}-{1}"
-    #
-    #         i.save()
-    #
-    #     frappe.db.commit()
 
     def on_submit(self):
         # super(RollToSheetConversion, self).save()
@@ -125,7 +96,8 @@ class RollToSheetConversion(Document):
                 "valuation_rate": item.rate,
                 "basic_rate": item.rate,
                 "amount": item.amount,
-                "batch_no": item.batch_no_target if item.batch_no_target else None
+                "batch_no": item.batch_no_target if item.batch_no_target else None,
+                "ream_pkt": item.ream_pkt_target if item.ream_pkt_target else None
             })
             try:
                 # doc.ignore_validate = True
