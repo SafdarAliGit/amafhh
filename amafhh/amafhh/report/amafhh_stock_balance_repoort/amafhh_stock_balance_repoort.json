@@ -1,5 +1,5 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "columns": [],
  "creation": "2024-02-21 16:22:40.762641",
  "disable_prepared_report": 0,
@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2024-02-21 16:22:40.762641",
+ "modified": "2024-02-21 20:40:57.215654",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Amafhh Stock Balance Repoort",

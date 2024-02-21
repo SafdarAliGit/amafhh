@@ -143,6 +143,7 @@ def get_data(filters):
         INNER JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
         {conditions} AND item.item_group != 'Roll'
         GROUP BY item.item_code
+        HAVING balance_qty != 0
         ORDER BY item.item_code
     """
 
