@@ -120,8 +120,8 @@ def get_conditions(filters):
 def get_data(filters):
     data = []
     conditions = get_conditions(filters)
-    if conditions:
-        conditions = "WHERE " + conditions
+    # if conditions:
+    #     conditions = "WHERE " + conditions
 
     stock_balance_query = f"""
         SELECT 
@@ -139,11 +139,15 @@ def get_data(filters):
             '' AS out_rm_pkt,
             (SUM(CASE WHEN sle.actual_qty > 0 THEN sle.actual_qty ELSE 0 END) - ABS(SUM(CASE WHEN sle.actual_qty < 0 THEN sle.actual_qty ELSE 0 END))) AS balance_qty,
             '' AS balance_rm_pkt  
-        FROM `tabItem` AS item
-        INNER JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
-        {conditions} AND item.item_group != 'Roll'
+        FROM `tabItem` AS item, `tabStock Ledger Entry` AS sle
+        WHERE
+            item.name = sle.item_code 
+            AND 
+            {conditions} 
+            AND item.item_group != 'Roll' 
+            AND sle.is_cancelled != 1
         GROUP BY item.item_code
-        HAVING balance_qty != 0
+        HAVING (SUM(CASE WHEN sle.actual_qty > 0 THEN sle.actual_qty ELSE 0 END) - ABS(SUM(CASE WHEN sle.actual_qty < 0 THEN sle.actual_qty ELSE 0 END))) != 0
         ORDER BY item.item_code
     """
 
