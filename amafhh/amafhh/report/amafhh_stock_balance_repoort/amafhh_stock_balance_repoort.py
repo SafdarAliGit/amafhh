@@ -131,7 +131,7 @@ def get_data(filters):
             COALESCE(item.length, 0) AS length,
             COALESCE(item.gsm, 0) AS gsm,
             item.item_group,
-            CASE WHEN item.item_group = 'Card' THEN 3100 WHEN item.item_group = 'Sheet' THEN 15500 ELSE 0 END AS factor,
+            CASE WHEN item.gsm < 100  THEN 3100 WHEN item.gsm >= 100 THEN 15500 ELSE 0 END AS factor,
             item.import_file,
             SUM(CASE WHEN sle.actual_qty > 0 THEN sle.actual_qty ELSE 0 END) AS in_qty,
             '' AS in_rm_pkt,
