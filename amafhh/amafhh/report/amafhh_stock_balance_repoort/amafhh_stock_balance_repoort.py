@@ -162,9 +162,9 @@ def get_data(filters):
         out_qty = Decimal(i.out_qty)
         balance_qty = Decimal(i.balance_qty)
 
-        i.in_rm_pkt = round(in_qty / ((width * length * gsm) / factor), 2)
-        i.out_rm_pkt = round(out_qty / ((width * length * gsm) / factor), 2)
-        i.balance_rm_pkt = round(balance_qty / ((width * length * gsm) / factor), 2)
+        i.in_rm_pkt = round(in_qty / ((width * length * gsm) / factor), 0 if gsm<100 else 2)
+        i.out_rm_pkt = round(out_qty / ((width * length * gsm) / factor), 0 if gsm<100 else 2)
+        i.balance_rm_pkt = round(balance_qty / ((width * length * gsm) / factor), 0 if gsm<100 else 2)
 
     data.extend(stock_balance_result)
     return data
