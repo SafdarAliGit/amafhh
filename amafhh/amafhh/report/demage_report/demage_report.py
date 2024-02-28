@@ -39,13 +39,7 @@ def get_columns():
             "fieldtype": "Data",
             "width": 140
         },
-        {
-            "label": "<b>ITEM CODE</b>",
-            "fieldname": "reel_no",
-            "fieldtype": "Link",
-            "options": "Item",
-            "width": 120
-        },
+
         {
             "label": "<b>DAMAGED</b>",
             "fieldname": "damaged",
@@ -73,7 +67,7 @@ def get_columns():
 def get_conditions(filters):
     conditions = []
     if filters.get("import_file"):
-        conditions.append(f"AND pii.import_file = %(import_file)s")
+        conditions.append(f"AND item.import_file = %(import_file)s")
     return " ".join(conditions)
 
 
@@ -87,7 +81,6 @@ def get_data(filters):
                 item.width,
                 item.gsm,
                 item.qty,
-                sle.item_code AS reel_no,
                 SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END) AS damaged,
                 SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END) AS sami_finished,
                 SUM(CASE WHEN sle.warehouse = 'Non Physical Damage - A' THEN sle.actual_qty ELSE 0 END) AS non_physical
@@ -99,7 +92,7 @@ def get_data(filters):
                 AND sle.voucher_type = 'Stock Entry'
                 {conditions}
             GROUP BY 
-                sle.item_code,item.width,item.gsm,item.qty,item.item_code
+                item.width,item.gsm,item.qty,item.item_code
             HAVING
                 damaged > 0 OR sami_finished > 0 OR non_physical > 0;
         """
