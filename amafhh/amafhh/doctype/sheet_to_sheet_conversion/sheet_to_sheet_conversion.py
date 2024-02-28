@@ -74,6 +74,8 @@ class SheetToSheetConversion(Document):
                 target_warehouse = 'Goods In Transit - A'
             elif item.stock_type_target == "Damaged":
                 target_warehouse = 'Damaged - A'
+            elif item.stock_type_target == "Non-Physical":
+                target_warehouse = 'Non Physical Damage - A'
 
             doc.append("items", {
                 "set_basic_rate_manually": 1,
