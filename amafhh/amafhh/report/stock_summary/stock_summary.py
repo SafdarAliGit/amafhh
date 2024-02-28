@@ -27,6 +27,13 @@ def get_columns():
             "width": 80
         },
         {
+            "label": "<b>IMPORT FILE</b>",
+            "fieldname": "import_file",
+            "fieldtype": "Link",
+            "options": "Import File",
+            "width": 120
+        },
+        {
             "label": "<b>BRAND ITEM</b>",
             "fieldname": "brand_item",
             "fieldtype": "Link",
@@ -82,8 +89,8 @@ def get_data(filters):
     stock_balance_query = f"""
             SELECT 
                 item.item_group,
+                COUNT(DISTINCT item.name) AS number_of_items,
                 item.import_file,
-                COUNT(*) AS number_of_items,
                 item.brand_item,
                 item.item_category,
                 COALESCE(item.width, 0) AS width,
