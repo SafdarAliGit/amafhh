@@ -1,5 +1,5 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "columns": [],
  "creation": "2024-02-27 20:28:59.235533",
  "disable_prepared_report": 0,
@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2024-02-27 20:28:59.235533",
+ "modified": "2024-02-28 07:18:14.017686",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Stock Summary",

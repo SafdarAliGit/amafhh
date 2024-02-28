@@ -166,7 +166,7 @@
    "fieldname": "stock_type_target",
    "fieldtype": "Select",
    "label": "Stock",
-   "options": "Finished\nSemi-Finished\nDamaged"
+   "options": "Finished\nSemi-Finished\nDamaged\nNon-Phyical"
   },
   {
    "fieldname": "import_file",
@@ -211,7 +211,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-04 22:22:38.684233",
+ "modified": "2024-02-28 07:29:38.103805",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion Items",
