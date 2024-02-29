@@ -70,11 +70,16 @@ def get_columns():
     return columns
 
 
+import frappe
+
 def get_conditions(filters):
     conditions = []
     if filters.get("import_file"):
-        conditions.append(f"item.import_file = %(import_file)s")
-    return " ".join(conditions)
+        conditions.append(f"item.import_file = '{filters.get('import_file')}'")
+    if conditions:
+        return "WHERE " + " AND ".join(conditions)
+    else:
+        return ""
 
 
 def get_data(filters):
@@ -82,28 +87,28 @@ def get_data(filters):
     conditions = get_conditions(filters)
 
     stock_damage_query = f"""
-            SELECT 
-                item.item_code,
-                item.width,
-                item.gsm,
-                ROUND(item.qty, 4) AS qty,
-                COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) AS finished,
-                COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) AS damaged,
-                COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) AS sami_finished,
-                COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Physical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical
-            FROM 
-                `tabItem` AS item
-            LEFT JOIN 
-                `tabStock Ledger Entry` AS sle ON SUBSTRING_INDEX(sle.item_code, '-', 1) = item.item_code 
-                 AND sle.is_cancelled != 1 
-                 AND sle.voucher_type = 'Stock Entry'
-            WHERE
-                {conditions}
-            GROUP BY 
-                 item.item_code, item.width, item.gsm, item.qty
-            ORDER BY 
-                item.item_code
-        """
-    stock_damage_result = frappe.db.sql(stock_damage_query, filters, as_dict=1)
+        SELECT 
+            item.item_code,
+            item.width,
+            item.gsm,
+            ROUND(item.qty, 4) AS qty,
+            COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) AS finished,
+            COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) AS damaged,
+            COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) AS sami_finished,
+            COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Physical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical
+        FROM 
+            `tabItem` AS item
+        LEFT JOIN 
+            `tabStock Ledger Entry` AS sle ON SUBSTRING_INDEX(sle.item_code, '-', 1) = item.item_code 
+             AND sle.is_cancelled != 1 
+             AND sle.voucher_type = 'Stock Entry' 
+        {conditions} 
+        GROUP BY 
+             item.item_code, item.width, item.gsm, item.qty
+        ORDER BY 
+            item.item_code
+    """
+    stock_damage_result = frappe.db.sql(stock_damage_query, as_dict=True)
     data.extend(stock_damage_result)
     return data
+
