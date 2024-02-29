@@ -98,10 +98,11 @@ def get_data(filters):
                  AND sle.is_cancelled != 1 
                  AND sle.voucher_type = 'Stock Entry'
             WHERE
-                 {conditions}
+                {conditions}
             GROUP BY 
-                item.width, item.gsm, item.qty, item.item_code
-            ORDER BY item.item_code
+                 item.item_code, item.width, item.gsm, item.qty
+            ORDER BY 
+                item.item_code
         """
     stock_damage_result = frappe.db.sql(stock_damage_query, filters, as_dict=1)
     data.extend(stock_damage_result)
