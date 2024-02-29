@@ -41,6 +41,12 @@ def get_columns():
         },
 
         {
+            "label": "<b>FINISHED</b>",
+            "fieldname": "finished",
+            "fieldtype": "Data",
+            "width": 120
+        },
+        {
             "label": "<b>DAMAGED</b>",
             "fieldname": "damaged",
             "fieldtype": "Data",
@@ -80,21 +86,21 @@ def get_data(filters):
                 item.item_code,
                 item.width,
                 item.gsm,
-                item.qty,
-                SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END) AS damaged,
-                SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END) AS sami_finished,
-                SUM(CASE WHEN sle.warehouse = 'Non Physical Damage - A' THEN sle.actual_qty ELSE 0 END) AS non_physical
+                ROUND(item.qty, 4) AS qty,
+                COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) AS finished,
+                COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) AS damaged,
+                COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) AS sami_finished,
+                COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Physical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical
             FROM 
-                `tabStock Ledger Entry` AS sle, `tabItem` AS item
-            WHERE
-                SUBSTRING_INDEX(sle.item_code, '-', 1) = item.item_code 
-                AND sle.is_cancelled != 1 
-                AND sle.voucher_type = 'Stock Entry'
-                {conditions}
+                `tabItem` AS item
+            LEFT JOIN 
+                `tabStock Ledger Entry` AS sle ON SUBSTRING_INDEX(sle.item_code, '-', 1) = item.item_code 
+                                                AND sle.is_cancelled != 1 
+                                                AND sle.voucher_type = 'Stock Entry'
+            {conditions}
             GROUP BY 
-                item.width,item.gsm,item.qty,item.item_code
-            HAVING
-                damaged > 0 OR sami_finished > 0 OR non_physical > 0;
+                item.width, item.gsm, item.qty, item.item_code
+            ORDER BY item.item_code
         """
 
     stock_damage_result = frappe.db.sql(stock_damage_query, filters, as_dict=1)
