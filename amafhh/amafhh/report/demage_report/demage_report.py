@@ -97,7 +97,7 @@ def get_data(filters):
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) AS sami_finished,
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Physical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical
         FROM 
-            `tabItem` AS item
+            `tabPurchase Invoice Item` AS item
         LEFT JOIN 
             `tabStock Ledger Entry` AS sle ON SUBSTRING_INDEX(sle.item_code, '-', 1) = item.item_code 
              AND sle.is_cancelled != 1 
