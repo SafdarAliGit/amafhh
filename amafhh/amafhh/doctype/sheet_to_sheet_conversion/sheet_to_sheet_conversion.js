@@ -189,7 +189,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                                         itemCodeCount[itemCodeSource]++;
                                         var newItemCode = itemCodeSource + '-' + itemCodeCount[itemCodeSource];
                                         frappe.model.set_value(cdt, cdn, 'item_code_target', newItemCode);
-                                        if (frm.doc.generate_batch == 1) {
+                                        if (frm.doc.generate_batch === 1) {
                                             frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
                                         }
                                         break; // Exit the loop if a duplicate is found
@@ -200,7 +200,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                                 if (!frm.doc.sheet_to_sheet_conversion_items[index].item_code_target) {
                                     var newItemCode = itemCodeSource + '-' + itemCodeCount[itemCodeSource];
                                     frappe.model.set_value(cdt, cdn, 'item_code_target', newItemCode);
-                                    if (frm.doc.generate_batch == 1) {
+                                    if (frm.doc.generate_batch === 1) {
                                         frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
                                     }
                                 }
@@ -268,7 +268,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                                         itemCodeCount[itemCodeSource]++;
                                         var newItemCode = itemCodeSource + '-' + itemCodeCount[itemCodeSource];
                                         frappe.model.set_value(cdt, cdn, 'item_code_target', newItemCode);
-                                        if (frm.doc.generate_batch == 1) {
+                                        if (frm.doc.generate_batch === 1) {
                                             frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
                                         }
                                         break; // Exit the loop if a duplicate is found
@@ -279,7 +279,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                                 if (!frm.doc.sheet_to_sheet_conversion_items[index].item_code_target) {
                                     var newItemCode = itemCodeSource + '-' + itemCodeCount[itemCodeSource];
                                     frappe.model.set_value(cdt, cdn, 'item_code_target', newItemCode);
-                                    if (frm.doc.generate_batch == 1) {
+                                    if (frm.doc.generate_batch === 1) {
                                         frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
                                     }
                                 }

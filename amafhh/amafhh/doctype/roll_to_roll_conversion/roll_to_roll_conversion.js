@@ -158,9 +158,8 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
 
                 // Increment the numeric part and append it to the parent's item code
                 var newItemCode = frm.fields_dict['roll_to_roll_conversion_source'].grid.data[0].item_code.toString() + '-' + (numericPart ? (parseInt(numericPart[0]) + 1) : 1);
-
                 // Set the new item code in the current row
-                if (frm.doc.generate_batch == 1) {
+                if (frm.doc.generate_batch === 1) {
                     frappe.model.set_value(cdt, cdn, 'batch_no_target', newItemCode);
                 }
                 frappe.model.set_value(item.doctype, item.name, 'item_code', newItemCode);
@@ -222,7 +221,9 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
                         frappe.model.set_value(cdt, cdn, 'width', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
                         frappe.model.set_value(cdt, cdn, 'length', response.message.length || 0);
+                           if (frm.doc.generate_batch === 1) {
                         frappe.model.set_value(cdt, cdn, 'batch_no_target', row.item_code);
+                        }
 
                         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
                     } else {

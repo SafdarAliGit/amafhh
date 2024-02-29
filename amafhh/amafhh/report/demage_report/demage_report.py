@@ -73,7 +73,7 @@ def get_columns():
 def get_conditions(filters):
     conditions = []
     if filters.get("import_file"):
-        conditions.append(f"AND item.import_file = %(import_file)s")
+        conditions.append(f"item.import_file = %(import_file)s")
     return " ".join(conditions)
 
 
@@ -95,14 +95,14 @@ def get_data(filters):
                 `tabItem` AS item
             LEFT JOIN 
                 `tabStock Ledger Entry` AS sle ON SUBSTRING_INDEX(sle.item_code, '-', 1) = item.item_code 
-                                                AND sle.is_cancelled != 1 
-                                                AND sle.voucher_type = 'Stock Entry'
-            {conditions}
+                 AND sle.is_cancelled != 1 
+                 AND sle.voucher_type = 'Stock Entry'
+            WHERE
+                 {conditions}
             GROUP BY 
                 item.width, item.gsm, item.qty, item.item_code
             ORDER BY item.item_code
         """
-
     stock_damage_result = frappe.db.sql(stock_damage_query, filters, as_dict=1)
     data.extend(stock_damage_result)
     return data
