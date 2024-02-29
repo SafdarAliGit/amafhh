@@ -95,7 +95,7 @@ def get_data(filters):
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) AS finished,
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) AS damaged,
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) AS sami_finished,
-            COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Physical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical
+            COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical
         FROM 
             `tabPurchase Invoice Item` AS item
         LEFT JOIN 
