@@ -64,13 +64,45 @@ def get_columns():
             "fieldname": "non_physical",
             "fieldtype": "Data",
             "width": 120
-        }
+        },
+        {
+            "label": "<b>TOTAL WEIGHT</b>",
+            "fieldname": "total_weight",
+            "fieldtype": "Data",
+            "width": 120
+        },
+        {
+            "label": "<b>DAMAGE AVG.</b>",
+            "fieldname": "damage_avg",
+            "fieldtype": "Data",
+            "width": 120
+        },
+        {
+            "label": "<b>NP.DAMAGE AVG.</b>",
+            "fieldname": "np_damage_avg",
+            "fieldtype": "Data",
+            "width": 120
+        },
+        {
+            "label": "<b>BAL. WT.</b>",
+            "fieldname": "balance_weight",
+            "fieldtype": "Data",
+            "width": 140
 
+        },
+        {
+            "label": "<b>CONV.WT.</b>",
+            "fieldname": "conversion_gsm",
+            "fieldtype": "Data",
+            "width": 140
+
+        }
     ]
     return columns
 
 
 import frappe
+
 
 def get_conditions(filters):
     conditions = []
@@ -95,7 +127,13 @@ def get_data(filters):
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) AS finished,
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) AS damaged,
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) AS sami_finished,
-            COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical
+            COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical,
+            (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0)) AS total_weight,
+            ((COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0))/item.qty) AS damage_avg,
+            ((COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0))/item.qty) AS np_damage_avg,
+            (item.qty - (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0))) AS balance_weight,
+            ((item.qty / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0)))* item.gsm) AS conversion_gsm
+            
         FROM 
             `tabPurchase Invoice Item` AS item
         LEFT JOIN 
@@ -111,4 +149,3 @@ def get_data(filters):
     stock_damage_result = frappe.db.sql(stock_damage_query, as_dict=True)
     data.extend(stock_damage_result)
     return data
-
