@@ -96,7 +96,15 @@ def get_columns():
             "fieldtype": "Data",
             "width": 140
 
+        },
+        {
+            "label": "<b>NP. CONV.WT.</b>",
+            "fieldname": "np_conversion_gsm",
+            "fieldtype": "Data",
+            "width": 140
+
         }
+
     ]
     return columns
 
@@ -132,7 +140,8 @@ def get_data(filters):
             ROUND((item.qty / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0))),4) AS damage_avg,
             ROUND(((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0))/item.qty),4) AS np_damage_avg,
             ROUND((item.qty - (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0))),4) AS balance_weight,
-            ROUND(((item.qty / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0)))* item.gsm),4) AS conversion_gsm
+            ROUND(((item.qty / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0)))* item.gsm),4) AS conversion_gsm,
+            ROUND((((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0))/item.qty)* item.gsm),4) AS np_conversion_gsm
             
         FROM 
             `tabPurchase Invoice Item` AS item
