@@ -117,14 +117,14 @@ def get_conditions(filters):
     if filters.get("import_file"):
         conditions.append(f"item.import_file = '{filters.get('import_file')}'")
     if conditions:
-        return "WHERE " + " AND ".join(conditions)
+        return " AND ".join(conditions)
     else:
         return ""
-
 
 def get_data(filters):
     data = []
     conditions = get_conditions(filters)
+    conditions_query = "WHERE item.item_code NOT LIKE '%-%'" if not conditions else f"WHERE {conditions} AND item.item_code NOT LIKE '%-%'"
 
     stock_damage_query = f"""
         SELECT 
@@ -142,19 +142,25 @@ def get_data(filters):
             ROUND((item.qty - (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0))),4) AS balance_weight,
             ROUND(((item.qty / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0)))* item.gsm),4) AS conversion_gsm,
             ROUND((((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0))/item.qty)* item.gsm),4) AS np_conversion_gsm
-            
+
         FROM 
-            `tabPurchase Invoice Item` AS item
+            `tabItem` AS item
         LEFT JOIN 
             `tabStock Ledger Entry` AS sle ON SUBSTRING_INDEX(sle.item_code, '-', 1) = item.item_code 
              AND sle.is_cancelled != 1 
              AND sle.voucher_type = 'Stock Entry' 
-        {conditions} 
+             AND item.item_code NOT LIKE '%-%'
+        {conditions_query}
         GROUP BY 
              item.item_code, item.width, item.gsm, item.qty
         ORDER BY 
             item.item_code
     """
+
     stock_damage_result = frappe.db.sql(stock_damage_query, as_dict=True)
     data.extend(stock_damage_result)
     return data
+
+
+
+
