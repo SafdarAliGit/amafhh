@@ -72,13 +72,13 @@ def get_columns():
             "width": 120
         },
         {
-            "label": "<b>DAMAGE AVG.</b>",
+            "label": "<b>DMG RATIO</b>",
             "fieldname": "damage_avg",
             "fieldtype": "Data",
             "width": 120
         },
         {
-            "label": "<b>NP.DAMAGE AVG.</b>",
+            "label": "<b>NP RATIO</b>",
             "fieldname": "np_damage_avg",
             "fieldtype": "Data",
             "width": 120
@@ -91,14 +91,14 @@ def get_columns():
 
         },
         {
-            "label": "<b>CONV.WT.</b>",
+            "label": "<b>DMG GSM AVG.</b>",
             "fieldname": "conversion_gsm",
             "fieldtype": "Data",
             "width": 140
 
         },
         {
-            "label": "<b>NP. CONV.WT.</b>",
+            "label": "<b>NP GSM AVG.</b>",
             "fieldname": "np_conversion_gsm",
             "fieldtype": "Data",
             "width": 140
@@ -124,7 +124,7 @@ def get_conditions(filters):
 def get_data(filters):
     data = []
     conditions = get_conditions(filters)
-    conditions_query = "WHERE item.item_code NOT LIKE '%-%'" if not conditions else f"WHERE {conditions} AND item.item_code NOT LIKE '%-%'"
+    conditions_query = f"WHERE item.item_code NOT LIKE '%-%'" if not conditions else f"WHERE {conditions} AND item.item_code NOT LIKE '%-%'"
 
     stock_damage_query = f"""
         SELECT 
@@ -137,11 +137,11 @@ def get_data(filters):
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) AS sami_finished,
             COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical,
             ROUND((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0)),4) AS total_weight,
-            ROUND((item.qty / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0))),4) AS damage_avg,
-            ROUND(((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0))/item.qty),4) AS np_damage_avg,
+            ROUND(((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0)) / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0))),4) AS damage_avg,
+            ROUND(((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0))/(COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0))),4) AS np_damage_avg,
             ROUND((item.qty - (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0))),4) AS balance_weight,
-            ROUND(((item.qty / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0)))* item.gsm),4) AS conversion_gsm,
-            ROUND((((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0))/item.qty)* item.gsm),4) AS np_conversion_gsm
+            ROUND((((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0)) / (COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0)))* item.gsm),4) AS conversion_gsm,
+            ROUND(((COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0))/(COALESCE(SUM(CASE WHEN sle.warehouse = 'Finished Goods - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0))* item.gsm),4) AS np_conversion_gsm
 
         FROM 
             `tabItem` AS item
