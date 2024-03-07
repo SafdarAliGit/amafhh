@@ -94,21 +94,21 @@ def get_columns():
 def get_conditions(filters):
     conditions = []
     if filters.get("item_code"):
-        conditions.append(f"item.item_code = %(item_code)s")
+        conditions.append("item.item_code = %(item_code)s")
     if filters.get("item_group"):
-        conditions.append(f"item.item_group = %(item_group)s")
+        conditions.append("item.item_group = %(item_group)s")
     if filters.get("warehouse"):
-        conditions.append(f"sle.warehouse = %(warehouse)s")
+        conditions.append("sle.warehouse = %(warehouse)s")
     if filters.get("to_date"):
-        conditions.append(f"sle.posting_date <= %(to_date)s")
+        conditions.append("sle.posting_date <= %(to_date)s")
     return " AND ".join(conditions)
 
+
+from decimal import Decimal
 
 def get_data(filters):
     data = []
     conditions = get_conditions(filters)
-    # if conditions:
-    #     conditions = "WHERE " + conditions
 
     stock_balance_query = f"""
         SELECT 
@@ -140,7 +140,7 @@ def get_data(filters):
         ORDER BY item.item_code
     """
 
-    stock_balance_result = frappe.db.sql(stock_balance_query,filters, as_dict=1)
+    stock_balance_result = frappe.db.sql(stock_balance_query, filters, as_dict=1)
     for i in stock_balance_result:
         factor = Decimal(i.factor)
         width = Decimal(i.width)
@@ -150,10 +150,13 @@ def get_data(filters):
         in_qty = Decimal(i.in_qty)
         out_qty = Decimal(i.out_qty)
         balance_qty = Decimal(i.balance_qty)
+        valuation_rate = Decimal(i.valuation_rate)
 
-        i.in_rm_pkt = round(in_qty / ((width * length * gsm) / factor), 0 if gsm<100 else 2) if i.item_group == 'Sheet' else 0
-        i.out_rm_pkt = round(out_qty / ((width * length * gsm) / factor), 0 if gsm<100 else 2) if i.item_group == 'Sheet' else 0
-        i.balance_rm_pkt = round(balance_qty / ((width * length * gsm) / factor), 0 if gsm<100 else 2) if i.item_group == 'Sheet' else 0
+        i.in_rm_pkt = round(in_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+        i.out_rm_pkt = round(out_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+        i.balance_rm_pkt = round(balance_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+        i.amount = balance_qty * valuation_rate
 
     data.extend(stock_balance_result)
     return data
+
