@@ -1,4 +1,5 @@
 # my_custom_app.my_custom_app.report.daily_activity_report.daily_activity_report.py
+import decimal
 from decimal import Decimal
 
 import frappe
@@ -106,6 +107,8 @@ def get_conditions(filters):
 
 from decimal import Decimal
 
+from decimal import Decimal
+
 def get_data(filters):
     data = []
     conditions = get_conditions(filters)
@@ -127,8 +130,7 @@ def get_data(filters):
             '' AS out_rm_pkt,
             (SUM(CASE WHEN sle.actual_qty > 0 THEN sle.actual_qty ELSE 0 END) - ABS(SUM(CASE WHEN sle.actual_qty < 0 THEN sle.actual_qty ELSE 0 END))) AS balance_qty,
             '' AS balance_rm_pkt ,
-            (SELECT valuation_rate FROM `tabStock Ledger Entry` WHERE item_code = item.item_code ORDER BY posting_date DESC, posting_time DESC LIMIT 1) AS valuation_rate,
-            ((SUM(CASE WHEN sle.actual_qty > 0 THEN sle.actual_qty ELSE 0 END) - ABS(SUM(CASE WHEN sle.actual_qty < 0 THEN sle.actual_qty ELSE 0 END))) * (SELECT valuation_rate FROM `tabStock Ledger Entry` WHERE item_code = item.item_code ORDER BY posting_date DESC, posting_time DESC LIMIT 1))  AS amount
+            (SELECT valuation_rate FROM `tabStock Ledger Entry` WHERE item_code = item.item_code ORDER BY posting_date DESC, posting_time DESC LIMIT 1) AS valuation_rate
         FROM `tabItem` AS item, `tabStock Ledger Entry` AS sle
         WHERE
             item.name = sle.item_code 
@@ -142,21 +144,27 @@ def get_data(filters):
 
     stock_balance_result = frappe.db.sql(stock_balance_query, filters, as_dict=1)
     for i in stock_balance_result:
-        factor = Decimal(i.factor)
-        width = Decimal(i.width)
-        length = Decimal(i.length)
-        gsm = Decimal(i.gsm)
+        try:
+            factor = Decimal(i.factor)
+            width = Decimal(i.width)
+            length = Decimal(i.length)
+            gsm = Decimal(i.gsm)
 
-        in_qty = Decimal(i.in_qty)
-        out_qty = Decimal(i.out_qty)
-        balance_qty = Decimal(i.balance_qty)
-        valuation_rate = Decimal(i.valuation_rate)
+            in_qty = Decimal(i.in_qty)
+            out_qty = Decimal(i.out_qty)
+            balance_qty = Decimal(i.balance_qty) if i.balance_qty else 0
+            valuation_rate = Decimal(i.valuation_rate) if i.valuation_rate else 0
 
-        i.in_rm_pkt = round(in_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
-        i.out_rm_pkt = round(out_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
-        i.balance_rm_pkt = round(balance_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
-        i.amount = balance_qty * valuation_rate
+            i.in_rm_pkt = round(in_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+            i.out_rm_pkt = round(out_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+            i.balance_rm_pkt = round(balance_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+            i.amount = balance_qty * valuation_rate
 
-    data.extend(stock_balance_result)
+            data.append(i)
+        except decimal.InvalidOperation as e:
+            frappe.log_error(f"Invalid value encountered: {e}")
+            continue
+
     return data
+
 
