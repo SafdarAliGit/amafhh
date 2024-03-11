@@ -174,10 +174,13 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
 
         function calculate_net_total(frm) {
             var target_weight = 0;
+            var weight_difference = 0;
             $.each(frm.doc.roll_to_roll_conversion_target || [], function (i, d) {
                 target_weight += flt(d.weight_target);
             });
+            weight_difference = frm.doc.roll_to_roll_conversion_source[0].weight_source - target_weight;
             frm.set_value("target_weight", parseFloat(target_weight).toFixed(3))
+            frm.set_value("weight_difference", parseFloat(weight_difference).toFixed(3))
         }
 
         calculate_net_total(frm);
