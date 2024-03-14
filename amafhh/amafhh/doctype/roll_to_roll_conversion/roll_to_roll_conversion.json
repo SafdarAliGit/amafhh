@@ -25,7 +25,8 @@
   "target_weight",
   "column_break_yeqgr",
   "weight_difference",
-  "amended_from"
+  "amended_from",
+  "non_physical_stock_entry"
  ],
  "fields": [
   {
@@ -127,6 +128,14 @@
   {
    "fieldname": "column_break_yeqgr",
    "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "non_physical_stock_entry",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Non Physical Stock Entry"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -137,7 +146,7 @@
    "link_fieldname": "roll_to_roll_conversion"
   }
  ],
- "modified": "2024-03-11 17:47:00.502875",
+ "modified": "2024-03-14 15:03:48.101085",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion",

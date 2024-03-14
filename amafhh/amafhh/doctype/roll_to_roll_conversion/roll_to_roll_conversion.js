@@ -3,6 +3,11 @@
 
 frappe.ui.form.on('Roll To Roll Conversion', {
     refresh(frm) {
+        if (frm.doc.docstatus == 1 && frm.doc.non_physical_stock_entry == 0 && frm.doc.weight_difference > 0) {
+            frm.add_custom_button(__('Non Physical Stock Entry'), function () {
+                frm.trigger("make_non_physical_stock_entry");
+            })
+        }
 
         frm.set_query('item_code', 'roll_to_roll_conversion_source', function (doc, cdt, cdn) {
             var d = locals[cdt][cdn];
@@ -33,6 +38,31 @@ frappe.ui.form.on('Roll To Roll Conversion', {
         });
 
     },
+    make_non_physical_stock_entry: function (frm) {
+        console.log(frm);
+        if (frm.doc.roll_to_roll_conversion_source && frm.doc.roll_to_roll_conversion_source.length > 0) {
+            frappe.call({
+                method: 'amafhh.amafhh.doctype.utils.make_non_physical_stock_entry.make_non_physical_stock_entry',
+                args: {
+                    'batch_no_source': frm.doc.roll_to_roll_conversion_source[0].batch_no_source,
+                    'posting_date': frm.doc.posting_date,
+                    'name': frm.doc.name,
+                    'source_warehouse': frm.doc.warehouse,
+                    'source_item_code': frm.doc.roll_to_roll_conversion_source[0].item_code,
+                    'weight_difference': frm.doc.weight_difference,
+                    'rate': frm.doc.roll_to_roll_conversion_source[0].rate
+                },
+                callback: function (r) {
+                    if (!r.exc) {
+                        frappe.msgprint('Non Physical Stock Entry Created');
+                    }
+                }
+            });
+        } else {
+            frappe.msgprint('Error: No roll to roll conversion source found.');
+        }
+    },
+
     cut_option: function (frm, cdt, cdn) {
         if (frm.doc.cut_option == 'Manual') {
             $.each(frm.doc.roll_to_roll_conversion_target || [], function (i, d) {
@@ -224,8 +254,8 @@ frappe.ui.form.on('Roll To Roll Conversion Target', {
                         frappe.model.set_value(cdt, cdn, 'width', response.message.width);
                         frappe.model.set_value(cdt, cdn, 'gsm', response.message.gsm);
                         frappe.model.set_value(cdt, cdn, 'length', response.message.length || 0);
-                           if (frm.doc.generate_batch === 1) {
-                        frappe.model.set_value(cdt, cdn, 'batch_no_target', row.item_code);
+                        if (frm.doc.generate_batch === 1) {
+                            frappe.model.set_value(cdt, cdn, 'batch_no_target', row.item_code);
                         }
 
                         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_target);
