@@ -6,7 +6,7 @@ frappe.ui.form.on('Roll To Roll Conversion', {
         if (frm.doc.docstatus == 1 && frm.doc.non_physical_stock_entry == 0 && frm.doc.weight_difference > 0) {
             frm.add_custom_button(__('Non Physical Stock Entry'), function () {
                 frm.trigger("make_non_physical_stock_entry");
-            })
+            });
         }
 
         frm.set_query('item_code', 'roll_to_roll_conversion_source', function (doc, cdt, cdn) {
