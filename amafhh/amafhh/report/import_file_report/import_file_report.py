@@ -107,8 +107,11 @@ def get_data(filters):
     JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
     WHERE
         lcv.docstatus = 1 
+        AND lcv.import_file IS NOT NULL
         {conditions} 
     GROUP BY
+        lcv.import_file
+    ORDER BY
         lcv.import_file
     """
     lcv_result = frappe.db.sql(lcv_query, filters, as_dict=True)
