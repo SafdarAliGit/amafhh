@@ -86,8 +86,8 @@ def get_data(filters):
     lcv_query = f"""
     SELECT 
         lcv.import_file,
-        SUM(lci.amount) AS grand_total,
-        SUM(lcv.qty) AS qty,
+        SUM(lcv.grand_total) AS grand_total,
+        SUM(lci.qty) AS qty,
         AVG(lci.rate) AS rate,
         GROUP_CONCAT(
            DISTINCT CONCAT(
