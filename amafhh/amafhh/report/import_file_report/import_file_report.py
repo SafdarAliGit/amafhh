@@ -106,8 +106,8 @@ def get_data(filters):
             FROM `tabLanded Cost Taxes and Charges` AS lctc
             WHERE lcv.name = lctc.parent
         ) AS all_expense_accounts,
-        lcvr_items.parent AS receipt_document,
-        lci_items.*
+        lcvr.receipt_document,
+        lci.*
     FROM `tabLanded Cost Voucher` AS lcv
     LEFT JOIN (
         SELECT lcvr1.parent, lcvr1.supplier
@@ -117,10 +117,8 @@ def get_data(filters):
             FROM `tabLanded Cost Purchase Receipt` AS lcvr2
             WHERE lcvr1.parent = lcvr2.parent
         )
-    ) AS lcvr_items ON lcv.name = lcvr_items.parent
-    LEFT JOIN `tabLanded Cost Voucher` AS lci_items ON lcvr_items.supplier = lci_items.supplier AND lcvr_items.parent = lci_items.parent
-    LEFT JOIN `tabLanded Cost Purchase Receipt` AS lcvr ON lcv.name = lcvr.parent
-    LEFT JOIN `tabLanded Cost Item` AS lci ON lcvr.name = lci.parent
+    ) AS lcvr ON lcv.name = lcvr.parent
+    LEFT JOIN `tabLanded Cost Item` AS lci ON lcvr.parent = lci.parent AND lcvr.supplier = lci.supplier
     LEFT JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
     WHERE
         lcv.docstatus = 1 
@@ -135,5 +133,6 @@ def get_data(filters):
 
     data.extend(lcv_result)
     return data
+
 
 
