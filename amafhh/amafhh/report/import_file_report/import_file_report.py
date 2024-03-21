@@ -103,7 +103,7 @@ def get_data(filters):
         (SUM(lci.amount) + sum(lctc.amount))/SUM(lci.qty) AS cost_rate
     FROM `tabLanded Cost Voucher` AS lcv
     JOIN `tabLanded Cost Purchase Receipt` AS lcvr ON lcv.name = lcvr.parent
-    JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
+    JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent AND lcvr.idx = lci.idx
     JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
     WHERE
         lcv.docstatus = 1 
