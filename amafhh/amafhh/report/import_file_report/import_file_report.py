@@ -70,6 +70,9 @@ def get_columns():
     return columns
 
 
+import frappe
+
+
 def get_conditions(filters):
     conditions = []
     if filters.get("import_file"):
@@ -118,5 +121,13 @@ def get_data(filters):
         lcv.import_file
     """
     lcv_result = frappe.db.sql(lcv_query, filters, as_dict=True)
+
+    # If lctc.expense_account exists more than once, select the first or smallest receipt_document
+    for row in lcv_result:
+        if len(row['expense_accounts'].split(',')) > 1:
+            receipt_documents = row['receipt_documents'].split(',')
+            row['receipt_documents'] = min(receipt_documents)
+
     data.extend(lcv_result)
     return data
+
