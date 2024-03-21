@@ -108,7 +108,7 @@ def get_data(filters):
     WHERE
         lcv.docstatus = 1 
         AND lcv.import_file IS NOT NULL
-        AND DISTINCT lcvr.receipt_document 
+        HAVING DISTINCT(lcvr.receipt_document) 
         {conditions} 
     GROUP BY
         lcv.import_file
