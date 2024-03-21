@@ -86,11 +86,6 @@ def get_data(filters):
     lcv_query = f"""
     SELECT 
         lcv.import_file,
-        GROUP_CONCAT(
-            DISTINCT CONCAT(
-                lcvr.supplier
-            ) 
-        ) AS suppliers,
         SUM(lci.amount) AS grand_total,
         SUM(lci.qty) AS qty,
         AVG(lci.rate) AS rate,
@@ -102,14 +97,9 @@ def get_data(filters):
         sum(lctc.amount) AS expense_amount,
         (SUM(lci.amount) + sum(lctc.amount))/SUM(lci.qty) AS cost_rate
     FROM `tabLanded Cost Voucher` AS lcv
-    JOIN (
-        SELECT lcvr1.parent, lcvr1.supplier
-        FROM `tabLanded Cost Purchase Receipt` AS lcvr1
-        WHERE lcvr1.idx = (
-            SELECT MIN(lcvr2.idx)
-            FROM `tabLanded Cost Purchase Receipt` AS lcvr2
-            WHERE lcvr1.parent = lcvr2.parent
-        )
+    LEFT JOIN (
+        SELECT parent, MIN(receipt_document) AS min_receipt_document
+        FROM `tabLanded Cost Purchase Receipt`
     ) AS lcvr ON lcv.name = lcvr.parent
     JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
     JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
