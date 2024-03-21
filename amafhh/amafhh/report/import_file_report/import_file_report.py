@@ -70,9 +70,6 @@ def get_columns():
     return columns
 
 
-import frappe
-
-
 def get_conditions(filters):
     conditions = []
     if filters.get("import_file"):
@@ -104,9 +101,11 @@ def get_data(filters):
         ) AS expense_accounts,
         sum(lctc.amount) AS expense_amount,
         (SUM(lci.amount) + sum(lctc.amount))/SUM(lci.qty) AS cost_rate,
-        GROUP_CONCAT(
-            DISTINCT lcvr.receipt_document
-        ) AS receipt_documents
+        (
+            SELECT GROUP_CONCAT(lctc.expense_account)
+            FROM `tabLanded Cost Taxes and Charges` AS lctc
+            WHERE lcv.name = lctc.parent
+        ) AS all_expense_accounts
     FROM `tabLanded Cost Voucher` AS lcv
     JOIN `tabLanded Cost Purchase Receipt` AS lcvr ON lcv.name = lcvr.parent
     JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
@@ -122,12 +121,7 @@ def get_data(filters):
     """
     lcv_result = frappe.db.sql(lcv_query, filters, as_dict=True)
 
-    # If lctc.expense_account exists more than once, select the first or smallest receipt_document
-    for row in lcv_result:
-        if len(row['expense_accounts'].split(',')) > 1:
-            receipt_documents = row['receipt_documents'].split(',')
-            row['receipt_documents'] = min(receipt_documents)
-
     data.extend(lcv_result)
     return data
+
 
