@@ -89,7 +89,7 @@ def get_data(filters):
         GROUP_CONCAT(
             DISTINCT CONCAT(
                 lcvr.supplier
-            ) 
+            )
         ) AS suppliers,
         SUM(lci.amount) AS grand_total,
         SUM(lci.qty) AS qty,
@@ -97,25 +97,43 @@ def get_data(filters):
         GROUP_CONCAT(
            DISTINCT CONCAT(
                 lctc.expense_account
-            ) 
+            )
         ) AS expense_accounts,
         sum(lctc.amount) AS expense_amount,
-        (SUM(lci.amount) + sum(lctc.amount))/SUM(lci.qty) AS cost_rate
+        (SUM(lci.amount) + sum(lctc.amount))/SUM(lci.qty) AS cost_rate,
+        (
+            SELECT GROUP_CONCAT(lctc.expense_account)
+            FROM `tabLanded Cost Taxes and Charges` AS lctc
+            WHERE lcv.name = lctc.parent
+        ) AS all_expense_accounts,
+        lcvr_items.parent AS receipt_document,
+        lci_items.*
     FROM `tabLanded Cost Voucher` AS lcv
-    JOIN `tabLanded Cost Purchase Receipt` AS lcvr ON lcv.name = lcvr.parent
-    JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
-    JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
+    LEFT JOIN (
+        SELECT lcvr1.parent, lcvr1.supplier
+        FROM `tabLanded Cost Purchase Receipt` AS lcvr1
+        WHERE lcvr1.idx = (
+            SELECT MIN(lcvr2.idx)
+            FROM `tabLanded Cost Purchase Receipt` AS lcvr2
+            WHERE lcvr1.parent = lcvr2.parent
+        )
+    ) AS lcvr_items ON lcv.name = lcvr_items.parent
+    LEFT JOIN `tabLanded Cost Item` AS lci_items ON lcvr_items.supplier = lci_items.supplier AND lcvr_items.parent = lci_items.parent
+    LEFT JOIN `tabLanded Cost Purchase Receipt` AS lcvr ON lcv.name = lcvr.parent
+    LEFT JOIN `tabLanded Cost Item` AS lci ON lcvr.name = lci.parent
+    LEFT JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
     WHERE
         lcv.docstatus = 1 
         AND lcv.import_file IS NOT NULL
-        HAVING DISTINCT(lcvr.receipt_document) 
         {conditions} 
     GROUP BY
-        lcv.import_file
+        lcv.import_file 
     ORDER BY
         lcv.import_file
     """
     lcv_result = frappe.db.sql(lcv_query, filters, as_dict=True)
+
     data.extend(lcv_result)
     return data
+
 
