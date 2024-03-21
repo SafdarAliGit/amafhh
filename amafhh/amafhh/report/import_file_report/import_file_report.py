@@ -110,7 +110,7 @@ def get_data(filters):
         AND lcv.import_file IS NOT NULL
         {conditions} 
     GROUP BY
-        lcv.import_file, lcv.receipt_document
+        lcv.import_file, lcvr.receipt_document
     ORDER BY
         lcv.import_file
     """
