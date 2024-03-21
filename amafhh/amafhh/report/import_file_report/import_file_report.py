@@ -101,8 +101,8 @@ def get_data(filters):
         SELECT parent, MIN(receipt_document) AS min_receipt_document
         FROM `tabLanded Cost Purchase Receipt`
     ) AS lcvr ON lcv.name = lcvr.parent
-    JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
-    JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
+    LEFT JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
+    LEFT JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
     WHERE
         lcv.docstatus = 1 
         AND lcv.import_file IS NOT NULL
