@@ -89,7 +89,7 @@ def get_data(filters):
         GROUP_CONCAT(
             DISTINCT CONCAT(
                 lcvr.supplier
-            ) 
+            )
         ) AS suppliers,
         SUM(lci.amount) AS grand_total,
         SUM(lci.qty) AS qty,
@@ -97,10 +97,13 @@ def get_data(filters):
         GROUP_CONCAT(
            DISTINCT CONCAT(
                 lctc.expense_account
-            ) 
+            )
         ) AS expense_accounts,
         sum(lctc.amount) AS expense_amount,
-        (SUM(lci.amount) + sum(lctc.amount))/SUM(lci.qty) AS cost_rate
+        (SUM(lci.amount) + sum(lctc.amount))/SUM(lci.qty) AS cost_rate,
+        GROUP_CONCAT(
+            DISTINCT lcvr.receipt_document
+        ) AS receipt_documents
     FROM `tabLanded Cost Voucher` AS lcv
     JOIN `tabLanded Cost Purchase Receipt` AS lcvr ON lcv.name = lcvr.parent
     JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
@@ -110,11 +113,10 @@ def get_data(filters):
         AND lcv.import_file IS NOT NULL
         {conditions} 
     GROUP BY
-        lcv.import_file, lcvr.receipt_document
+        lcv.import_file 
     ORDER BY
         lcv.import_file
     """
     lcv_result = frappe.db.sql(lcv_query, filters, as_dict=True)
     data.extend(lcv_result)
     return data
-
