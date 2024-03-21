@@ -86,7 +86,12 @@ def get_data(filters):
     lcv_query = f"""
     SELECT 
         lcv.import_file,
-        SUM(lcv.grand_total) AS grand_total,
+        GROUP_CONCAT(
+            DISTINCT CONCAT(
+                lcvr.supplier
+            ) 
+        ) AS suppliers,
+        SUM(lci.amount) AS grand_total,
         SUM(lci.qty) AS qty,
         AVG(lci.rate) AS rate,
         GROUP_CONCAT(
@@ -97,22 +102,33 @@ def get_data(filters):
         sum(lctc.amount) AS expense_amount,
         (SUM(lci.amount) + sum(lctc.amount))/SUM(lci.qty) AS cost_rate
     FROM `tabLanded Cost Voucher` AS lcv
-    LEFT JOIN (
-        SELECT parent, MIN(receipt_document) AS min_receipt_document
-        FROM `tabLanded Cost Purchase Receipt`
-    ) AS lcvr ON lcv.name = lcvr.parent
-    LEFT JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
-    LEFT JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
+    JOIN `tabLanded Cost Purchase Receipt` AS lcvr ON lcv.name = lcvr.parent
+    JOIN `tabLanded Cost Item` AS lci ON lcv.name = lci.parent
+    JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
     WHERE
         lcv.docstatus = 1 
         AND lcv.import_file IS NOT NULL
         {conditions} 
     GROUP BY
-        lcv.import_file
+        lcv.import_file,lcvr.receipt_document
     ORDER BY
         lcv.import_file
     """
     lcv_result = frappe.db.sql(lcv_query, filters, as_dict=True)
+    # TO REMOVE DUPLICATES
+    keys_to_check = ['suppliers', 'grand_total', 'qty', 'rate', 'expense_accounts', 'expense_amount', 'cost_rate']
+    seen_values = []
+
+    for entry in lcv_result:
+        key_values = tuple(entry[key] for key in keys_to_check)
+
+        if key_values in seen_values:
+            for key in keys_to_check:
+                entry[key] = None
+        else:
+            seen_values.append(key_values)
+
+    # END
     data.extend(lcv_result)
     return data
 
