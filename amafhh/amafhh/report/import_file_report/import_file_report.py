@@ -118,7 +118,7 @@ def get_data(filters):
             WHERE lcvr1.parent = lcvr2.parent
         )
     ) AS lcvr_items ON lcv.name = lcvr_items.parent
-    LEFT JOIN `tabLanded Cost Item` AS lci_items ON lcvr_items.supplier = lci_items.supplier AND lcvr_items.parent = lci_items.parent
+    LEFT JOIN `tabLanded Cost Voucher` AS lci_items ON lcvr_items.supplier = lci_items.supplier AND lcvr_items.parent = lci_items.parent
     LEFT JOIN `tabLanded Cost Purchase Receipt` AS lcvr ON lcv.name = lcvr.parent
     LEFT JOIN `tabLanded Cost Item` AS lci ON lcvr.name = lci.parent
     LEFT JOIN `tabLanded Cost Taxes and Charges` AS lctc ON lcv.name = lctc.parent
