@@ -129,7 +129,11 @@ def get_data(filters):
         total_qty += purchase.qty
         total_rate += purchase.rate
         total_amount += purchase.amount
-    avg_rate = total_rate / len(purchase_result)
+    if len(purchase_result) != 0:
+        avg_rate = total_rate / len(purchase_result)
+    else:
+        # Handle the case where len(purchase_result) is zero
+        avg_rate = 0  # or any other appropriate value
 
     purchase_total_dict['qty'] = total_qty
     purchase_total_dict['rate'] = avg_rate
@@ -166,7 +170,12 @@ def get_data(filters):
     cost_after_expense_summary = {'heading': '<b>Cost after Expense</b>', 'posting_date': '-------', 'supplier': '-------',
                           'voucher_no': '-------',
                           'qty': '-------', 'rate': '-------', ',' 'amount': None}
-    cost_after_expense_summary['amount'] = total_cost/total_qty
+    if total_qty != 0:
+        cost_after_expense_summary['amount'] = total_cost / total_qty
+    else:
+        # Handle the case where total_qty is zero
+        cost_after_expense_summary['amount'] = 0  # or any other appropriate value
+
     landed_cost_result.append(landed_cost_total_dict)
     landed_cost_result.append(total_cost_summary)
     landed_cost_result.append(cost_after_expense_summary)
