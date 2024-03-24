@@ -146,7 +146,7 @@ def get_data(filters):
          'rate': '-------', 'amount': ''}]
     landed_cost_total_dict = {'heading': '<b>Total</b>', 'posting_date': '-------', 'supplier': '-------',
                            'voucher_no': '-------',
-                           'qty': '-------', 'rate':'-------' , ',' 'amount': None}
+                           'qty': '-------', 'rate':'-------' , 'amount': None}
 
     total_lc_amount = 0
     for lcr in landed_cost_result:
