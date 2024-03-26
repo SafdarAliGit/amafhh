@@ -72,7 +72,7 @@ class RollToRollConversion(Document):
 
         # Append source item
         it = doc.append("items", {})
-        # it.set_basic_rate_manually = 1
+        it.set_basic_rate_manually = 1
         it.s_warehouse = source_warehouse
         it.item_code = self.roll_to_roll_conversion_source[0].item_code
         it.qty = self.target_weight

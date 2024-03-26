@@ -79,7 +79,7 @@ class RollToSheetConversion(Document):
                 target_warehouse = 'Non Fisical Damage - A'
 
             doc.append("items", {
-                # "set_basic_rate_manually": 1,
+                "set_basic_rate_manually": 1,
                 "s_warehouse": source_warehouse,
                 "t_warehouse": "",
                 "item_code": item.item_code_source,

@@ -12,46 +12,46 @@ def execute(filters=None):
 def get_columns():
     columns = [
         {
-            "label": _("--------------"),
+            "label": _("Headings"),
             "fieldname": "heading",
             "fieldtype": "Data",
             "width": 150
         },
         {
-            "label": _("Date"),
+            "label": _("<b>Date</b>"),
             "fieldname": "posting_date",
             "fieldtype": "Date",
             "width": 150
         },
         {
-            "label": _("Supplier"),
+            "label": _("<b>Supplier</b>"),
             "fieldname": "supplier",
             "fieldtype": "Link",
             "options": "Supplier",
             "width": 100
         },
         {
-            "label": _("Pur. Inv#/LCV#"),
+            "label": _("<b>Pur. Inv#</b>"),
             "fieldname": "voucher_no",
             "fieldtype": "Link",
             "options": "Purchase Invoice",
             "width": 180
         },
         {
-            "label": _("Total Qty/Account"),
+            "label": _("<b>Total Qty</b>"),
             "fieldname": "qty",
             "fieldtype": "Data",
             "width": 180
         },
         {
-            "label": _("Rate"),
+            "label": _("<b>Rate</b>"),
             "fieldname": "rate",
             "fieldtype": "Currency",
             "width": 180
         },
 
         {
-            "label": _("Amount"),
+            "label": _("<b>Amount</b>"),
             "fieldname": "amount",
             "fieldtype": "Currency",
             "width": 200
@@ -99,10 +99,10 @@ def get_data(filters):
                 SELECT
                    '' AS heading,
                     lcv.posting_date,
-                    '-------' AS supplier,
+                    lctc.description AS qty,
                     lcv.name AS voucher_no,
-                    lctc.expense_account AS qty,
-                    lctc.description AS rate,
+                    lctc.expense_account AS supplier,
+                    '' AS rate,
                     lctc.amount
                 FROM
                     `tabLanded Cost Voucher` AS lcv
@@ -143,11 +143,15 @@ def get_data(filters):
     purchase_result.append(purchase_total_dict)
     # ====================CALCULATING TOTAL IN PURCHASE END====================
 
-    # # ====================CALCULATING TOTAL IN LNADED COST VOUCHDER====================
+    # # ====================CALCULATING TOTAL IN LANDED COST VOUCHER====================
     landed_cost_header_dict = [
         {'heading': '<b><u>Expense Detail</b></u>', 'posting_date': '-------', 'supplier': '-------',
          'voucher_no': '-------', 'qty': '-------',
-         'rate': '-------', 'amount': ''}]
+         'rate': '-------', 'amount': ''},
+        {'heading': '', 'posting_date': '-------', 'supplier': '<b>Account</b>',
+         'voucher_no': '<b>LCV#</b>', 'qty': '<b>Description</b>',
+         'rate': '-------', 'amount': ''}
+    ]
     landed_cost_total_dict = {'heading': '<b>Total</b>', 'posting_date': '-------', 'supplier': '-------',
                            'voucher_no': '-------',
                            'qty': '-------', 'rate':'-------' , 'amount': None}
@@ -160,7 +164,7 @@ def get_data(filters):
 
     landed_cost_result = landed_cost_header_dict + landed_cost_result
 
-    # ====================CALCULATING TOTAL IN GL ENTRY====================
+    # # ====================CALCULATING TOTAL IN LANDED COST VOUCHER END====================
     # SUMMARY
     total_cost = total_amount + total_lc_amount
     total_cost_summary = {'heading': '<b>Total Cost</b>', 'posting_date': '-------', 'supplier': '-------',
