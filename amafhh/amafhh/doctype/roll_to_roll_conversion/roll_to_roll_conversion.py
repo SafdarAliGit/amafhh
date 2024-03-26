@@ -84,7 +84,7 @@ class RollToRollConversion(Document):
         for item in self.roll_to_roll_conversion_target:
             it = doc.append("items", {})
             # target_warehouse = None
-            # it.set_basic_rate_manually = 1
+            it.set_basic_rate_manually = 1
             # if item.stock_type_target == "Finished":
             #     target_warehouse = 'Finished Goods - A'
             # elif item.stock_type_target == "Semi-Finished":
