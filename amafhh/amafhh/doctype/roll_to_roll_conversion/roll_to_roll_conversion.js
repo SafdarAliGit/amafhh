@@ -161,6 +161,29 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
     rate: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'amount', row.rate * row.weight_source);
+    },
+    item_code: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if (row.item_code) {
+            frappe.call({
+                method: 'amafhh.amafhh.doctype.utils.fetch_valuation_rate.fetch_valuation_rate',
+
+                args: {
+                    item_code: row.item_code
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        frappe.model.set_value(cdt, cdn, 'rate', response.message.valuation_rate);
+                    } else {
+                        frappe.msgprint(__('Valuation Rate not found for Item: {0}', [row.item_code]));
+                    }
+
+
+                }
+            });
+        }
+
+
     }
 
 });

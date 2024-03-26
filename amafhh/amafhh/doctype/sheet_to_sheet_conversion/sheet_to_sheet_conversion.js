@@ -147,7 +147,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                     if (response.message) {
 
                         frappe.model.set_value(cdt, cdn, 'item_code_source', response.message.item_code);
-                        frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
+                        frappe.model.set_value(cdt, cdn, 'rate', response.message.valuation_rate);
                         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
                         frappe.model.set_value(cdt, cdn, 'stock_weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
@@ -232,7 +232,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
                     if (response.message) {
 
                         frappe.model.set_value(cdt, cdn, 'item_code_source', response.message.item_code);
-                        frappe.model.set_value(cdt, cdn, 'rate', response.message.rate);
+                        frappe.model.set_value(cdt, cdn, 'rate', response.message.valuation_rate);
                         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
                         frappe.model.set_value(cdt, cdn, 'stock_weight_source', response.message.weight_balance);
                         frappe.model.set_value(cdt, cdn, 'width_source', response.message.width);
