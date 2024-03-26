@@ -97,7 +97,7 @@ class SheetToSheetConversion(Document):
                 "qty": item.weight_target,
                 "valuation_rate": item.rate,
                 "basic_rate": item.rate,
-                "amount": item.amount,
+                "basic_amount": item.amount,
                 "batch_no": item.batch_no_target if item.batch_no_target else None,
                 "ream_pkt": item.ream_pkt_target if item.ream_pkt_target else None
             })

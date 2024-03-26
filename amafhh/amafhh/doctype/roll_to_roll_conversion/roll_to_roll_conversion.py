@@ -96,7 +96,7 @@ class RollToRollConversion(Document):
             it.qty = item.weight_target
             it.valuation_rate = item.rate
             it.basic_rate = item.rate
-            it.amount = item.amount
+            it.basic_amount = item.amount
             it.batch_no = item.batch_no_target
 
         try:
