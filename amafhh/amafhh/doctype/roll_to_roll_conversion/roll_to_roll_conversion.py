@@ -69,13 +69,13 @@ class RollToRollConversion(Document):
         doc.posting_date = self.posting_date
         doc.roll_to_roll_conversion = self.name
         source_warehouse = self.warehouse
-
         # Append source item
         it = doc.append("items", {})
         it.set_basic_rate_manually = 1
         it.s_warehouse = source_warehouse
         it.item_code = self.roll_to_roll_conversion_source[0].item_code
         it.qty = self.target_weight
+        it.valuation_rate = self.roll_to_roll_conversion_source[0].rate
         it.basic_rate = self.roll_to_roll_conversion_source[0].rate
         it.amount = self.roll_to_roll_conversion_source[0].amount
         it.batch_no = self.roll_to_roll_conversion_source[0].batch_no_source if self.roll_to_roll_conversion_source[0].batch_no_source else None
@@ -100,7 +100,8 @@ class RollToRollConversion(Document):
             it.batch_no = item.batch_no_target
 
         try:
-            # doc.ignore_validation = True
+            doc.ignore_validation = True
+            doc.save()
             doc.submit()
             self.stock_entry = doc.name
             self.save()
