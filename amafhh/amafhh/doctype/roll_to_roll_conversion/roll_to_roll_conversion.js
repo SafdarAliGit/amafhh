@@ -174,6 +174,7 @@ frappe.ui.form.on('Roll To Roll Conversion Source', {
                 callback: function (response) {
                     if (response.message) {
                         frappe.model.set_value(cdt, cdn, 'rate', response.message.valuation_rate);
+                        frappe.model.set_value(cdt, cdn, 'weight_source', response.message.weight_balance);
                     } else {
                         frappe.msgprint(__('Valuation Rate not found for Item: {0}', [row.item_code]));
                     }
