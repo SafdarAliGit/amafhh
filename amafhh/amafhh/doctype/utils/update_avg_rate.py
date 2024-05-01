@@ -29,13 +29,10 @@ def update_avg_rate(**args):
     si_parent_query = (
         frappe.qb.from_(si)
         .select(
-            si.posting_date,
-            si.customer,
-            si.name.as_("voucher_no"),
             frappe.qb.functions("SUM", sii.qty).as_("qty")
         )
         .left_join(sii).on(si.name == sii.parent)
-        .where((si.docstatus == 1) & (si.import_file == import_file))
+        .where((si.docstatus == 1) & (sii.import_file == import_file))
     )
     si_parent_query_result = si_parent_query.run(as_dict=True)
 
