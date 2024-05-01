@@ -89,6 +89,7 @@ def update_avg_rate(**args):
 
     balance_stock_value = total_balance_qty * avg_rate_with_lc
     cogs = total_cost - balance_stock_value
+    profit_and_loss = (total_cost if total_cost > 0 else 0) - (cogs if cogs > 0 else 0)
 
     return {
         'total_purchase_qty': round(total_purchase_qty, 2),
@@ -100,7 +101,8 @@ def update_avg_rate(**args):
         'total_cost': round(total_cost, 2),
         'avg_rate_with_lc': round(avg_rate_with_lc, 2),
         'balance_stock_value': round(balance_stock_value, 2),
-        'cogs': round(cogs, 2)
+        'cogs': round(cogs, 2),
+        'profit_and_loss': round(profit_and_loss, 2)
     }
 
     # ----------END----------
