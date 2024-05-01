@@ -69,15 +69,18 @@ def update_avg_rate(**args):
         total_sales_qty += sale.qty if sale.qty else 0
 
     # -------------Stock Balances----------------
-    item_codes = frappe.get_all("Item", filters={"import_file": import_file}, pluck="name")
-    item_codes_str = ", ".join(["%s"] * len(item_codes))
-    balance_stock = frappe.db.sql("""
-        SELECT SUM(qty_after_transaction) AS qty_after_transaction
-        FROM `tabStock Ledger Entry`
-        WHERE item_code IN ({0}) AND is_cancelled = 0
-    """.format(item_codes_str), tuple(item_codes), as_dict=True)
-    total_balance_qty = balance_stock[0].qty_after_transaction if balance_stock else 0
-    
+    # item_codes = frappe.get_all("Item", filters={"import_file": import_file}, pluck="name")
+    # item_codes_str = ", ".join(["%s"] * len(item_codes))
+    # balance_stock = frappe.db.sql("""
+    #     SELECT SUM(qty_after_transaction) AS qty_after_transaction
+    #     FROM `tabStock Ledger Entry`
+    #     WHERE item_code IN ({0}) AND is_cancelled = 0
+    # """.format(item_codes_str), tuple(item_codes), as_dict=True)
+    # total_balance_qty = balance_stock[0].qty_after_transaction if balance_stock else 0
+    total_balance_qty = total_purchase_qty if total_purchase_qty else 0 - total_sales_qty if total_sales_qty else 0
+
+
+
     # -------------Landed Cost Voucher----------------
     total_lc_amount = sum(lcr.amount for lcr in lcv_parent_query_result)
 
