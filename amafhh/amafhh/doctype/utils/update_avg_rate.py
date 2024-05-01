@@ -58,15 +58,15 @@ def update_avg_rate(**args):
     total_rate = 0
     total_purchase_amount = 0
     for purchase in pi_parent_query_result:
-        total_purchase_qty += purchase.qty
-        total_rate += purchase.rate
-        total_purchase_amount += purchase.amount
+        total_purchase_qty += purchase.qty if purchase.qty else 0
+        total_rate += purchase.rate if purchase.rate else 0
+        total_purchase_amount += purchase.amount if purchase.amount else 0
 
     avg_purchase_rate = total_rate / len(pi_parent_query_result) if pi_parent_query_result else 0
     # -------------Sales Invoice----------------
     total_sales_qty = 0
     for sale in si_parent_query_result:
-        total_sales_qty += sale.qty
+        total_sales_qty += sale.qty if sale.qty else 0
 
     # -------------Stock Balances----------------
     item_codes = frappe.get_all("Item", filters={"import_file": import_file}, pluck="name")
@@ -80,7 +80,7 @@ def update_avg_rate(**args):
     )
     total_balance_qty = 0
     for stock in balance_stock:
-        total_balance_qty += stock.qty_after_transaction
+        total_balance_qty += stock.qty_after_transaction if stock.qty_after_transaction else 0
     # -------------Landed Cost Voucher----------------
     total_lc_amount = sum(lcr.amount for lcr in lcv_parent_query_result)
 
