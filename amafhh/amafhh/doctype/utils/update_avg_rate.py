@@ -31,7 +31,7 @@ def update_avg_rate(**args):
         .select(
             si.posting_date,
             si.customer,
-            pi.name.as_("voucher_no"),
+            si.name.as_("voucher_no"),
             frappe.qb.functions("SUM", sii.qty).as_("qty"),
             frappe.qb.functions("AVG", sii.rate).as_("rate"),
             si.grand_total.as_("amount")
