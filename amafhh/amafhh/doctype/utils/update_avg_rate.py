@@ -76,9 +76,8 @@ def update_avg_rate(**args):
         FROM `tabStock Ledger Entry`
         WHERE item_code IN ({0}) AND is_cancelled = 0
     """.format(item_codes_str), tuple(item_codes), as_dict=True)
-    total_balance_qty = 0
-    for stock in balance_stock:
-        total_balance_qty += stock.qty_after_transaction if stock.qty_after_transaction else 0
+    total_balance_qty = balance_stock[0].qty_after_transaction if balance_stock else 0
+    
     # -------------Landed Cost Voucher----------------
     total_lc_amount = sum(lcr.amount for lcr in lcv_parent_query_result)
 
