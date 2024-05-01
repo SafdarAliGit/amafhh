@@ -70,11 +70,12 @@ def update_avg_rate(**args):
 
     # -------------Stock Balances----------------
     item_codes = frappe.get_all("Item", filters={"import_file": import_file}, pluck="name")
+    item_codes_str = ", ".join(["%s"] * len(item_codes))
     balance_stock = frappe.db.sql("""
         SELECT SUM(qty_after_transaction) AS qty_after_transaction
         FROM `tabStock Ledger Entry`
-        WHERE item_code IN (%s) AND is_cancelled = 0
-    """, (item_codes,), as_dict=True)
+        WHERE item_code IN ({0}) AND is_cancelled = 0
+    """.format(item_codes_str), tuple(item_codes), as_dict=True)
     total_balance_qty = 0
     for stock in balance_stock:
         total_balance_qty += stock.qty_after_transaction if stock.qty_after_transaction else 0
