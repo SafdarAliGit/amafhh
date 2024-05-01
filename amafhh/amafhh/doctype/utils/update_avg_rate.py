@@ -77,7 +77,7 @@ def update_avg_rate(**args):
     #     WHERE item_code IN ({0}) AND is_cancelled = 0
     # """.format(item_codes_str), tuple(item_codes), as_dict=True)
     # total_balance_qty = balance_stock[0].qty_after_transaction if balance_stock else 0
-    total_balance_qty = total_purchase_qty if total_purchase_qty else 0 - total_sales_qty if total_sales_qty else 0
+    total_balance_qty = (total_purchase_qty if total_purchase_qty>0 else 0) - (total_sales_qty if total_sales_qty>0 else 0)
 
 
 
