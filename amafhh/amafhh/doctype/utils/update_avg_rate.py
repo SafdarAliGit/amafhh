@@ -101,7 +101,7 @@ def update_avg_rate(**args):
 
     balance_stock_value = total_balance_qty * avg_rate_with_lc
     cogs = total_cost - balance_stock_value
-    profit_and_loss = (total_cost if total_cost > 0 else 0) - ((cogs if cogs > 0 else 0) + (balance_stock_value if balance_stock_value > 0 else 0))
+    profit_and_loss = (total_sale_amount if total_sale_amount > 0 else 0) - (cogs if cogs > 0 else 0)
 
 
     return {
