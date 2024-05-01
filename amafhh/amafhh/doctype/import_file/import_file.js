@@ -19,6 +19,10 @@ frappe.ui.form.on('Import File', {
                         frm.set_value("total_lc_amount", r.message.total_lc_amount);
                         frm.set_value("total_cost", r.message.total_cost);
                         frm.set_value("avg_rate_with_lc", r.message.avg_rate_with_lc);
+                        frm.set_value("total_sales_qty", r.message.total_sales_qty);
+                        frm.set_value("total_balance_qty", r.message.total_balance_qty);
+                        frm.set_value("balance_stock_value", r.message.balance_stock_value);
+                        frm.set_value("cogs", r.message.cogs);
                     }
                 }
             });
