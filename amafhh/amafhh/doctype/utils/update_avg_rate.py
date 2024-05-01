@@ -36,8 +36,6 @@ def update_avg_rate(**args):
         )
         .left_join(sii).on(si.name == sii.parent)
         .where((si.docstatus == 1) & (si.import_file == import_file))
-        .groupby(si.name)
-        .orderby(si.posting_date)
     )
     si_parent_query_result = si_parent_query.run(as_dict=True)
 
