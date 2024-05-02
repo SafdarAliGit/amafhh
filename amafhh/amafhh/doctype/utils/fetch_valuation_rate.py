@@ -19,7 +19,7 @@ def fetch_valuation_rate(**args):
     """
     stock = frappe.get_all(
         "Stock Ledger Entry",
-        filters={"item_code": item_code},
+        filters={"item_code": item_code,"is_cancelled": 0},
         fields=["qty_after_transaction"],
         order_by="name desc",
         limit=1
