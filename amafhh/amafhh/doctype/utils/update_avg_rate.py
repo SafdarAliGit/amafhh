@@ -26,20 +26,18 @@ def update_avg_rate(**args):
 
     si = frappe.qb.DocType("Sales Invoice")
     sii = frappe.qb.DocType("Sales Invoice Item")
+
     si_parent_query = (
         frappe.qb.from_(si)
         .select(
-            si.posting_date,
-            si.customer,
-            si.name.as_("voucher_no"),
             frappe.qb.functions("SUM", sii.qty).as_("qty"),
-            frappe.qb.functions("AVG", sii.rate).as_("rate"),
-            si.grand_total.as_("amount")
+            frappe.qb.functions("SUM", sii.amount).as_("amount")
         )
         .left_join(sii).on(si.name == sii.parent)
-        .where((si.docstatus == 1) & (sii.import_file == import_file))
-        .groupby(si.name)
-        .orderby(si.posting_date)
+        .where(
+            (si.docstatus == 1) &
+            (sii.import_file == import_file)
+        )
     )
     si_parent_query_result = si_parent_query.run(as_dict=True)
 
@@ -72,13 +70,10 @@ def update_avg_rate(**args):
     avg_purchase_rate = total_rate / len(pi_parent_query_result) if pi_parent_query_result else 0
     # -------------Sales Invoice----------------
     total_sales_qty = 0
-    total_rate = 0
     total_sale_amount = 0
-    for sale in si_parent_query_result:
-        total_sales_qty += sale.qty if sale.qty else 0
-        total_rate += sale.rate if sale.rate else 0
-        total_sale_amount += sale.amount if sale.amount else 0
-    avg_sale_rate = total_rate / len(si_parent_query_result) if si_parent_query_result else 0
+    total_sales_qty = si_parent_query_result[0].qty if si_parent_query_result else 0
+    total_sale_amount = si_parent_query_result[0].amount if si_parent_query_result else 0
+    avg_sale_rate = total_sale_amount / total_sales_qty
 
     # -------------Stock Balances----------------
     # item_codes = frappe.get_all("Item", filters={"import_file": import_file}, pluck="name")
