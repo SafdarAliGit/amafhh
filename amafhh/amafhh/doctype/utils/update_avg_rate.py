@@ -73,7 +73,11 @@ def update_avg_rate(**args):
     total_sale_amount = 0
     total_sales_qty = si_parent_query_result[0].qty if si_parent_query_result else 0
     total_sale_amount = si_parent_query_result[0].amount if si_parent_query_result else 0
-    avg_sale_rate = total_sale_amount / total_sales_qty
+    # Check if either of the values is None
+    if total_sale_amount is None or total_sales_qty is None:
+        avg_sale_rate = 0
+    else:
+        avg_sale_rate = total_sale_amount / total_sales_qty
 
     # -------------Stock Balances----------------
     # item_codes = frappe.get_all("Item", filters={"import_file": import_file}, pluck="name")
@@ -84,9 +88,7 @@ def update_avg_rate(**args):
     #     WHERE item_code IN ({0}) AND is_cancelled = 0
     # """.format(item_codes_str), tuple(item_codes), as_dict=True)
     # total_balance_qty = balance_stock[0].qty_after_transaction if balance_stock else 0
-    total_balance_qty = (total_purchase_qty if total_purchase_qty>0 else 0) - (total_sales_qty if total_sales_qty>0 else 0)
-
-
+    total_balance_qty = (total_purchase_qty if total_purchase_qty else 0) - (total_sales_qty if total_sales_qty else 0)
 
     # -------------Landed Cost Voucher----------------
     total_lc_amount = sum(lcr.amount for lcr in lcv_parent_query_result)
@@ -96,23 +98,22 @@ def update_avg_rate(**args):
 
     balance_stock_value = total_balance_qty * avg_rate_with_lc
     cogs = total_cost - balance_stock_value
-    profit_and_loss = (total_sale_amount if total_sale_amount > 0 else 0) - (cogs if cogs > 0 else 0)
-
+    profit_and_loss = (total_sale_amount if total_sale_amount else 0) - (cogs if cogs else 0)
 
     return {
-        'total_purchase_qty': round(total_purchase_qty, 2),
-        'total_sales_qty': round(total_sales_qty, 2),
-        'total_balance_qty': round(total_balance_qty, 2),
-        'avg_purchase_rate': round(avg_purchase_rate, 2),
-        'avg_sale_rate': round(avg_sale_rate, 2),
-        'total_purchase_amount': round(total_purchase_amount, 2),
-        'total_sale_amount': round(total_sale_amount, 2),
-        'total_lc_amount': round(total_lc_amount, 2),
-        'total_cost': round(total_cost, 2),
-        'avg_rate_with_lc': round(avg_rate_with_lc, 2),
-        'balance_stock_value': round(balance_stock_value, 2),
-        'cogs': round(cogs, 2),
-        'profit_and_loss': round(profit_and_loss, 2)
+        'total_purchase_qty': round(total_purchase_qty, 2) if total_purchase_qty else 0,
+        'total_sales_qty': round(total_sales_qty, 2) if total_sales_qty else 0,
+        'total_balance_qty': round(total_balance_qty, 2) if total_balance_qty else 0,
+        'avg_purchase_rate': round(avg_purchase_rate, 2) if avg_purchase_rate else 0,
+        'avg_sale_rate': round(avg_sale_rate, 2) if avg_sale_rate else 0,
+        'total_purchase_amount': round(total_purchase_amount, 2) if total_purchase_amount else 0,
+        'total_sale_amount': round(total_sale_amount, 2) if total_sale_amount else 0,
+        'total_lc_amount': round(total_lc_amount, 2) if total_lc_amount else 0,
+        'total_cost': round(total_cost, 2) if total_cost else 0,
+        'avg_rate_with_lc': round(avg_rate_with_lc, 2) if avg_rate_with_lc else 0,
+        'balance_stock_value': round(balance_stock_value, 2) if balance_stock_value else 0,
+        'cogs': round(cogs, 2) if cogs else 0,
+        'profit_and_loss': round(profit_and_loss, 2) if profit_and_loss else 0
     }
 
     # ----------END----------
