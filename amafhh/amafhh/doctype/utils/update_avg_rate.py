@@ -57,12 +57,10 @@ def update_avg_rate(**args):
     total_purchase_qty = 0
     total_rate = 0
     total_purchase_amount = 0
-    for purchase in pi_parent_query_result:
-        total_purchase_qty += purchase.qty if purchase.qty else 0
-        total_rate += purchase.rate if purchase.rate else 0
-        total_purchase_amount += purchase.amount if purchase.amount else 0
+    total_purchase_qty = pi_parent_query_result[0].qty if pi_parent_query_result[0].qty else 0
+    avg_purchase_rate = pi_parent_query_result[0].rate if pi_parent_query_result[0].rate else 0
+    total_purchase_amount = pi_parent_query_result[0].amount if pi_parent_query_result[0].amount else 0
 
-    avg_purchase_rate = total_rate / len(pi_parent_query_result) if pi_parent_query_result else 0
     # -------------Sales Invoice----------------
     total_sales_qty = 0
     total_sale_amount = 0
