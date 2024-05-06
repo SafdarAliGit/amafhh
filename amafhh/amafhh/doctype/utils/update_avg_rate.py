@@ -10,12 +10,17 @@ def update_avg_rate(**args):
     pi_parent_query = (
         frappe.qb.from_(pi)
         .select(
+            pi.posting_date,
+            pi.supplier,
+            pi.name.as_("voucher_no"),
             frappe.qb.functions("SUM", pii.qty).as_("qty"),
             frappe.qb.functions("AVG", pii.rate).as_("rate"),
             pi.grand_total.as_("amount")
         )
         .left_join(pii).on(pi.name == pii.parent)
         .where((pi.docstatus == 1) & (pi.import_file == import_file))
+        .groupby(pi.name)
+        .orderby(pi.posting_date)
     )
     pi_parent_query_result = pi_parent_query.run(as_dict=True)
 
@@ -57,10 +62,12 @@ def update_avg_rate(**args):
     total_purchase_qty = 0
     total_rate = 0
     total_purchase_amount = 0
-    total_purchase_qty = pi_parent_query_result[0].qty if pi_parent_query_result[0].qty else 0
-    avg_purchase_rate = pi_parent_query_result[0].rate if pi_parent_query_result[0].rate else 0
-    total_purchase_amount = pi_parent_query_result[0].amount if pi_parent_query_result[0].amount else 0
+    for purchase in pi_parent_query_result:
+        total_purchase_qty += purchase.qty if purchase.qty else 0
+        total_rate += purchase.rate if purchase.rate else 0
+        total_purchase_amount += purchase.amount if purchase.amount else 0
 
+    avg_purchase_rate = total_rate / len(pi_parent_query_result) if pi_parent_query_result else 0
     # -------------Sales Invoice----------------
     total_sales_qty = 0
     total_sale_amount = 0
