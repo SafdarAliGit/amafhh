@@ -10,17 +10,12 @@ def update_avg_rate(**args):
     pi_parent_query = (
         frappe.qb.from_(pi)
         .select(
-            pi.posting_date,
-            pi.supplier,
-            pi.name.as_("voucher_no"),
             frappe.qb.functions("SUM", pii.qty).as_("qty"),
             frappe.qb.functions("AVG", pii.rate).as_("rate"),
             pi.grand_total.as_("amount")
         )
         .left_join(pii).on(pi.name == pii.parent)
         .where((pi.docstatus == 1) & (pi.import_file == import_file))
-        .groupby(pi.name)
-        .orderby(pi.posting_date)
     )
     pi_parent_query_result = pi_parent_query.run(as_dict=True)
 
