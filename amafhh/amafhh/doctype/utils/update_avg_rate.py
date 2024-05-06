@@ -99,6 +99,26 @@ def update_avg_rate(**args):
     balance_stock_value = total_balance_qty * avg_rate_with_lc
     cogs = total_cost - balance_stock_value
     profit_and_loss = (total_sale_amount if total_sale_amount else 0) - (cogs if cogs else 0)
+    # DAMAGED , NON PHYSICAL, UNDELIVERED STOCK
+    stock_damage_query = f"""
+                SELECT 
+                    COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) AS damaged,
+                    COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical,
+                    COALESCE(SUM(CASE WHEN sle.warehouse = 'Un delivered. Warehouse - A' THEN sle.actual_qty ELSE 0 END), 0) AS undelivered
+                FROM 
+                    `tabItem` AS item
+                LEFT JOIN 
+                    `tabStock Ledger Entry` AS sle ON sle.item_code = item.item_code 
+                     AND sle.is_cancelled = 0 
+                     AND sle.voucher_type = 'Stock Entry'
+                     AND item.import_file = '{import_file}'
+            """
+
+    stock_damage_result = frappe.db.sql(stock_damage_query, as_dict=True)
+    qty = (stock_damage_result[0].damaged if stock_damage_result[0].damaged else 0) + (
+        stock_damage_result[0].non_physical if stock_damage_result[0].non_physical else 0) + (
+        stock_damage_result[0].undelivered if stock_damage_result[0].undelivered else 0)
+    amount = qty * avg_rate_with_lc
 
     return {
         'total_purchase_qty': round(total_purchase_qty, 2) if total_purchase_qty else 0,
@@ -112,8 +132,10 @@ def update_avg_rate(**args):
         'total_cost': round(total_cost, 2) if total_cost else 0,
         'avg_rate_with_lc': round(avg_rate_with_lc, 2) if avg_rate_with_lc else 0,
         'balance_stock_value': round(balance_stock_value, 2) if balance_stock_value else 0,
-        'cogs': round(cogs, 2) if cogs else 0,
-        'profit_and_loss': round(profit_and_loss, 2) if profit_and_loss else 0
+        'cogs': (round(cogs, 2) if cogs else 0) + (round(amount, 2) if amount else 0),
+        'profit_and_loss': round(profit_and_loss, 2) if profit_and_loss else 0,
+        'qty': round(qty, 2) if qty else 0,
+        'amount': round(amount, 2) if amount else 0
     }
 
     # ----------END----------

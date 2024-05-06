@@ -26,6 +26,8 @@ frappe.ui.form.on('Import File', {
                         frm.set_value("profit_and_loss", r.message.profit_and_loss);
                         frm.set_value("total_sale_amount", r.message.total_sale_amount);
                         frm.set_value("avg_sale_rate", r.message.avg_sale_rate);
+                        frm.set_value("qty", r.message.qty);
+                        frm.set_value("amount", r.message.amount);
                     }
                 }
             });
