@@ -392,7 +392,8 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
         })
 
         //ROUTING TO PRINT FORMAT CUSTOM
-        frappe.set_route("print", "Purchase Invoice", doc.name);
+        // frappe.set_route("print", "Purchase Invoice", doc.name);
+        frappe.set_route("Form", "Import File", doc.import_file);
         // CUSTOM END
 
     }

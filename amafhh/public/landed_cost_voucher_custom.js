@@ -4,8 +4,11 @@ frappe.ui.form.on("Landed Cost Voucher", {
         fetch_purchase_invoices(frm, import_file);
 
     },
+    on_submit: function (frm) {
+        frappe.set_route("Form", "Import File", frm.doc.import_file);
+    }
 
-})
+});
 
 function fetch_purchase_invoices(frm, import_file) {
     if (import_file) {
