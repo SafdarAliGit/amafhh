@@ -138,7 +138,6 @@ class StockBalanceReport(object):
 	def get_item_warehouse_map(self):
 		item_warehouse_map = {}
 		self.opening_vouchers = self.get_opening_vouchers()
-
 		for entry in self.sle_entries:
 			group_by_key = self.get_group_by_key(entry)
 			if group_by_key not in item_warehouse_map:
@@ -189,6 +188,8 @@ class StockBalanceReport(object):
 		qty_dict.val_rate = entry.valuation_rate
 		qty_dict.bal_qty += qty_diff
 		qty_dict.bal_val += value_diff
+
+
 
 	def initialize_data(self, item_warehouse_map, group_by_key, entry):
 		opening_data = self.opening_data.get(group_by_key, {})
@@ -251,17 +252,20 @@ class StockBalanceReport(object):
 	def prepare_stock_ledger_entries(self):
 		sle = frappe.qb.DocType("Stock Ledger Entry")
 		item_table = frappe.qb.DocType("Item")
+		import_file_table = frappe.qb.DocType("Import File")
 
 		query = (
 			frappe.qb.from_(sle)
 			.inner_join(item_table)
 			.on(sle.item_code == item_table.name)
+			.inner_join(import_file_table)
+			.on(item_table.import_file == import_file_table.name)
 			.select(
 				sle.item_code,
 				sle.warehouse,
 				sle.posting_date,
 				sle.actual_qty,
-				sle.valuation_rate,
+				import_file_table.avg_rate_with_lc.as_("valuation_rate"),  # Changed from sle.valuation_rate to import_file_table.valuation_rate
 				sle.company,
 				sle.voucher_type,
 				sle.qty_after_transaction,
@@ -290,6 +294,7 @@ class StockBalanceReport(object):
 			query = query.where(sle.company == self.filters.get("company"))
 
 		self.sle_entries = query.run(as_dict=True)
+
 
 	def apply_inventory_dimensions_filters(self, query, sle) -> str:
 		inventory_dimension_fields = self.get_inventory_dimension_fields()

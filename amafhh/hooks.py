@@ -37,7 +37,7 @@ app_license = "MIT"
 doctype_js = {"Purchase Invoice": "public/js/purchase_invoice.js",
               "Sales Invoice": "public/js/sales_invoice.js", "Item": "public/js/item.js",
               "Landed Cost Voucher": "public/landed_cost_voucher_custom.js",
-    }
+              }
 # Home Pages
 # ----------
 
@@ -131,7 +131,11 @@ override_doctype_class = {
 #		"on_trash": "method"
 #	}
 # }
-
+# doc_events = {
+#     "Purchase Invoice": {
+#         "on_submit": "amafhh.overrides.purchase_invoice_overrides.insert_import_file_to_stock_ledger_entry"
+#     }
+# }
 # Scheduled Tasks
 # ---------------
 

@@ -39,3 +39,17 @@ class PurchaseInvoiceOverrides(PurchaseInvoice):
                     # frappe.db.commit()
                 except Exception as e:
                     frappe.throw(frappe._("Error Updating Item NO: {0}".format(str(e))))
+
+
+def insert_import_file_to_stock_ledger_entry(doc, method):
+    # Loop through items in the Purchase Invoice
+    for item in doc.items:
+        # Check if there's a related stock entry (this is a simplified example)
+        stock_entries = frappe.get_list("Stock Ledger Entry", fields=["name"],
+                                        filters={"voucher_detail_no": item.name})
+
+        # Update Stock Ledger Entries with the import_file value from Purchase Invoice Item
+        for entry in stock_entries:
+            frappe.db.set_value("Stock Ledger Entry", entry.name, "import_file", item.import_file)
+
+    frappe.db.commit()

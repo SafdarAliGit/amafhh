@@ -107,4 +107,4 @@ frappe.query_reports["Stock Balance Custom"] = {
 	}
 };
 
-erpnext.utils.add_inventory_dimensions('Stock Balance', 8);
+erpnext.utils.add_inventory_dimensions('Stock Balance Custom', 8);
