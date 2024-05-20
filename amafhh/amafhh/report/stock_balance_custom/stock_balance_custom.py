@@ -269,7 +269,7 @@ class StockBalanceReport(object):
 				sle.company,
 				sle.voucher_type,
 				sle.qty_after_transaction,
-				sle.stock_value_difference,
+				(sle.actual_qty * import_file_table.avg_rate_with_lc).as_("stock_value_difference"),
 				sle.item_code.as_("name"),
 				sle.voucher_no,
 				sle.stock_value,
