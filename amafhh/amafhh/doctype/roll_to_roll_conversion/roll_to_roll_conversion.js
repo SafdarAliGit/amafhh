@@ -39,7 +39,6 @@ frappe.ui.form.on('Roll To Roll Conversion', {
 
     },
     make_non_physical_stock_entry: function (frm) {
-        console.log(frm);
         if (frm.doc.roll_to_roll_conversion_source && frm.doc.roll_to_roll_conversion_source.length > 0) {
             frappe.call({
                 method: 'amafhh.amafhh.doctype.utils.make_non_physical_stock_entry.make_non_physical_stock_entry',

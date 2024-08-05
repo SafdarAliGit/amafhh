@@ -64,7 +64,7 @@ def get_columns():
 def get_conditions(filters, doctype):
     conditions = []
     if doctype in ["pi","lcv"]:
-        conditions.append(f"`{doctype}`.import_file = %(import_file)s")
+        conditions.append(f"`{doctype}`.name = %(import_file)s")
     return " AND ".join(conditions)
 
 

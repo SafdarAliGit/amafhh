@@ -37,6 +37,7 @@ app_license = "MIT"
 doctype_js = {"Purchase Invoice": "public/js/purchase_invoice.js",
               "Sales Invoice": "public/js/sales_invoice.js", "Item": "public/js/item.js",
               "Landed Cost Voucher": "public/landed_cost_voucher_custom.js",
+
               }
 # Home Pages
 # ----------
