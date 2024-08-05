@@ -142,6 +142,7 @@ def get_data(filters):
         sle.is_cancelled = 0
         {conditions}
     HAVING stock_qty != 0
+    GROUP BY item.brand_item
     ORDER BY item.brand_item
         """
 
