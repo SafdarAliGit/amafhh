@@ -87,7 +87,11 @@ def get_data(filters):
                 COALESCE(item.length, 0) AS length,
                 COALESCE(item.gsm, 0) AS gsm,
                 CASE WHEN item.gsm < 100  THEN 3100 WHEN item.gsm >= 100 THEN 15500 ELSE 0 END AS factor,
-                (SUM(CASE WHEN sle.actual_qty > 0 THEN sle.actual_qty ELSE 0 END) - ABS(SUM(CASE WHEN sle.actual_qty < 0 THEN sle.actual_qty ELSE 0 END))) AS stock_qty,
+                (SELECT actual_qty
+                FROM `tabStock Ledger Entry` AS sle
+                WHERE sle.item_code = item.item_code
+                ORDER BY sle.posting_date DESC
+                LIMIT 1) AS stock_qty,
                 0 AS packet
             FROM `tabItem` AS item
             JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
@@ -95,7 +99,6 @@ def get_data(filters):
                 sle.is_cancelled = 0
                 AND item.item_group = 'Sheet'
                 {conditions}
-            GROUP BY item.brand_item, item.import_file
             HAVING stock_qty != 0
             ORDER BY item.brand_item
         """
