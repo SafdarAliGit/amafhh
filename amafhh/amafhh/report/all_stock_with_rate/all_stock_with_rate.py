@@ -130,7 +130,7 @@ def get_data(filters):
         (SELECT actual_qty
         FROM `tabStock Ledger Entry` AS sle
         WHERE sle.item_code = item.item_code
-        ORDER BY sle.posting_date DESC
+        ORDER BY sle.name DESC
         LIMIT 1) AS stock_qty,
         0 AS packet,
         0 AS per_kg,
@@ -141,7 +141,6 @@ def get_data(filters):
     WHERE
         sle.is_cancelled = 0
         {conditions}
-    GROUP BY item.brand_item
     HAVING stock_qty != 0
     ORDER BY item.brand_item
         """
