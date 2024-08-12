@@ -127,11 +127,12 @@ def get_data(filters):
         COALESCE(item.length, 0) AS length,
         COALESCE(item.gsm, 0) AS gsm,
         CASE WHEN item.gsm < 100  THEN 3100 WHEN item.gsm >= 100 THEN 15500 ELSE 0 END AS factor,
-        (SELECT actual_qty
-        FROM `tabStock Ledger Entry` AS sle
-        WHERE sle.item_code = item.item_code
-        ORDER BY sle.name DESC
-        LIMIT 1) AS stock_qty,
+        SUM(( SELECT actual_qty
+            FROM `tabStock Ledger Entry` AS sle
+            WHERE sle.item_code = item.item_code
+              AND sle.is_cancelled = 0
+            ORDER BY sle.posting_date DESC
+            LIMIT 1)) AS stock_qty,
         0 AS packet,
         0 AS per_kg,
         COALESCE((SELECT avg_rate_with_lc FROM `tabImport File` WHERE name = item.import_file),0) AS rate,
@@ -141,6 +142,7 @@ def get_data(filters):
     WHERE
         sle.is_cancelled = 0
         {conditions}
+    GROUP BY item.brand_item, item.import_file, item.item_code
     HAVING stock_qty != 0
     ORDER BY item.brand_item
         """
