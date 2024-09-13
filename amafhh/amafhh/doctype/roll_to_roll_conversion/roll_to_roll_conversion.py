@@ -38,6 +38,7 @@ class RollToRollConversion(Document):
             product_item.ref_type = "Roll To Roll Conversion"
             product_item.item_category = item.item_category if item.item_category else ""
             product_item.brand_item = item.brand if item.brand else ""
+            # product_item.valuation_rate = item.rate
             try:
                 product_item.save()
                 # frappe.db.commit()
