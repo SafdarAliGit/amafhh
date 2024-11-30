@@ -104,7 +104,8 @@ def update_avg_rate(**args):
                 SELECT 
                     COALESCE(SUM(CASE WHEN sle.warehouse = 'Damaged - A' THEN sle.actual_qty ELSE 0 END), 0) AS damaged,
                     COALESCE(SUM(CASE WHEN sle.warehouse = 'Non Fisical Damage - A' THEN sle.actual_qty ELSE 0 END), 0) AS non_physical,
-                    COALESCE(SUM(CASE WHEN sle.warehouse = 'Un delivered. Warehouse - A' THEN sle.actual_qty ELSE 0 END), 0) AS undelivered
+                    COALESCE(SUM(CASE WHEN sle.warehouse = 'Un delivered. Warehouse - A' THEN sle.actual_qty ELSE 0 END), 0) AS undelivered,
+                    COALESCE(SUM(CASE WHEN sle.warehouse = 'Goods In Transit - A' THEN sle.actual_qty ELSE 0 END), 0) AS goodsintransit
                 FROM 
                     `tabItem` AS item
                 LEFT JOIN 
@@ -117,7 +118,8 @@ def update_avg_rate(**args):
     stock_damage_result = frappe.db.sql(stock_damage_query, as_dict=True)
     qty = (stock_damage_result[0].damaged if stock_damage_result[0].damaged else 0) + (
         stock_damage_result[0].non_physical if stock_damage_result[0].non_physical else 0) + (
-        stock_damage_result[0].undelivered if stock_damage_result[0].undelivered else 0)
+        stock_damage_result[0].undelivered if stock_damage_result[0].undelivered else 0) +(
+        stock_damage_result[0].goodsintransit if stock_damage_result[0].goodsintransit else 0)
     amount = qty * avg_rate_with_lc
 
     return {
