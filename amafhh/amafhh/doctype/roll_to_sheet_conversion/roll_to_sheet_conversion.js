@@ -7,8 +7,7 @@ frappe.ui.form.on('Roll To Sheet Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Batch", "item_group", "=", "Roll"],
-                    ["Batch", "batch_qty", ">", 0]
+                    ["Batch", "item_group", "=", "Roll"]
                 ]
             };
         });

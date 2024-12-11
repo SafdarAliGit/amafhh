@@ -13,7 +13,8 @@ frappe.ui.form.on('Roll To Roll Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Item", "item_group", "=", "Roll"]
+                    ["Item", "item_group", "=", "Roll"],
+                     ["Item", "qty", ">", 0]
                 ]
             };
         });
@@ -31,8 +32,7 @@ frappe.ui.form.on('Roll To Roll Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Batch", "item_group", "=", "Roll"],
-                    ["Batch", "batch_qty", ">", 0]
+                    ["Batch", "item_group", "=", "Roll"]
                 ]
             };
         });

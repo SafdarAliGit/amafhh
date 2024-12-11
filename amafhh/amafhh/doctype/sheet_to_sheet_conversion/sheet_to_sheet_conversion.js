@@ -15,8 +15,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion', {
             var d = locals[cdt][cdn];
             return {
                 filters: [
-                    ["Batch", "item_group", "=", 'Sheet'],
-                    ["Batch", "batch_qty", ">", 0]
+                    ["Batch", "item_group", "=", 'Sheet']
                 ]
             };
         });
@@ -121,6 +120,7 @@ function check_net_total(frm) {
     }
 
 }
+
 function target_ream_pkt(frm, cdt, cdn) {
     var row = locals[cdt][cdn];
     var weight_factor = 1;
@@ -133,7 +133,7 @@ function target_ream_pkt(frm, cdt, cdn) {
 }
 
 frappe.ui.form.on('Sheet To Sheet Conversion Items', {
-    waste_qty:function (frm, cdt, cdn) {
+    waste_qty: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, 'balance_qty', flt(row.stock_weight_source) - row.waste_qty);
     },
