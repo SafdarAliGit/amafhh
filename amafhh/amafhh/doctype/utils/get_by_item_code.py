@@ -28,11 +28,12 @@ def get_by_item_code(item_code):
 
     stock = frappe.get_all(
         "Stock Ledger Entry",
-        filters={"item_code": item_code},
+        filters={"item_code": item_code, "qty_after_transaction": [">", 0]},
         fields=["qty_after_transaction"],
         order_by="name desc",
         limit=1
     )
+
     if stock:
         data.update(
             {
