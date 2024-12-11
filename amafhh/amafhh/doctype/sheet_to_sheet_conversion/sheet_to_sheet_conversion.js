@@ -133,6 +133,10 @@ function target_ream_pkt(frm, cdt, cdn) {
 }
 
 frappe.ui.form.on('Sheet To Sheet Conversion Items', {
+    waste_qty:function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, 'balance_qty', flt(row.stock_weight_source) - row.waste_qty);
+    },
 
     batch_no_source: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
