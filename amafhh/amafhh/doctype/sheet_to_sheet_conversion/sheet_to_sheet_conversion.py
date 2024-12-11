@@ -101,6 +101,19 @@ class SheetToSheetConversion(Document):
                 "batch_no": item.batch_no_target if item.batch_no_target else None,
                 "ream_pkt": item.ream_pkt_target if item.ream_pkt_target else None
             })
+            if item.waste_qty and item.waste_qty_warehouse:
+                doc.append("items", {
+                    "set_basic_rate_manually": 1,
+                    "t_warehouse": item.waste_qty_warehouse,
+                    "s_warehouse": "",
+                    "item_code": item.item_code_source,
+                    "qty": item.waste_qty,
+                    "valuation_rate": item.rate,
+                    "basic_rate": item.rate,
+                    "amount": item.waste_qty * item.rate,
+                    "batch_no": item.batch_no_source if item.batch_no_target else None,
+                    "ream_pkt": None
+                })
             try:
                 # doc.ignore_validate = True
                 doc.submit()
