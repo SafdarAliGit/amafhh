@@ -129,7 +129,7 @@ function target_ream_pkt(frm, cdt, cdn) {
     } else {
         weight_factor = 15500;
     }
-    frappe.model.set_value(cdt, cdn, 'ream_pkt_projected', parseFloat(row.stock_weight_source) / ((parseFloat(row.width_target) * parseFloat(row.length_target) * parseFloat(row.gsm_source)) / weight_factor));
+    frappe.model.set_value(cdt, cdn, 'ream_pkt_projected', parseFloat(row.balance_qty) / ((parseFloat(row.width_target) * parseFloat(row.length_target) * parseFloat(row.gsm_source)) / weight_factor));
 }
 
 frappe.ui.form.on('Sheet To Sheet Conversion Items', {
