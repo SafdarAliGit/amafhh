@@ -132,10 +132,10 @@ def get_data(filters):
                 ELSE 0 
             END AS factor,
             (
-                SELECT actual_qty
+                SELECT qty_after_transaction
                 FROM `tabStock Ledger Entry` AS sle
                 WHERE sle.item_code = item.item_code
-                    AND sle.actual_qty > 1
+                    AND sle.qty_after_transaction > 1
                     AND sle.is_cancelled = 0
                 ORDER BY sle.posting_date DESC
                 LIMIT 1
