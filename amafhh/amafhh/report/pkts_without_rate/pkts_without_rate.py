@@ -95,7 +95,7 @@ def get_data(filters):
                 SELECT actual_qty
                 FROM `tabStock Ledger Entry` AS sle
                 WHERE sle.item_code = item.item_code
-                    AND sle.actual_qty > 0
+                    AND sle.actual_qty > 1
                     AND sle.is_cancelled = 0
                 ORDER BY sle.posting_date DESC
                 LIMIT 1
