@@ -77,31 +77,39 @@ def get_data(filters):
     conditions = get_conditions(filters)
 
     stock_balance_query = f"""
-            SELECT 
-                item.brand_item,
-                item.import_file,
-                item.item_code,
-                item.stock_uom,
-                item.item_group,
-                COALESCE(item.width, 0) AS width,
-                COALESCE(item.length, 0) AS length,
-                COALESCE(item.gsm, 0) AS gsm,
-                CASE WHEN item.gsm < 100  THEN 3100 WHEN item.gsm >= 100 THEN 15500 ELSE 0 END AS factor,
-                (SELECT actual_qty
+        SELECT 
+            item.brand_item,
+            item.import_file,
+            item.item_code,
+            item.stock_uom,
+            item.item_group,
+            COALESCE(item.width, 0) AS width,
+            COALESCE(item.length, 0) AS length,
+            COALESCE(item.gsm, 0) AS gsm,
+            CASE 
+                WHEN item.gsm < 100 THEN 3100 
+                WHEN item.gsm >= 100 THEN 15500 
+                ELSE 0 
+            END AS factor,
+            (
+                SELECT actual_qty
                 FROM `tabStock Ledger Entry` AS sle
                 WHERE sle.item_code = item.item_code
+                    AND sle.actual_qty > 0
+                    AND sle.is_cancelled = 0
                 ORDER BY sle.posting_date DESC
-                LIMIT 1) AS stock_qty,
-                0 AS packet
-            FROM `tabItem` AS item
-            JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
-            WHERE
-                sle.is_cancelled = 0
-                AND item.item_group = 'Sheet'
-                {conditions}
-            HAVING stock_qty != 0
-            ORDER BY item.brand_item
-        """
+                LIMIT 1
+            ) AS stock_qty,
+            0 AS packet
+        FROM `tabItem` AS item
+        JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
+        WHERE
+            sle.is_cancelled = 0
+            AND item.item_group = 'Sheet'
+            {conditions}
+        HAVING stock_qty != 0
+        ORDER BY item.brand_item
+    """
 
     stock_balance_result = frappe.db.sql(stock_balance_query, filters, as_dict=1)
     for i in stock_balance_result:

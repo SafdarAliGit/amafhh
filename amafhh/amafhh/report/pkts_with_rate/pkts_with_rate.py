@@ -117,34 +117,42 @@ def get_data(filters):
     conditions = get_conditions(filters)
 
     stock_balance_query = f"""
-            SELECT 
-                item.brand_item,
-                item.import_file,
-                item.item_code,
-                item.stock_uom,
-                item.item_group,
-                COALESCE(item.width, 0) AS width,
-                COALESCE(item.length, 0) AS length,
-                COALESCE(item.gsm, 0) AS gsm,
-                CASE WHEN item.gsm < 100  THEN 3100 WHEN item.gsm >= 100 THEN 15500 ELSE 0 END AS factor,
-                (SELECT actual_qty
+        SELECT 
+            item.brand_item,
+            item.import_file,
+            item.item_code,
+            item.stock_uom,
+            item.item_group,
+            COALESCE(item.width, 0) AS width,
+            COALESCE(item.length, 0) AS length,
+            COALESCE(item.gsm, 0) AS gsm,
+            CASE 
+                WHEN item.gsm < 100 THEN 3100 
+                WHEN item.gsm >= 100 THEN 15500 
+                ELSE 0 
+            END AS factor,
+            (
+                SELECT actual_qty
                 FROM `tabStock Ledger Entry` AS sle
                 WHERE sle.item_code = item.item_code
+                    AND sle.actual_qty > 0
+                    AND sle.is_cancelled = 0
                 ORDER BY sle.posting_date DESC
-                LIMIT 1) AS stock_qty,
-                0 AS packet,
-                0 AS per_kg,
-                COALESCE((SELECT avg_rate_with_lc FROM `tabImport File` WHERE name = item.import_file),0) AS rate,
-                0 kg_amount
-            FROM `tabItem` AS item
-            JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
-            WHERE
-                sle.is_cancelled = 0
-                AND item.item_group = 'Sheet'
-                {conditions}
-            HAVING stock_qty != 0
-            ORDER BY item.brand_item
-        """
+                LIMIT 1
+            ) AS stock_qty,
+            0 AS packet,
+            0 AS per_kg,
+            COALESCE((SELECT avg_rate_with_lc FROM `tabImport File` WHERE name = item.import_file), 0) AS rate,
+            0 kg_amount
+        FROM `tabItem` AS item
+        JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
+        WHERE
+            sle.is_cancelled = 0
+            AND item.item_group = 'Sheet'
+            {conditions}
+        HAVING stock_qty != 0
+        ORDER BY item.brand_item
+    """
 
     stock_balance_result = frappe.db.sql(stock_balance_query, filters, as_dict=1)
     for i in stock_balance_result:
@@ -154,7 +162,8 @@ def get_data(filters):
             length = Decimal(i.length)
             gsm = Decimal(i.gsm)
             stock_qty = Decimal(i.stock_qty)
-            i.packet = round(stock_qty / ((width * length * gsm) / factor),0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+            i.packet = round(stock_qty / ((width * length * gsm) / factor),
+                             0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
             i.per_kg = round(((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
             i.kg_amount = round(i.stock_qty * i.rate, 3)
         except decimal.InvalidOperation as e:
