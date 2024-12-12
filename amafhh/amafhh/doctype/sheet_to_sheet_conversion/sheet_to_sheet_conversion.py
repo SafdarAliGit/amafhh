@@ -92,10 +92,10 @@ class SheetToSheetConversion(Document):
                 "s_warehouse": source_warehouse,
                 "t_warehouse": "",
                 "item_code": item.item_code_source,
-                "qty": item.weight_target,
+                "qty": item.weight_source,
                 "valuation_rate": item.rate,
                 "basic_rate": item.rate,
-                "amount": item.amount,
+                "amount": item.weight_source * item.rate,
                 "batch_no": item.batch_no_source if item.batch_no_target else None,
                 "ream_pkt": item.ream_pkt_source if item.ream_pkt_source else None
             })
@@ -107,7 +107,7 @@ class SheetToSheetConversion(Document):
                 "qty": item.weight_target,
                 "valuation_rate": item.rate,
                 "basic_rate": item.rate,
-                "basic_amount": item.amount,
+                "basic_amount": item.weight_target * item.rate,
                 "batch_no": item.batch_no_target if item.batch_no_target else None,
                 "ream_pkt": item.ream_pkt_target if item.ream_pkt_target else None
             })
