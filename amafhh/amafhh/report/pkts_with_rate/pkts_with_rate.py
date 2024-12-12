@@ -137,6 +137,7 @@ def get_data(filters):
                 WHERE sle.item_code = item.item_code
                     AND sle.qty_after_transaction > 1
                     AND sle.is_cancelled = 0
+                    {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
                 ORDER BY sle.posting_date DESC
                 LIMIT 1
             ) AS stock_qty,
