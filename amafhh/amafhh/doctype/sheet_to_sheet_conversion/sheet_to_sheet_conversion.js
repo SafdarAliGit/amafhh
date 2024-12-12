@@ -321,8 +321,6 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
         calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
         calculate_source_target_weight_total(frm)
         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
-        frappe.model.set_value(cdt, cdn, 'waste_qty', parseFloat(row.weight_source - row.weight_target));
-        frappe.model.set_value(cdt, cdn, 'balance_qty', flt(row.stock_weight_source) - flt(row.waste_qty));
     },
     ream_pkt_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
@@ -330,6 +328,8 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
         calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
         calculate_source_target_weight_total(frm);
         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
+        frappe.model.set_value(cdt, cdn, 'waste_qty', parseFloat(row.weight_source - row.weight_target));
+        frappe.model.set_value(cdt, cdn, 'balance_qty', flt(row.stock_weight_source) - flt(row.waste_qty));
     },
 
     length_target: function (frm, cdt, cdn) {
