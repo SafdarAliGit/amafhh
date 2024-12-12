@@ -68,6 +68,7 @@ class SheetToSheetConversion(Document):
             doc.sheet_to_sheet_conversion = self.name
             source_warehouse = self.source_warehouse
             target_warehouse = None
+            waste_warehouse = None
             if item.stock_type_target == "Finished":
                 target_warehouse = 'Finished Goods - A'
             elif item.stock_type_target == "Semi-Finished":
@@ -76,6 +77,15 @@ class SheetToSheetConversion(Document):
                 target_warehouse = 'Damaged - A'
             elif item.stock_type_target == "Non-Physical":
                 target_warehouse = 'Non Fisical Damage - A'
+
+            if item.waste_stock_type == "Finished":
+                waste_warehouse = 'Finished Goods - A'
+            elif item.waste_stock_type == "Semi-Finished":
+                waste_warehouse = 'Goods In Transit - A'
+            elif item.waste_stock_type == "Damaged":
+                waste_warehouse = 'Damaged - A'
+            elif item.waste_stock_type == "Non-Physical":
+                waste_warehouse = 'Non Fisical Damage - A'
 
             doc.append("items", {
                 "set_basic_rate_manually": 1,
@@ -101,10 +111,10 @@ class SheetToSheetConversion(Document):
                 "batch_no": item.batch_no_target if item.batch_no_target else None,
                 "ream_pkt": item.ream_pkt_target if item.ream_pkt_target else None
             })
-            if item.waste_qty and item.waste_qty_warehouse:
+            if item.waste_qty > 0 and item.waste_stock_type:
                 doc.append("items", {
                     "set_basic_rate_manually": 1,
-                    "t_warehouse": item.waste_qty_warehouse,
+                    "t_warehouse": waste_warehouse,
                     "s_warehouse": "",
                     "item_code": item.item_code_source,
                     "qty": item.waste_qty,

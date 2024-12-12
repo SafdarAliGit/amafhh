@@ -17,7 +17,7 @@
   "weight_source",
   "calculated_rp",
   "waste_qty",
-  "waste_qty_warehouse",
+  "waste_stock_type",
   "balance_qty",
   "column_break_pyaqn",
   "stock_type_target",
@@ -223,16 +223,17 @@
    "read_only": 1
   },
   {
-   "fieldname": "waste_qty_warehouse",
-   "fieldtype": "Link",
-   "label": "Waste Qty Warehouse",
-   "options": "Warehouse"
+   "fieldname": "waste_stock_type",
+   "fieldtype": "Select",
+   "label": "Waste Stock",
+   "mandatory_depends_on": "eval:doc.waste_qty > 0;",
+   "options": "Damaged\nFinished\nSemi-Finished\nNon-Phyical"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-12-11 20:22:48.837186",
+ "modified": "2024-12-12 19:26:34.063506",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion Items",
