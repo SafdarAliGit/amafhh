@@ -107,7 +107,7 @@ class SheetToSheetConversion(Document):
                 "qty": item.weight_target,
                 "valuation_rate": item.rate,
                 "basic_rate": item.rate,
-                "amount": float(item.weight_target) * float(item.rate),
+                "basic_amount": float(item.weight_target) * float(item.rate),
                 "batch_no": item.batch_no_target if item.batch_no_target else None,
                 "ream_pkt": item.ream_pkt_target if item.ream_pkt_target else None
             })
@@ -120,7 +120,7 @@ class SheetToSheetConversion(Document):
                     "qty": item.waste_qty,
                     "valuation_rate": item.rate,
                     "basic_rate": item.rate,
-                    "amount": float(item.waste_qty) * float(item.rate),
+                    "basic_amount": float(item.waste_qty) * float(item.rate),
                     "batch_no": item.batch_no_source if item.batch_no_target else None,
                     "ream_pkt": None
                 })
