@@ -8,7 +8,7 @@ from frappe.utils import nowdate
 
 class SheetToSheetConversion(Document):
     def validate(self):
-        if self.balance_qty != self.target_weight:
+        if self.source_weight != self.target_weight:
             frappe.throw("Total Source And Target Weight Should Be Same")
 
     def on_submit(self):

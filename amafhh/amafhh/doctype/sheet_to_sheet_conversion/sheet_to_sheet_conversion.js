@@ -98,7 +98,7 @@ function calculate_source_target_weight_total(frm) {
     var weight_target = 0;
     $.each(frm.doc.sheet_to_sheet_conversion_items || [], function (i, d) {
 
-        weight_source += flt(d.weight_source);
+        weight_source += flt(d.balance_qty);
         weight_target += flt(d.weight_target);
     });
     frm.set_value('source_weight', parseFloat(weight_source).toFixed(4));
@@ -110,7 +110,7 @@ function check_net_total(frm) {
     var weight_target = 0;
     $.each(frm.doc.sheet_to_sheet_conversion_items || [], function (i, d) {
         if (row.item_code_source == d.item_code_source) {
-            weight_source += flt(d.weight_source);
+            weight_source += flt(d.balance_qty);
             weight_target += flt(d.weight_target);
         }
     });
