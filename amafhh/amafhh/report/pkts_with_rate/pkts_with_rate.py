@@ -118,41 +118,47 @@ def get_data(filters):
 
     stock_balance_query = f"""
         SELECT 
-            item.brand_item,
-            item.import_file,
-            item.item_code,
-            item.stock_uom,
-            item.item_group,
-            COALESCE(item.width, 0) AS width,
-            COALESCE(item.length, 0) AS length,
-            COALESCE(item.gsm, 0) AS gsm,
-            CASE 
-                WHEN item.gsm < 100 THEN 3100 
-                WHEN item.gsm >= 100 THEN 15500 
-                ELSE 0 
-            END AS factor,
-            (
-                SELECT qty_after_transaction
-                FROM `tabStock Ledger Entry` AS sle
-                WHERE sle.item_code = item.item_code
-                    AND sle.qty_after_transaction > 1
-                    AND sle.is_cancelled = 0
-                    {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
-                ORDER BY sle.posting_date DESC
-                LIMIT 1
-            ) AS stock_qty,
-            0 AS packet,
-            0 AS per_kg,
-            COALESCE((SELECT avg_rate_with_lc FROM `tabImport File` WHERE name = item.import_file), 0) AS rate,
-            0 kg_amount
-        FROM `tabItem` AS item
-        JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
-        WHERE
-            sle.is_cancelled = 0
-            AND item.item_group = 'Sheet'
-            {conditions}
-        HAVING stock_qty != 0
-        ORDER BY item.brand_item
+    item.brand_item,
+    item.import_file,
+    item.item_code,
+    item.stock_uom,
+    item.item_group,
+    COALESCE(item.width, 0) AS width,
+    COALESCE(item.length, 0) AS length,
+    COALESCE(item.gsm, 0) AS gsm,
+    CASE 
+        WHEN item.gsm < 100 THEN 3100 
+        WHEN item.gsm >= 100 THEN 15500 
+        ELSE 0 
+    END AS factor,
+    (
+        SELECT qty_after_transaction
+        FROM `tabStock Ledger Entry` AS sle
+        WHERE sle.item_code = item.item_code
+            AND sle.qty_after_transaction > 1
+            AND sle.is_cancelled = 0
+            {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+        ORDER BY sle.posting_date DESC, sle.posting_time DESC
+        LIMIT 1
+    ) AS stock_qty,
+    0 AS packet,
+    0 AS per_kg,
+    COALESCE((SELECT avg_rate_with_lc FROM `tabImport File` WHERE name = item.import_file), 0) AS rate,
+    0 AS kg_amount
+    FROM `tabItem` AS item
+    WHERE
+        item.item_group = 'Sheet'
+        AND EXISTS (
+            SELECT 1
+            FROM `tabStock Ledger Entry` AS sle
+            WHERE sle.item_code = item.item_code
+                AND sle.qty_after_transaction > 1
+                AND sle.is_cancelled = 0
+                {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+            HAVING MAX(sle.posting_date) IS NOT NULL
+        )
+    HAVING stock_qty != 0
+    ORDER BY item.brand_item
     """
 
     stock_balance_result = frappe.db.sql(stock_balance_query, filters, as_dict=1)
