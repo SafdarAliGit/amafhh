@@ -213,7 +213,8 @@
   {
    "fieldname": "waste_qty",
    "fieldtype": "Float",
-   "label": "Waste Qty"
+   "label": "Waste Qty",
+   "precision": "9"
   },
   {
    "default": "0",
@@ -233,7 +234,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-12-12 19:26:34.063506",
+ "modified": "2025-01-06 17:47:46.815731",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion Items",
