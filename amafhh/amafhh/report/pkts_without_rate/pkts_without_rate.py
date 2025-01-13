@@ -125,9 +125,16 @@ def get_data(filters):
             length = Decimal(i.length)
             gsm = Decimal(i.gsm)
             stock_qty = Decimal(i.stock_qty)
-            i.packet = round(stock_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+
+            # Check for zero values in divisor components
+            if width > 0 and length > 0 and gsm > 0 and factor > 0:
+                i.packet = round(stock_qty / ((width * length * gsm) / factor),
+                                 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
+            else:
+                i.packet = 0  # Set to 0 if division cannot be performed safely
         except decimal.InvalidOperation as e:
             frappe.log_error(f"Invalid value encountered: {e}")
             continue
     data.extend(stock_balance_result)
     return data
+
