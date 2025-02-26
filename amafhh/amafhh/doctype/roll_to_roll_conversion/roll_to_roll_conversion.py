@@ -67,7 +67,9 @@ class RollToRollConversion(Document):
         doc.stock_entry_type = "Repack"
         doc.purpose = "Repack"
         doc.batch_no = self.roll_to_roll_conversion_source[0].batch_no_source if self.roll_to_roll_conversion_source[0].batch_no_source else None
+        doc.set_posting_time = 1
         doc.posting_date = self.posting_date
+        doc.posting_time = self.posting_time
         doc.roll_to_roll_conversion = self.name
         source_warehouse = self.warehouse
         # Append source item

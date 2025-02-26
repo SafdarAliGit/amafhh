@@ -11,6 +11,8 @@
   "cut_option",
   "column_break_y0xdh",
   "posting_date",
+  "column_break_jv0xf",
+  "posting_time",
   "column_break_ahnmg",
   "warehouse",
   "section_break_iyspz",
@@ -136,6 +138,16 @@
    "fieldtype": "Int",
    "hidden": 1,
    "label": "Non Physical Stock Entry"
+  },
+  {
+   "default": "Now",
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time"
+  },
+  {
+   "fieldname": "column_break_jv0xf",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -146,7 +158,7 @@
    "link_fieldname": "roll_to_roll_conversion"
   }
  ],
- "modified": "2024-03-14 15:03:48.101085",
+ "modified": "2025-02-26 20:14:44.695737",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Roll Conversion",

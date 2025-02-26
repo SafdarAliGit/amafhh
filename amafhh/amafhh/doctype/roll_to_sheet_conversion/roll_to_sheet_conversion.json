@@ -11,6 +11,8 @@
   "conversion_type",
   "column_break_jhy6j",
   "posting_date",
+  "column_break_etpii",
+  "posting_time",
   "column_break_gfau7",
   "warehouse",
   "column_break_60nkh",
@@ -106,6 +108,16 @@
    "hidden": 1,
    "label": "Generate Batch For Target item",
    "options": "0"
+  },
+  {
+   "fieldname": "column_break_etpii",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Now",
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -116,7 +128,7 @@
    "link_fieldname": "roll_to_sheet_conversion"
   }
  ],
- "modified": "2024-02-05 07:59:45.637769",
+ "modified": "2025-02-26 20:16:58.428799",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion",

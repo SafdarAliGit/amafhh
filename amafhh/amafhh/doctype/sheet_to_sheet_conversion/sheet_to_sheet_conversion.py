@@ -64,7 +64,9 @@ class SheetToSheetConversion(Document):
             doc.stock_entry_type = "Repack"
             doc.purpose = "Repack"
             doc.batch_no = item.batch_no_source if item.batch_no_source else None
+            doc.set_posting_time = 1
             doc.posting_date = self.posting_date
+            doc.posting_time = self.posting_time
             doc.sheet_to_sheet_conversion = self.name
             source_warehouse = self.source_warehouse
             target_warehouse = None

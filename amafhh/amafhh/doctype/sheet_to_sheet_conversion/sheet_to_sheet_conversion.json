@@ -11,6 +11,8 @@
   "conversion_type",
   "column_break_kupli",
   "posting_date",
+  "column_break_gwxcv",
+  "posting_time",
   "column_break_i2ide",
   "source_warehouse",
   "column_break_0xkgr",
@@ -102,6 +104,16 @@
    "hidden": 1,
    "label": " Generate Batch For Target item",
    "options": "0"
+  },
+  {
+   "fieldname": "column_break_gwxcv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Now",
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -112,7 +124,7 @@
    "link_fieldname": "sheet_to_sheet_conversion"
   }
  ],
- "modified": "2024-12-11 21:27:36.078761",
+ "modified": "2025-02-26 20:17:55.652733",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion",
