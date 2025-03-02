@@ -62,8 +62,8 @@ class RollToSheetConversion(Document):
         # Append target items using a loop
         for item in self.roll_to_sheet_conversion_items:
             doc = frappe.new_doc("Stock Entry")
-            doc.stock_entry_type = "Repack"
-            doc.purpose = "Repack"
+            doc.stock_entry_type = "Manufacture"
+            doc.purpose = "Manufacture"
             if item.batch_no_target:
                 doc.batch_no = item.batch_no_target
             doc.set_posting_time = 1
@@ -87,9 +87,9 @@ class RollToSheetConversion(Document):
                 "t_warehouse": "",
                 "item_code": item.item_code_source,
                 "qty": item.weight_target,
-                "valuation_rate": item.rate,
-                "basic_rate": item.rate,
-                "amount": item.amount,
+                # "valuation_rate": item.rate,
+                # "basic_rate": item.rate,
+                # "amount": item.amount,
                 "batch_no": item.batch_no_source if item.batch_no_target else None
             })
             doc.append("items", {
@@ -98,11 +98,12 @@ class RollToSheetConversion(Document):
                 "t_warehouse": target_warehouse,
                 "item_code": item.item_code_target,
                 "qty": item.weight_target,
-                "valuation_rate": item.rate,
-                "basic_rate": item.rate,
-                "basic_amount": item.amount,
+                # "valuation_rate": item.rate,
+                # "basic_rate": item.rate,
+                # "basic_amount": item.amount,
                 "batch_no": item.batch_no_target if item.batch_no_target else None,
-                "ream_pkt": item.ream_pkt_target if item.ream_pkt_target else None
+                "ream_pkt": item.ream_pkt_target if item.ream_pkt_target else None,
+                "is_finished_item": 1
             })
             try:
                 # doc.ignore_validate = True
