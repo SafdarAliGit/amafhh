@@ -87,7 +87,7 @@ class RollToSheetConversion(Document):
                 "t_warehouse": "",
                 "item_code": item.item_code_source,
                 "qty": item.weight_target,
-                # "valuation_rate": item.rate,
+                "valuation_rate": item.rate,
                 # "basic_rate": item.rate,
                 # "amount": item.amount,
                 "batch_no": item.batch_no_source if item.batch_no_target else None
@@ -98,7 +98,7 @@ class RollToSheetConversion(Document):
                 "t_warehouse": target_warehouse,
                 "item_code": item.item_code_target,
                 "qty": item.weight_target,
-                # "valuation_rate": item.rate,
+                "valuation_rate": item.rate,
                 # "basic_rate": item.rate,
                 # "basic_amount": item.amount,
                 "batch_no": item.batch_no_target if item.batch_no_target else None,
