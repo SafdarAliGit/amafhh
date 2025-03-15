@@ -5,6 +5,8 @@ from decimal import Decimal
 from frappe.model.document import Document
 from frappe.utils import nowdate
 from frappe import _, throw
+from amafhh.amafhh.doctype.utils_functions import get_doctypes_by_field
+from frappe.model.naming import make_autoname
 
 
 class RollToRollConversion(Document):
@@ -110,3 +112,25 @@ class RollToRollConversion(Document):
             self.save()
         except Exception as e:
             frappe.throw(_("Error submitting Stock Entry: {0}".format(str(e))))
+
+
+    def on_cancel(self):
+        stock_entries = get_doctypes_by_field('Stock Entry', 'roll_to_roll_conversion', self.name)
+
+        if stock_entries:
+            for se_data in stock_entries:
+                se = frappe.get_doc('Stock Entry', se_data.name)
+                if se.docstatus != 2:  # Ensure the document is not already cancelled
+                    se.cancel()
+                    frappe.db.commit()
+                else:
+                    frappe.throw(f"Stock Entry {se.name} is already cancelled.")
+
+                # Generate new name for amendment if required
+                if se.amended_from:
+                    new_name = f"{se.name.split('-')[0]}-{int(se.name.split('-')[-1]) + 1}"
+                else:
+                    new_name = f"{se.name}-1"
+
+                make_autoname(new_name, 'Stock Entry')
+
