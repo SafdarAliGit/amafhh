@@ -143,7 +143,7 @@ def get_data(filters):
         sle.is_cancelled = 0
         {conditions}
     GROUP BY item.brand_item, item.import_file, item.item_code
-    HAVING stock_qty != 0
+    HAVING stock_qty > {f"%(stock_limit)s" if filters.get("stock_limit") else 0}
     ORDER BY item.brand_item
         """
 
