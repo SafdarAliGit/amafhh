@@ -135,9 +135,9 @@ def get_data(filters):
         SELECT qty_after_transaction
         FROM `tabStock Ledger Entry` AS sle
         WHERE sle.item_code = item.item_code
-            AND sle.qty_after_transaction > 1
             AND sle.is_cancelled = 0
             {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+            {f"AND sle.posting_date <= %(to_date)s" if filters.get("to_date") else ""}
         ORDER BY sle.posting_date DESC, sle.posting_time DESC
         LIMIT 1
     ) AS stock_qty,
@@ -155,9 +155,10 @@ def get_data(filters):
                 AND sle.qty_after_transaction > 1
                 AND sle.is_cancelled = 0
                 {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+                {f"AND sle.posting_date <= %(to_date)s" if filters.get("to_date") else ""}
             HAVING MAX(sle.posting_date) IS NOT NULL
         )
-    HAVING stock_qty != 0
+    HAVING stock_qty > {f"%(stock_limit)s" if filters.get("stock_limit") else 0}
     ORDER BY item.brand_item
     """
 

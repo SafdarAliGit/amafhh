@@ -30,6 +30,12 @@ frappe.query_reports["PKTS WITH RATE"] = {
             "label": __("To Date"),
             "fieldtype": "Date",
             "reqd": 1
+        },
+        {
+            "fieldname": "stock_limit",
+            "label": __("Stock Limit"),
+            "fieldtype": "Int",
+            "default": 10
         }
     ]
 };
