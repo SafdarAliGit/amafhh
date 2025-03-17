@@ -152,7 +152,6 @@ def get_data(filters):
             SELECT 1
             FROM `tabStock Ledger Entry` AS sle
             WHERE sle.item_code = item.item_code
-                AND sle.qty_after_transaction > 1
                 AND sle.is_cancelled = 0
                 {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
                 {f"AND sle.posting_date <= %(to_date)s" if filters.get("to_date") else ""}
