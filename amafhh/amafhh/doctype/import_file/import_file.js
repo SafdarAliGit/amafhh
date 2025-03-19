@@ -28,6 +28,10 @@ frappe.ui.form.on('Import File', {
                         frm.set_value("avg_sale_rate", r.message.avg_sale_rate);
                         frm.set_value("qty", r.message.qty);
                         frm.set_value("amount", r.message.amount);
+                        frm.set_value("damaged", r.message.damaged);
+                        frm.set_value("non_physical", r.message.non_physical);
+                        frm.set_value("undelivered", r.message.undelivered);
+                        frm.set_value("goods_in_transit", r.message.goods_in_transit);
                     }
                 }
             });

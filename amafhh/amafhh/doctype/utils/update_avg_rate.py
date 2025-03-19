@@ -137,7 +137,12 @@ def update_avg_rate(**args):
         'cogs': (round(cogs, 2) if cogs else 0) + (round(amount, 2) if amount else 0),
         'profit_and_loss': round(profit_and_loss, 2) if profit_and_loss else 0,
         'qty': round(qty, 2) if qty else 0,
-        'amount': round(amount, 2) if amount else 0
+        'amount': round(amount, 2) if amount else 0,
+        'damaged': stock_damage_result[0].damaged if stock_damage_result[0].damaged else 0,
+        'non_physical': stock_damage_result[0].non_physical if stock_damage_result[0].non_physical else 0,
+        'undelivered': stock_damage_result[0].undelivered if stock_damage_result[0].undelivered else 0,
+        'goods_in_transit': stock_damage_result[0].goodsintransit if stock_damage_result[0].goodsintransit else 0
+
     }
 
     # ----------END----------
