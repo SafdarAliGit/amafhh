@@ -56,6 +56,13 @@ def get_columns():
             "width": 120
         },
         {
+            "label": "<b>WAREHOUSE</b>",
+            "fieldname": "warehouse",
+            "fieldtype": "Link",
+            "options": "Warehouse",
+            "width": 120
+        },
+        {
             "label": "<b>UNIT</b>",
             "fieldname": "stock_uom",
             "fieldtype": "Data",
@@ -133,6 +140,16 @@ def get_data(filters):
               AND sle.is_cancelled = 0
             ORDER BY sle.posting_date DESC
             LIMIT 1)) AS stock_qty,
+        (
+            SELECT warehouse
+            FROM `tabStock Ledger Entry` AS sle
+            WHERE sle.item_code = item.item_code
+                AND sle.is_cancelled = 0
+                {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+                {f"AND sle.posting_date <= %(to_date)s" if filters.get("to_date") else ""}
+            ORDER BY sle.posting_date DESC, sle.posting_time DESC
+            LIMIT 1
+        ) AS warehouse,
         0 AS packet,
         0 AS per_kg,
         COALESCE((SELECT avg_rate_with_lc FROM `tabImport File` WHERE name = item.import_file),0) AS rate,

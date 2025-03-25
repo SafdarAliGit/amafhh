@@ -35,6 +35,13 @@ def get_columns():
             "width": 120
         },
         {
+            "label": "<b>WAREHOUSE</b>",
+            "fieldname": "warehouse",
+            "fieldtype": "Link",
+            "options": "Warehouse",
+            "width": 120
+        },
+        {
             "label": "<b>UNIT</b>",
             "fieldname": "stock_uom",
             "fieldtype": "Data",
@@ -92,7 +99,17 @@ def get_data(filters):
                 WHERE sle.item_code = item.item_code
                 ORDER BY sle.posting_date DESC
                 LIMIT 1) AS stock_qty,
-                0 AS packet
+                0 AS packet,
+                (
+                    SELECT warehouse
+                    FROM `tabStock Ledger Entry` AS sle
+                    WHERE sle.item_code = item.item_code
+                        AND sle.is_cancelled = 0
+                        {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+                        {f"AND sle.posting_date <= %(to_date)s" if filters.get("to_date") else ""}
+                    ORDER BY sle.posting_date DESC, sle.posting_time DESC
+                    LIMIT 1
+                ) AS warehouse
             FROM `tabItem` AS item
             JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
             WHERE
