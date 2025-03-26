@@ -63,6 +63,37 @@ def get_columns():
     ]
     return columns
 
+def get_warehouse_condition(filters):
+    """Returns the appropriate warehouse filtering condition for the SQL query."""
+    if not filters.get("warehouse"):
+        return ""  # No warehouse filter applied
+
+    warehouse = filters["warehouse"]
+    is_group = frappe.get_value("Warehouse", warehouse, "is_group")
+
+    if is_group:
+        # Fetch all subgroup warehouses recursively
+        warehouses = get_child_warehouses(warehouse)  
+        warehouses.append(warehouse)  # Include the group warehouse itself
+        
+        # Convert warehouse list to a proper SQL `IN` format
+        warehouse_list = ", ".join(f"'{w}'" for w in warehouses)
+        return f"AND sle.warehouse IN ({warehouse_list})"
+    else:
+        return "AND sle.warehouse = %(warehouse)s"
+
+
+def get_child_warehouses(parent_warehouse):
+    """Recursively fetch all child warehouses under a given warehouse."""
+    child_warehouses = frappe.get_all(
+        "Warehouse", filters={"parent_warehouse": parent_warehouse}, pluck="name"
+    )
+
+    # Recursively fetch sub-child warehouses
+    for child in child_warehouses:
+        child_warehouses.extend(get_child_warehouses(child))
+
+    return child_warehouses
 
 def get_conditions(filters):
     conditions = []
@@ -72,16 +103,19 @@ def get_conditions(filters):
         conditions.append(f"AND item.import_file = %(import_file)s")
     if filters.get("item_code"):
         conditions.append(f"AND sle.item_code = %(item_code)s")
-    if filters.get("warehouse"):
-        conditions.append(f"AND sle.warehouse = %(warehouse)s")
     if filters.get("to_date"):
         conditions.append(f"AND sle.posting_date <= %(to_date)s")
+    if filters.get("warehouse"):
+        warehouse_condition = get_warehouse_condition(filters)
+        conditions.append(warehouse_condition)  # Use the warehouse filtering function
+
     return " ".join(conditions)
 
 
 def get_data(filters):
     data = []
     conditions = get_conditions(filters)
+    warehouse_condition = get_warehouse_condition(filters)
 
     stock_balance_query = f"""
         SELECT DISTINCT 
@@ -103,7 +137,7 @@ def get_data(filters):
         FROM `tabStock Ledger Entry` AS sle_sub
         WHERE sle_sub.item_code = item.item_code  
             AND sle_sub.is_cancelled = 0
-            {f"AND sle_sub.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+            {warehouse_condition}
             {f"AND sle_sub.posting_date <= %(to_date)s" if filters.get("to_date") else ""}
         ORDER BY sle_sub.posting_date DESC, sle_sub.posting_time DESC
         LIMIT 1
@@ -113,7 +147,7 @@ def get_data(filters):
         FROM `tabStock Ledger Entry` AS sle
         WHERE sle.item_code = item.item_code
             AND sle.is_cancelled = 0
-            {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+            {warehouse_condition}
             {f"AND sle.posting_date <= %(to_date)s" if filters.get("to_date") else ""}
         ORDER BY sle.posting_date DESC, sle.posting_time DESC
         LIMIT 1
@@ -127,7 +161,7 @@ def get_data(filters):
             FROM `tabStock Ledger Entry` AS sle
             WHERE sle.item_code = item.item_code
                 AND sle.is_cancelled = 0
-                {f"AND sle.warehouse = %(warehouse)s" if filters.get("warehouse") else ""}
+                {warehouse_condition}
                 {f"AND sle.posting_date <= %(to_date)s" if filters.get("to_date") else ""}
         )
     HAVING stock_qty > {f"%(stock_limit)s" if filters.get("stock_limit") else 0}
