@@ -14,31 +14,16 @@ def execute(filters=None):
 def get_columns():
     columns = [
         {
-            "label": "<b>WIDTH</b>",
-            "fieldname": "width",
-            "fieldtype": "Float",
-            "width": 80
-
-        },
-        {
-            "label": "<b>LENGTH</b>",
-            "fieldname": "length",
-            "fieldtype": "Float",
-            "width": 80
-
-        },
-        {
-            "label": "<b>GRAM</b>",
-            "fieldname": "gsm",
-            "fieldtype": "Float",
-            "width": 80
-
-        },
-        {
             "label": "<b>PRODUCT NAME</b>",
             "fieldname": "brand_item",
             "fieldtype": "Link",
             "options": "Brand",
+            "width": 120
+        },
+        {
+            "label": "<b>PRODUCT CATEGORY</b>",
+            "fieldname": "item_category",
+            "fieldtype": "Data",
             "width": 120
         },
         {
@@ -49,13 +34,6 @@ def get_columns():
             "width": 100
         },
         {
-            "label": "<b>SERIAL NO</b>",
-            "fieldname": "item_code",
-            "fieldtype": "Link",
-            "options": "Item",
-            "width": 120
-        },
-        {
             "label": "<b>WAREHOUSE</b>",
             "fieldname": "warehouse",
             "fieldtype": "Link",
@@ -63,30 +41,10 @@ def get_columns():
             "width": 120
         },
         {
-            "label": "<b>UNIT</b>",
-            "fieldname": "stock_uom",
-            "fieldtype": "Data",
-            "width": 80
-        },
-        {
             "label": "<b>STOCK QTY</b>",
             "fieldname": "stock_qty",
             "fieldtype": "Float",
             "width": 80
-        },
-        {
-            "label": "<b>PACKET</b>",
-            "fieldname": "packet",
-            "fieldtype": "Float",
-            "width": 80
-
-        },
-        {
-            "label": "<b>PER KG</b>",
-            "fieldname": "per_kg",
-            "fieldtype": "Float",
-            "width": 80
-
         },
         {
             "label": "<b>RATE</b>",
@@ -163,16 +121,9 @@ def get_data(filters):
 
     stock_balance_query = f"""
     SELECT 
-        item.brand_item,
-        item.import_file,
-        item.item_code,
-        item.stock_uom,
-        item.item_group,
         item.item_category, 
-        COALESCE(item.width, 0) AS width,
-        COALESCE(item.length, 0) AS length,
-        COALESCE(item.gsm, 0) AS gsm,
-        CASE WHEN item.gsm < 100  THEN 3100 WHEN item.gsm >= 100 THEN 15500 ELSE 0 END AS factor,
+        item.brand_item, 
+        item.import_file, 
         SUM(( SELECT actual_qty
             FROM `tabStock Ledger Entry` AS sle
             WHERE sle.item_code = item.item_code
@@ -189,8 +140,6 @@ def get_data(filters):
             ORDER BY sle.posting_date DESC, sle.posting_time DESC
             LIMIT 1
         ) AS warehouse,
-        0 AS packet,
-        0 AS per_kg,
         COALESCE((SELECT avg_rate_with_lc FROM `tabImport File` WHERE name = item.import_file),0) AS rate,
         0 AS kg_amount
     FROM `tabItem` AS item
@@ -198,22 +147,16 @@ def get_data(filters):
     WHERE
         sle.is_cancelled = 0
         {conditions}
-    GROUP BY item.brand_item, item.import_file, item.item_code
+    GROUP BY item.item_category
     HAVING stock_qty > {f"%(stock_limit)s" if filters.get("stock_limit") else 0}
-    ORDER BY item.brand_item
+    ORDER BY item.item_category
         """
 
     stock_balance_result = frappe.db.sql(stock_balance_query, filters, as_dict=1)
     for i in stock_balance_result:
         try:
-            factor = Decimal(i.factor)
-            width = Decimal(i.width)
-            length = Decimal(i.length)
-            gsm = Decimal(i.gsm)
-            stock_qty = Decimal(i.stock_qty)
-            i.packet = round(stock_qty / ((width * length * gsm) / factor), 0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
-            i.per_kg = round(((width * length * gsm) / factor),0 if gsm < 100 else 2) if i.item_group == 'Sheet' else 0
-            i.kg_amount = round(i.stock_qty * i.rate, 3)
+            stock_qty = float(i.stock_qty)
+            i.kg_amount = round(stock_qty * i.rate, 3)
         except decimal.InvalidOperation as e:
             frappe.log_error(f"Invalid value encountered: {e}")
             continue
