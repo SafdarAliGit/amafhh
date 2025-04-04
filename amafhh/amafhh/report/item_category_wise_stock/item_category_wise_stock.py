@@ -13,7 +13,7 @@ def get_columns():
             "label": "<b>PRODUCT CATEGORY</b>",
             "fieldname": "item_category",
             "fieldtype": "Data",
-            "width": 150
+            "width": 180
         },
 
         {
