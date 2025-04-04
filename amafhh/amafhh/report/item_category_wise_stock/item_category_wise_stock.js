@@ -16,12 +16,6 @@
                 "options": "Item"
             },
             {
-                "fieldname": "warehouse",
-                "label": __("Warehouse"),
-                "fieldtype": "Link",
-                "options": "Warehouse"
-            },
-            {
                 "fieldname": "to_date",
                 "label": __("To Date"),
                 "fieldtype": "Date",
