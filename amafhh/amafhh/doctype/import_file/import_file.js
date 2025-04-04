@@ -32,6 +32,9 @@ frappe.ui.form.on('Import File', {
                         frm.set_value("non_physical", r.message.non_physical);
                         frm.set_value("undelivered", r.message.undelivered);
                         frm.set_value("goods_in_transit", r.message.goods_in_transit);
+                        frm.set_value("custom_sale_amount", r.message.total_sale_amount);
+                        frm.set_value("custom_paid_amount", r.message.total_paid_amount);
+                        frm.set_value("custom_balance_receiveable", r.message.custom_balance_receiveable);
                     }
                 }
             });

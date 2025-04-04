@@ -115,6 +115,24 @@ def update_avg_rate(**args):
                      AND item.import_file = '{import_file}'
             """
 
+    total_sale_amount = frappe.db.sql("""
+                SELECT SUM(`sales_item`.`amount`) AS total_amount
+                FROM `tabSales Invoice Item` AS sales_item
+                JOIN `tabSales Invoice` AS parent
+                ON sales_item.parent = parent.name
+                WHERE parent.docstatus = 1
+                AND sales_item.import_file = %s
+            """, (import_file))[0][0] or 0.0
+    total_paid_amount = frappe.db.sql("""
+                SELECT SUM(sales_item.amount) AS total_amount
+                FROM `tabSales Invoice Item` AS sales_item
+                JOIN `tabSales Invoice` AS parent
+                ON sales_item.parent = parent.name
+                WHERE parent.docstatus = 1
+                AND parent.status IN ('Paid', 'Partly Paid')
+                AND sales_item.import_file = %s
+            """, (import_file))[0][0] or 0.0
+
     stock_damage_result = frappe.db.sql(stock_damage_query, as_dict=True)
     qty = (stock_damage_result[0].damaged if stock_damage_result[0].damaged else 0) + (
         stock_damage_result[0].non_physical if stock_damage_result[0].non_physical else 0) + (
@@ -141,7 +159,10 @@ def update_avg_rate(**args):
         'damaged': stock_damage_result[0].damaged if stock_damage_result[0].damaged else 0,
         'non_physical': stock_damage_result[0].non_physical if stock_damage_result[0].non_physical else 0,
         'undelivered': stock_damage_result[0].undelivered if stock_damage_result[0].undelivered else 0,
-        'goods_in_transit': stock_damage_result[0].goodsintransit if stock_damage_result[0].goodsintransit else 0
+        'goods_in_transit': stock_damage_result[0].goodsintransit if stock_damage_result[0].goodsintransit else 0,
+        'total_sale_amount':total_sale_amount,
+        'total_paid_amount':total_paid_amount,
+        'custom_balance_receiveable':total_sale_amount - total_paid_amount
 
     }
 
