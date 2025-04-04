@@ -15,13 +15,7 @@ def get_columns():
             "fieldtype": "Data",
             "width": 150
         },
-        {
-            "label": "<b>WAREHOUSE</b>",
-            "fieldname": "warehouse",
-            "fieldtype": "Link",
-            "options": "Warehouse",
-            "width": 140
-        },
+
         {
             "label": "<b>STOCK QTY</b>",
             "fieldname": "stock_qty",
@@ -42,23 +36,6 @@ def get_columns():
         }
     ]
 
-def get_child_warehouses(parent_warehouse):
-    """Recursively fetch all child warehouses under a given warehouse."""
-    warehouses = set()
-
-    def fetch_children(warehouse):
-        children = frappe.get_all(
-            "Warehouse",
-            filters={"parent_warehouse": warehouse},
-            pluck="name"
-        )
-        for child in children:
-            if child not in warehouses:
-                warehouses.add(child)
-                fetch_children(child)
-
-    fetch_children(parent_warehouse)
-    return list(warehouses)
 
 def get_conditions(filters):
     conditions = []
@@ -67,17 +44,7 @@ def get_conditions(filters):
         conditions.append("AND sle.item_code = %(item_code)s")
     if filters.get("to_date"):
         conditions.append("AND sle.posting_date <= %(to_date)s")
-    if filters.get("warehouse"):
-        warehouse = filters["warehouse"]
-        is_group = frappe.get_value("Warehouse", warehouse, "is_group")
-        if is_group:
-            warehouses = get_child_warehouses(warehouse)
-            warehouses.append(warehouse)
-            warehouse_list = ", ".join(f"'{w}'" for w in warehouses)
-            conditions.append(f"AND sle.warehouse IN ({warehouse_list})")
-        else:
-            conditions.append("AND sle.warehouse = %(warehouse)s")
-
+    
     return " ".join(conditions)
 
 def get_data(filters):
@@ -87,16 +54,7 @@ def get_data(filters):
     stock_balance_query = f"""
     SELECT 
         item.item_category, 
-        (
-            SELECT warehouse
-            FROM `tabStock Ledger Entry` AS sle
-            WHERE sle.item_code = item.item_code
-              AND sle.is_cancelled = 0
-              {conditions}
-            ORDER BY sle.posting_date DESC, sle.posting_time DESC
-            LIMIT 1
-        ) AS warehouse,
-        COALESCE((
+        AVG(COALESCE((
             SELECT valuation_rate
             FROM `tabStock Ledger Entry` AS sle
             WHERE sle.item_code = item.item_code
@@ -104,7 +62,7 @@ def get_data(filters):
               {conditions}
             ORDER BY sle.posting_date DESC, sle.posting_time DESC
             LIMIT 1
-        ), 0) AS rate,
+        ), 0)) AS rate,
         SUM(CASE WHEN sle.is_cancelled = 0 THEN sle.actual_qty ELSE 0 END) AS stock_qty
     FROM `tabItem` AS item
     LEFT JOIN `tabStock Ledger Entry` AS sle ON item.name = sle.item_code
