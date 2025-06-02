@@ -724,6 +724,7 @@ frappe.ui.form.on('Purchase Invoice Item', {
         var row = locals[cdt][cdn];
         var conversionType = row.stock_type.trim();
         calculateWeightAndSetValues(row, conversionType, cdt, cdn);
+        calculate_total_ream_pkt(frm, cdt, cdn);
 
     },
     stock_type: function (frm, cdt, cdn) {
@@ -837,3 +838,12 @@ frappe.ui.form.on('Purchase Invoice Item', {
         frappe.model.set_value(cdt, cdn, 'import_file',import_file);
     }
 });
+
+function calculate_total_ream_pkt(frm, cdt, cdn) {
+    var row = locals[cdt][cdn];
+    var total_ream_pkt = 0;
+    frm.doc.items.forEach(function (item) {
+        total_ream_pkt += flt(item.ream_pkt);
+    });
+    frm.set_value('custom_total_ream_pkt', total_ream_pkt);
+}
