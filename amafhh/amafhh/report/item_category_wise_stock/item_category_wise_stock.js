@@ -26,6 +26,13 @@
                 "label": __("Stock Limit"),
                 "fieldtype": "Int",
                 "default": 10
+            },
+            {
+                "fieldname": "warehouse",
+                "label": __("Warehouse"),
+                "fieldtype": "Link",
+                "options": "Warehouse",
+                "reqd": 0
             }
         ]
     };
