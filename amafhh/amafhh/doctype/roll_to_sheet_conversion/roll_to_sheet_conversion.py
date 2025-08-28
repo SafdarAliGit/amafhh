@@ -21,7 +21,7 @@ class RollToSheetConversion(Document):
                 product_item.has_batch_no = 1
             product_item.item_code = item.item_code_target
             product_item.item_name = item.item_code_target
-            product_item.item_group = 'Sheet'
+            product_item.item_group = item.item_group
             product_item.gsm = item.gsm_source
             product_item.width = item.width_target
             product_item.length = item.length_target
@@ -36,6 +36,8 @@ class RollToSheetConversion(Document):
             product_item.item_category = item.item_category if item.item_category else ""
             product_item.brand_item = item.brand if item.brand else ""
             product_item.valuation_rate = item.rate
+            product_item.custom_weight_per_unit = item.weight_per_unit or 0
+            product_item.item_group = item.item_group
             try:
                 product_item.save()
                 # frappe.db.commit()

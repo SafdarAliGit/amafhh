@@ -77,7 +77,7 @@ function calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn) {
         total_sheet_weight = single_sheet_weight * row.sheet_source;
     }
     frappe.model.set_value(cdt, cdn, 'weight_source', total_ream_pkt_weight + total_sheet_weight);
-    frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
+    // frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
 }
 
 
@@ -105,7 +105,7 @@ function calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn) {
         total_sheet_weight = single_sheet_weight * row.sheet_target;
     }
     frappe.model.set_value(cdt, cdn, 'weight_target', total_ream_pkt_weight + total_sheet_weight);
-    frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
+    // frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
 }
 
 function calculate_source_target_weight_total(frm) {

@@ -77,7 +77,8 @@ function calculateWeightAndSetValues(row, conversionType, cdt, cdn) {
         total_sheet_weight = single_sheet_weight * row.sheet_target;
     }
     frappe.model.set_value(cdt, cdn, 'weight_target', total_ream_pkt_weight + total_sheet_weight);
-    frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
+    frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_ream_pkt_weight);
+    frappe.model.set_value(cdt, cdn, 'item_group', conversionType);
 
 }
 

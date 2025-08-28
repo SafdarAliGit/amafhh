@@ -19,6 +19,7 @@
   "ream_pkt_target",
   "sheet_target",
   "stock_type_target",
+  "item_group",
   "column_break_wnq1a",
   "weight_target",
   "rate",
@@ -174,12 +175,19 @@
    "in_list_view": 1,
    "label": "Weight Per Unit",
    "read_only": 1
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Group",
+   "options": "Item Group"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-28 13:07:20.972551",
+ "modified": "2025-08-28 19:35:17.548723",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion Items",
