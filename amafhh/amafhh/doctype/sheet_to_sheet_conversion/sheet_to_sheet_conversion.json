@@ -8,8 +8,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "conversion_type",
-  "column_break_kupli",
   "posting_date",
   "column_break_gwxcv",
   "posting_time",
@@ -60,16 +58,6 @@
    "fieldtype": "Table",
    "label": "Sheet To Sheet Conversion Items",
    "options": "Sheet To Sheet Conversion Items"
-  },
-  {
-   "fieldname": "conversion_type",
-   "fieldtype": "Select",
-   "label": "Conversion Type",
-   "options": "\nREAM\nPKT"
-  },
-  {
-   "fieldname": "column_break_kupli",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "section_break_urbfc",
@@ -124,7 +112,7 @@
    "link_fieldname": "sheet_to_sheet_conversion"
   }
  ],
- "modified": "2025-02-26 20:17:55.652733",
+ "modified": "2025-08-28 13:52:30.227715",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Sheet To Sheet Conversion",

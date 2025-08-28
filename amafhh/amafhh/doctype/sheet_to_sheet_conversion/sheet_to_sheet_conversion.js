@@ -37,6 +37,21 @@ var maxSubBatchManager = {
 };
 
 // CUSTOM OBJECT END
+function setConversionType(frm, cdt, cdn) {
+    let conversionType = "";
+    var row = locals[cdt][cdn];
+    let gsm = row.gsm_source;
+    if (gsm >= 40 && gsm <= 90) {
+        conversionType = 'REAM';
+    } else if (gsm >= 91 && gsm <= 400) {
+        conversionType = 'PKT';
+    }
+    else {
+        frappe.msgprint("Invalid GSM");
+        return;
+    }
+    return conversionType;
+}
 
 function calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn) {
     var single_ream_pkt_weight, total_ream_pkt_weight = 0, single_sheet_weight, total_sheet_weight = 0, weightFactor;
@@ -52,7 +67,6 @@ function calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn) {
     } else {
         // Adjust this part based on your requirements
         frappe.model.set_value(cdt, cdn, 'sheet_source', 0); // Set to a default value or handle differently
-        frappe.msgprint("Please select Conversion Type");
         return;
     }
 
@@ -63,6 +77,7 @@ function calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn) {
         total_sheet_weight = single_sheet_weight * row.sheet_source;
     }
     frappe.model.set_value(cdt, cdn, 'weight_source', total_ream_pkt_weight + total_sheet_weight);
+    frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
 }
 
 
@@ -80,7 +95,6 @@ function calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn) {
     } else {
         // Adjust this part based on your requirements
         frappe.model.set_value(cdt, cdn, 'sheet_target', 0); // Set to a default value or handle differently
-        frappe.msgprint("Please select Conversion Type");
         return;
     }
 
@@ -91,6 +105,7 @@ function calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn) {
         total_sheet_weight = single_sheet_weight * row.sheet_target;
     }
     frappe.model.set_value(cdt, cdn, 'weight_target', total_ream_pkt_weight + total_sheet_weight);
+    frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
 }
 
 function calculate_source_target_weight_total(frm) {
@@ -304,20 +319,20 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
     },
     sheet_source: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        var conversionType = frm.doc.conversion_type;
+        var conversionType = setConversionType(frm,cdt,cdn);
         calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn);
         calculate_source_target_weight_total(frm);
     },
     ream_pkt_source: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        var conversionType = frm.doc.conversion_type;
+        var conversionType = setConversionType(frm,cdt,cdn);
         calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn);
         calculate_source_target_weight_total(frm);
     },
 
     sheet_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        var conversionType = frm.doc.conversion_type;
+        var conversionType = setConversionType(frm,cdt,cdn);
         calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
 
         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
@@ -325,7 +340,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
     },
     ream_pkt_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        var conversionType = frm.doc.conversion_type;
+        var conversionType = setConversionType(frm,cdt,cdn);
         calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
 
         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
@@ -336,7 +351,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
 
     length_target: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        var conversionType = frm.doc.conversion_type;
+        var conversionType = setConversionType(frm,cdt,cdn);
         calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
         calculate_source_target_weight_total(frm);
         frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
@@ -348,7 +363,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
             frappe.model.set_value(cdt, cdn, 'width_target', null);
             frappe.throw(__("Target Width cannot be greater than Source Width"));
         } else {
-            var conversionType = frm.doc.conversion_type;
+            var conversionType = setConversionType(frm,cdt,cdn);
             calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
             calculate_source_target_weight_total(frm);
             frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));
@@ -358,7 +373,7 @@ frappe.ui.form.on('Sheet To Sheet Conversion Items', {
             frappe.model.set_value(cdt, cdn, 'width_target', null);
             frappe.throw(__("Target Width cannot be less than 1"));
         } else {
-            var conversionType = frm.doc.conversion_type;
+            var conversionType = setConversionType(frm,cdt,cdn);
             calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn);
             calculate_source_target_weight_total(frm);
             frappe.model.set_value(cdt, cdn, 'amount', parseFloat(row.rate * row.weight_target).toFixed(2));

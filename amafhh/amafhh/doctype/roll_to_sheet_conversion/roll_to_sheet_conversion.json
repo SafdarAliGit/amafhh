@@ -8,8 +8,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "conversion_type",
-  "column_break_jhy6j",
   "posting_date",
   "column_break_etpii",
   "posting_time",
@@ -27,12 +25,6 @@
   "amended_from"
  ],
  "fields": [
-  {
-   "fieldname": "conversion_type",
-   "fieldtype": "Select",
-   "label": "Conversion Type",
-   "options": "\nREAM\nPKT"
-  },
   {
    "fieldname": "posting_date",
    "fieldtype": "Date",
@@ -66,10 +58,6 @@
    "options": "Roll To Sheet Conversion",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break_jhy6j",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "column_break_gfau7",
@@ -128,7 +116,7 @@
    "link_fieldname": "roll_to_sheet_conversion"
   }
  ],
- "modified": "2025-02-26 20:16:58.428799",
+ "modified": "2025-08-28 13:41:52.237887",
  "modified_by": "Administrator",
  "module": "Amafhh",
  "name": "Roll To Sheet Conversion",
