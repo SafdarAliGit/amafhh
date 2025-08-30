@@ -5,6 +5,19 @@ frappe.provide("erpnext.item");
 
 frappe.ui.form.on("Item", {
 
+	width: function(frm) {
+        calculate_unit_weight(frm);
+    },
+    length: function(frm) {
+        calculate_unit_weight(frm);
+    },
+    gsm: function(frm) {
+        calculate_unit_weight(frm);
+    },
+    item_group: function(frm) {
+        calculate_unit_weight(frm);
+    },
+
 	setup: function(frm) {
 		frm.add_fetch('attribute', 'numeric_values', 'numeric_values');
 		frm.add_fetch('attribute', 'from_range', 'from_range');
@@ -915,4 +928,30 @@ function open_form(frm, doctype, child_doctype, parentfield) {
 			}
 		])
 	});
+}
+
+
+
+function calculate_unit_weight(frm) {
+    let weight_factor = 0;
+    let single_ream_pkt_weight = 0;
+
+    let conversion_type = frm.doc.item_group || "";
+    let width = parseFloat(frm.doc.width) || 0;
+    let gsm = parseFloat(frm.doc.gsm) || 0;
+    let length = parseFloat(frm.doc.length) || 0;
+
+    if (conversion_type === "REAM") {
+        weight_factor = 3100;
+        single_ream_pkt_weight = (width * gsm * length) / weight_factor;
+
+    } else if (conversion_type === "PKT") {
+        weight_factor = 15500;
+        single_ream_pkt_weight = (width * gsm * length) / weight_factor;
+
+    } else {
+        single_ream_pkt_weight = 0;
+    }
+
+    frm.set_value("custom_weight_per_unit", single_ream_pkt_weight);
 }

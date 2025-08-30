@@ -35,7 +35,8 @@ app_license = "MIT"
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 doctype_js = {"Purchase Invoice": "public/js/purchase_invoice.js",
-              "Sales Invoice": "public/js/sales_invoice.js", "Item": "public/js/item.js",
+              "Sales Invoice": "public/js/sales_invoice.js",
+              "Item": "public/js/item.js",
               "Landed Cost Voucher": "public/landed_cost_voucher_custom.js",
 
               }
@@ -133,8 +134,8 @@ override_doctype_class = {
 #	}
 # }
 # doc_events = {
-#     "Purchase Invoice": {
-#         "on_submit": "amafhh.overrides.purchase_invoice_overrides.insert_import_file_to_stock_ledger_entry"
+#     "Item": {
+#         "on_update": "amafhh.overrides.item.update_item_weight"
 #     }
 # }
 # Scheduled Tasks
