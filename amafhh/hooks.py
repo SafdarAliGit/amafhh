@@ -133,11 +133,11 @@ override_doctype_class = {
 #		"on_trash": "method"
 #	}
 # }
-# doc_events = {
-#     "Item": {
-#         "on_update": "amafhh.overrides.item.update_item_weight"
-#     }
-# }
+doc_events = {
+    "Item": {
+        "on_update": "amafhh.overrides.item.update_item_weight"
+    }
+}
 # Scheduled Tasks
 # ---------------
 
