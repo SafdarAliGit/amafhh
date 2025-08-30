@@ -953,5 +953,5 @@ function calculate_unit_weight(frm) {
         single_ream_pkt_weight = 0;
     }
 
-    frm.set_value("custom_weight_per_unit", single_ream_pkt_weight);
+    frm.set_value("custom_weight_per_unit", round(single_ream_pkt_weight,4));
 }
