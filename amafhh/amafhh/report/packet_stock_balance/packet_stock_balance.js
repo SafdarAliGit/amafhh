@@ -30,6 +30,13 @@ frappe.query_reports["Packet Stock Balance"] = {
 			"fieldtype": "Link",
 			"options": "Brand",
 			"reqd": 0
+		},
+		{
+			"fieldname": "group_by",
+			"label": __("Group By"),
+			"fieldtype": "Select",
+			"options": ["Brand", "GSM"],
+			"default": "GSM"
 		}
 	]
 };
