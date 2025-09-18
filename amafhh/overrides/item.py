@@ -10,9 +10,9 @@ def calculate_unit_weight(doc):
     single_ream_pkt_weight = 0
 
     conversion_type = doc.item_group or ""
-    width = float(doc.width) or 0
-    gsm = float(doc.gsm) or 0
-    length = float(doc.length) or 0
+    width = float(doc.width or 0)
+    gsm = float(doc.gsm or 0)
+    length = float(doc.length or 0)
 
     if conversion_type == "REAM":
         weight_factor = 3100
