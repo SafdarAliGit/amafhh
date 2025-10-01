@@ -10,8 +10,10 @@ from frappe.model.naming import make_autoname
 
 class SheetToSheetConversion(Document):
     def validate(self):
-        if round(float(self.source_weight), 2) != round(float(self.target_weight), 2):
-            frappe.throw("Total Source And Target Weight Should Be Same")
+         # Validate each row in the child table
+        for idx, item in enumerate(self.sheet_to_sheet_conversion_items or [], 1):
+            if round(float(item.weight_target), 2) != round(float(item.balance_qty), 2):
+                frappe.throw(f"Row {idx}: Weight Target and Balance Quantity must be the same.")
 
     def on_submit(self):
         for item in self.sheet_to_sheet_conversion_items:
