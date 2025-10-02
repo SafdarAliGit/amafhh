@@ -76,7 +76,7 @@ function calculateSourceWeightAndSetValues(row, conversionType, cdt, cdn) {
     if (row.sheet_source !== null && row.sheet_source !== undefined && row.sheet_source !== "") {
         total_sheet_weight = single_sheet_weight * row.sheet_source;
     }
-    frappe.model.set_value(cdt, cdn, 'weight_source', total_ream_pkt_weight + total_sheet_weight);
+    frappe.model.set_value(cdt, cdn, 'weight_source', round(total_ream_pkt_weight + total_sheet_weight,4));
     // frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
 }
 
@@ -104,7 +104,7 @@ function calculateTargetWeightAndSetValues(row, conversionType, cdt, cdn) {
     if (row.sheet_target !== null && row.sheet_target !== undefined && row.sheet_target !== "") {
         total_sheet_weight = single_sheet_weight * row.sheet_target;
     }
-    frappe.model.set_value(cdt, cdn, 'weight_target', total_ream_pkt_weight + total_sheet_weight);
+    frappe.model.set_value(cdt, cdn, 'weight_target', round(total_ream_pkt_weight + total_sheet_weight,4));
     // frappe.model.set_value(cdt, cdn, 'weight_per_unit', single_sheet_weight);
 }
 
