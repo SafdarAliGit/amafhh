@@ -113,7 +113,7 @@ function calculate_source_target_weight_total(frm) {
     var weight_target = 0;
     $.each(frm.doc.sheet_to_sheet_conversion_items || [], function (i, d) {
 
-        weight_source += flt(d.balance_qty);
+        weight_source += flt(d.weight_source);
         weight_target += flt(d.weight_target);
     });
     frm.set_value('source_weight', parseFloat(weight_source).toFixed(4));
